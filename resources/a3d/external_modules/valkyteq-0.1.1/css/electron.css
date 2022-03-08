@@ -1,0 +1,13 @@
+body{
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+    background-image: url("/static/index/bg06.webp");
+    background-color: rgba(0, 0, 0, 0.24);
+    color: #fff;
+}
+
+.login-wrap {
+    background-repeat: no-repeat;background-position: center center;background-attachment: fixed;background-size: cover;background-image: url("/static/index/bg06.webp");background-color: rgba(0, 0, 0, 0.24);color: #fff;
+}

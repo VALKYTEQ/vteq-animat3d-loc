@@ -1,0 +1,59 @@
+/*************** *
+* VALKYTEQ Fonts *
+* ****************/
+
+/* Home */
+@font-face {
+    font-family: 'Russo One';
+    src:url('./fonts/Russo-One.ttf.woff') format('woff'),
+    url('./fonts/Russo-One.ttf.svg#Russo-One') format('svg'),
+    url('./fonts/Russo-One.ttf.eot'),
+    url('./fonts/Russo-One.ttf.eot?#iefix') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* VCMS */
+@font-face {
+    font-family: 'Digitall';
+    src:url('./fonts/01-Digitall.ttf.woff') format('woff'),
+    url('./fonts/01-Digitall.ttf.svg#01-Digitall') format('svg'),
+    url('./fonts/01-Digitall.ttf.eot'),
+    url('./fonts/01-Digitall.ttf.eot?#iefix') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* LUNA */
+@font-face {
+    font-family: 'Mechsuit';
+    src:url('./fonts/Mechsuit.ttf.woff') format('woff'),
+    url('./fonts/Mechsuit.ttf.svg#Mechsuit') format('svg'),
+    url('./fonts/Mechsuit.ttf.eot'),
+    url('./fonts/Mechsuit.ttf.eot?#iefix') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Premiere */
+@font-face {
+    font-family: 'Brush Script';
+    src:url('./fonts/BrushScriptStd.ttf.woff') format('woff'),
+    url('./fonts/BrushScriptStd.ttf.png#BrushScriptStd') format('png'),
+    url('./fonts/BrushScriptStd.ttf.eot'),
+    url('./fonts/BrushScriptStd.ttf.eot?#iefix') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Dev */
+@font-face {
+    font-family: 'JetBrains Mono';
+    src:url('./fonts/JetBrains-Mono.ttf.woff') format('woff'),
+    url('./fonts/JetBrains-Mono.ttf.svg#JetBrains-Mono') format('svg'),
+    url('./fonts/JetBrains-Mono.ttf.eot'),
+    url('./fonts/JetBrains-Mono.ttf.eot?#iefix') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+

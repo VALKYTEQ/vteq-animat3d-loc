@@ -1,0 +1,199 @@
+/*
+    background-image: url(/img/main/bg.png);
+*/
+
+.loading-screen {
+    display: inline-block;
+    position: fixed;
+    top: 70%;
+    bottom: 30%;
+    left: 0;
+    right: 0;
+    width: 80%;
+    height: 100px;
+    margin: auto;
+    z-index: 99999;
+}
+
+.load-bg {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    transition: all 5s linear;
+    cursor: default;
+}
+
+.progress-color {
+    color: #8e24aa;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.progress-finish {
+    position: relative;
+    height: 5px;
+    display: block;
+    width: 100%;
+    background-color: #8e24aa;
+    border-radius: 2px;
+    background-clip: padding-box;
+    /*margin: 0.5rem 0 1rem 0;*/
+    overflow: hidden;
+}
+
+.cursor-default {
+    cursor: default;
+}
+
+.progress {
+    position: relative;
+    height: 5px;
+    display: block;
+    width: 100%;
+    background-color: white;
+    /*background-color: #00D9FF;*/
+    border-radius: 2px;
+    background-clip: padding-box;
+    /*margin: 0.5rem 0 1rem 0;*/
+    overflow: hidden;
+}
+
+.progress .indeterminate {
+    background-color:black;
+}
+
+.progress .indeterminate:before {
+    content: '';
+    position: absolute;
+    background-color: #8e24aa;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    will-change: left, right;
+    -webkit-animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+    animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+
+.progress .indeterminate:after {
+    content: '';
+    position: absolute;
+    background-color: #8e24aa;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    will-change: left, right;
+    -webkit-animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+    animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+    -webkit-animation-delay: 1.15s;
+    animation-delay: 1.15s;
+}
+
+@-webkit-keyframes indeterminate {
+    0% {
+        left: -35%;
+        right: 100%; }
+    60% {
+        left: 100%;
+        right: -90%; }
+    100% {
+        left: 100%;
+        right: -90%; }
+}
+
+@keyframes indeterminate {
+    0% {
+        left: -35%;
+        right: 100%; }
+    60% {
+        left: 100%;
+        right: -90%; }
+    100% {
+        left: 100%;
+        right: -90%; }
+}
+
+@-webkit-keyframes indeterminate-short {
+    0% {
+        left: -200%;
+        right: 100%; }
+    60% {
+        left: 107%;
+        right: -8%; }
+    100% {
+        left: 107%;
+        right: -8%; }
+}
+
+@keyframes indeterminate-short {
+    0% {
+        left: -200%;
+        right: 100%; }
+    60% {
+        left: 107%;
+        right: -8%; }
+    100% {
+        left: 107%;
+        right: -8%; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.console {
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    color: grey;
+    font-family: Consolas, monaco, monospace;
+}
+
+#version {
+    color: white;
+    font-family: Consolas, monaco, monospace;
+    cursor: default;
+}
+
+
+
+
+.pull-down {
+    padding-top: 70px;
+}
+
+.pull-up {
+    padding-top: 15px;
+}
+
+
+
+.fullscreen-bg {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    overflow: hidden;
+    z-index: -120;
+}
+
+.fullscreen-bg__video {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+    min-height: 50%;
+    min-width: 50%;
+}

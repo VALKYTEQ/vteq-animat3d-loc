@@ -1,0 +1,6 @@
+{
+    "type": "module",
+    "dependencies": {
+        "argon2": "^0.28.5"
+    }
+}

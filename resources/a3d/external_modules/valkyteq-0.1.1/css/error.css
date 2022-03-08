@@ -1,0 +1,161 @@
+@import "fonts/fonts.css";
+
+#content {
+    background: url("images/errblank.png");
+    background-repeat: no-repeat;
+    position: relative;
+    height: 728px;
+    width: 1057px;
+    margin: 0;
+    padding-top: 59px;
+}
+
+#main {
+    overflow: hidden;
+}
+
+body {
+    font-family: 'philosopherregular';
+    font-size: 11pt;
+    overflow: hidden;
+    margin: 0;
+}
+
+#error-page-menu {
+    text-align: center;
+    margin: 60px auto 0;
+    font-size: 12pt;
+    cursor: default;
+    padding-top: 13px;
+    line-height: 1;
+    text-shadow: 1px 1px 12px rgba(22,22,22,0.4);
+}
+
+#error-page-menu a {
+    color: ghostwhite;
+    text-decoration: none;
+    margin: 30px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 0.5s all ease;
+}
+
+#error-page-description {
+    color: ghostwhite;
+    text-align: center;
+    width: 500px;
+    text-shadow: 1px 1px 12px rgba(22,22,22,0.4);
+    margin: 80px auto 0;
+    font-size: 12pt;
+    cursor: default;
+    padding-top: 13px;
+    line-height: 1;
+}
+
+#error-page-menu a i {
+    background-image: url("images/spritesheet.png");
+    background-repeat: no-repeat;
+
+    display: inline-block;
+    vertical-align: top;
+
+}
+
+#error-page-menu a:hover {
+    opacity: 1;
+}
+
+#error-page-message {
+    text-transform: uppercase;
+    text-align: center;
+    margin: 300px auto 0;
+    font-size: 26pt;
+    cursor: default;
+    padding-top: 13px;
+    font-weight: bold;
+    line-height: 1;
+    text-shadow: 1px 1px 12px rgba(22,22,22,0.8);
+    color: ghostwhite;
+}
+
+#error-page-btn-support i {
+    height: 24px;
+    margin-top: -5px;
+    width: 24px;
+    background-position: -82px -45px;
+    margin-right: 3px;
+}
+
+#error-page-btn-reload i {
+    height: 34px;
+    width: 34px;
+    transform: scale(0.705,0.705);
+    background-position: -207px -91px;
+    margin-top: -10px;
+    margin-right: -2px;
+}
+
+#error-page-btn-logout i {
+    display: block;
+    background-position: -251px -91px;
+    width: 35px;
+    height: 33px;
+    margin-top: -10px;
+    margin-right: -2px;
+}
+
+
+.close-block {
+    float: left;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.close-block i {
+    background-image: url("images/spritesheet.png");
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: top;
+    opacity: 0.5;
+    transition: 0.5s all ease;
+}
+
+.close-block a {
+    width: 20px;
+    height: 20px;
+}
+
+.turn {
+    background-position: -279px -26px;
+    width: 11px;
+    height: 2px;
+    margin-top: 4px;
+}
+
+.close {
+    background-position: -279px -38px;
+    width: 9px;
+    height: 9px;
+}
+
+#btn-minimize, #btn-close {
+    margin-top: 5px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#btn-minimize {
+    margin-right: -7px;
+}
+
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+}

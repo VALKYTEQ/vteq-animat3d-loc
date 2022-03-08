@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Animat3D | ..a project by VALKYTEQ</title>
+        <meta charset="utf-8">
+        <meta content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport">
+        <!-- Bootstrap -->
+        <link type="text/css" rel="stylesheet" href="./external_modules/bootstrap-3.4.1/bootstrap.min.css">
+        <!-- Font Awesome -->
+        <link type="text/css" rel="stylesheet" href="./external_modules/fontawesome-5.14.0/css/all.css" crossorigin="anonymous">
+        <!-- Animat3D -->
+        <link type="text/css" rel="stylesheet" href="./animat3d.min.css">
+        <!-- Valkyteq -->
+        <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fonts.css">
+        <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fancy.css">
+    </head>
+    <body>
+        <div id="login-wrap" style="display: none; opacity: 1; width:100%; height: 100%;">
+            <div class="container-fluid">
+                <div class="login">
+                    <div class="login-page">
+                        <div class="login-block">
+                            <div class="form-group">
+                                <h2 class='u-margin-bottom-md text-center'>Username</h2>
+                                <div class="input-group"> <span class="input-group-addon"><i class="fa fa-user ti-user"></i></span>
+                                    <input name="login" id="login" type="text" class="form-control" placeholder="Your username" required /> </div>
+                            </div>
+                            <div class="form-group">
+                                <h2 class='u-margin-bottom-md text-center'>Password</h2>
+                                <div class="input-group"><span class="input-group-addon"><i class="fa fa-lock ti-unlock"></i></span>
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="Your password" required />
+                                </div>
+                            </div>
+                            <br>
+                            <fieldset class="form-check text-center" >
+                                <input class="form-check-input" type="checkbox" id="notbot" name="notbot" value="No" />
+                                <label class="form-check-label" for="notbot">I am not a bot... ┬─┬ ノ( ゜-゜ノ)</label>
+                            </fieldset>
+                            <div class="form-group" hidden>
+                                <input class="form-control" type="text" id="recap" name="recap" value="6LfLXcQbAAAAACnsmwzDIykT8iA79hHmibgcfzH9" hidden/>
+                                <label class="form-label" for="recap" hidden></label>
+                            </div>
+                            <br>
+                            <button name="submit" type="submit" class="btn btn-outline btn-block submit"><i class="fa fa-transporter-2"></i> LOG IN</button>
+                            <div class="login-footer">
+                            </div>
+                            <div class="login-links">
+                                <p class="text-center">Don't have account? <a class="txt-brand" href="https://valkyteq.com/reg/" target="_blank"><font color=#29aafe>Register now</font></a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="main" class="text-center main" style="display: none;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-6">
+                        <div id="main-lnk-preview" class="btn btn-outline btn-menu">Public Preview</div>
+                        <hr>
+                        <div id="main-lnk-editor" class="btn btn-outline btn-menu">Character Editor</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fancy-message">
+            <p>
+                <i></i>
+                <b class="fancy-message-title">Error:</b><br>
+                <span class="fancy-message-text"></span>
+            </p>
+            <span class="close-message"><a href=""></a></span>
+        </div>
+
+        <!-- SCRIPTS -->
+        <script type="text/javascript" src="./external_modules/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="./external_modules/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/flags.js"></script>
+        <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/md5.js"></script>
+        <script type="text/javascript" src="./animat3d.min.js"></script>
+    </body>
+</html>
