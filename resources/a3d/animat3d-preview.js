@@ -35,7 +35,7 @@ import Stats from './animat3d_modules/libs/stats.module.js';
 import {GUI} from './animat3d_modules/libs/lil-gui.module.min.js';
 import { Water } from './animat3d_modules/objects/Water2.js';
 
-console.log(`Animat3D Version       : public@^0.9.0c`);
+console.log(`Animat3D Version       : public@^0.9.7a`);
 
 let scene, renderer, camera, stats;
 let stats1, stats2, stats3;

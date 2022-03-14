@@ -57,3 +57,14 @@
     font-style: normal;
 }
 
+/* Design */
+@font-face {
+    font-family: 'Philosopher';
+    src:url('./fonts/Philosopher.ttf.woff') format('woff'),
+    url('./fonts/Philosopher.ttf.svg#Philosopher') format('svg'),
+    url('./fonts/Philosopher.ttf.eot'),
+    url('./fonts/Philosopher.ttf.eot?#iefix') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+

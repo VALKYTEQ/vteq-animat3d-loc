@@ -30,7 +30,11 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-console.log(`Animat3D Version       : public@^0.9.6c`);
+console.log(`Animat3D Version       : public@^0.9.7a`);
+
+// ****************************************************************************************************************** //
+//                                                 v  FUNCTIONS  v                                                    //
+// ****************************************************************************************************************** //
 
 let hash = {};
 let err = false;
@@ -53,16 +57,54 @@ function readFileHash(file, hash) {
     rawFile.send(null);
 }
 
+function showFancyMessage(title, text, level, autohide) {
+
+    var $fancyMessage = $('.fancy-message').removeClass('error success').addClass(level);
+    $fancyMessage.find('.fancy-message-title').html(title);
+    $fancyMessage.find('.fancy-message-text').html(text);
+    $fancyMessage.stop().fadeIn();
+
+    // Hide after a while
+    if (autohide) {
+        var seconds = 5;
+        var tid = $fancyMessage.data('tid');
+        if (typeof tid != 'undefined')
+            clearTimeout(tid);
+        tid = setTimeout(function () {
+            $fancyMessage.fadeOut();
+        }, seconds * 1000);
+        $fancyMessage.data('tid', tid);
+    }
+}
+
+function lunaUserLogout() {
+    resetItemFlag("USER")
+    resetItemFlag("USER_ID")
+    resetItemFlag("USER_NAME")
+    resetItemFlag("USER_VIP")
+    resetItemFlag("USER_COINS")
+    resetItemFlag("USER_UNLOCKS")
+    resetItemFlag("CHAR_NAME")
+    resetItemFlag("CHAR_SET")
+    resetItemFlag("SRV_TIME")
+    resetItemFlag("SRV_SIGN");
+    $('#main-wrap').fadeOut();
+    setTimeout(function () {
+        $('#login-wrap').fadeIn();
+    }, 333)
+}
+
 // ****************************************************************************************************************** //
 //                                                 v  USERDATA  v                                                     //
 // ****************************************************************************************************************** //
 
-// resetItemFlag("SRV_SIGN");
 lunaUserInfo("hash");
 
 if (getItemFlag("SRV_SIGN").length > 5) {
-    $('#login-wrap').hide();
-    $('#main').fadeIn();
+    $('#login-wrap').fadeOut();
+    setTimeout(function () {
+        $('#main-wrap').fadeIn();
+    }, 333)
 }
 else {
     $('#login-wrap').fadeIn();
@@ -158,7 +200,7 @@ function lunaUserInfo(type, dataSave) {
                 setItemFlag("SRV_TIME", obj.timestamp)
                 setItemFlag("SRV_SIGN", obj.sign)
                 $('#login-wrap').fadeOut();
-                $('#main').fadeIn();
+                $('#main-wrap').fadeIn();
                 // location.href = "./electron.html"
             }
 
@@ -174,11 +216,9 @@ function lunaUserInfo(type, dataSave) {
 
 }
 
-
-
-
-
-
+// ****************************************************************************************************************** //
+//                                              v  MISCELLANEOUS  v                                                   //
+// ****************************************************************************************************************** //
 
 $('#main-lnk-preview').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
@@ -188,6 +228,15 @@ $('#main-lnk-preview').click(function () {
 $('#main-lnk-editor').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
     else { location.href = "./editor.html" }
+});
+
+$('#main-lnk-control').click(function () {
+    if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
+    else { location.href = "./control.html" }
+});
+
+$('#main-lnk-logout').click(function () {
+    lunaUserLogout()
 });
 
 $('.submit').click(function() {
@@ -220,25 +269,5 @@ $('input').keyup(function(){
     $('.fancy-message').fadeOut();
     $('.row.error').removeClass('error');
 });
-
-function showFancyMessage(title, text, level, autohide) {
-
-    var $fancyMessage = $('.fancy-message').removeClass('error success').addClass(level);
-    $fancyMessage.find('.fancy-message-title').html(title);
-    $fancyMessage.find('.fancy-message-text').html(text);
-    $fancyMessage.stop().fadeIn();
-
-    // Hide after a while
-    if (autohide) {
-        var seconds = 5;
-        var tid = $fancyMessage.data('tid');
-        if (typeof tid != 'undefined')
-            clearTimeout(tid);
-        tid = setTimeout(function () {
-            $fancyMessage.fadeOut();
-        }, seconds * 1000);
-        $fancyMessage.data('tid', tid);
-    }
-}
 
 

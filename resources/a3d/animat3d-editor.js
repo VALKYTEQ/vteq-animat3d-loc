@@ -36,13 +36,13 @@ import {GUI} from "./animat3d_modules/libs/lil-gui.module.min.js";
 import Stats from './animat3d_modules/libs/stats.module.js';
 import { Water } from './animat3d_modules/objects/Water2.js';
 
-console.log(`Animat3D Version       : public@^0.9.6c`);
+console.log(`Animat3D Version       : public@^0.9.7a`);
 
 let camera, scene, renderer;
 let stats1, stats2, stats3;
 let clock, character;
 let settingsA3D, settingsDummy;
-let settingsA3Dbuy = {}
+let settingsA3Dbuy = {};
 
 let userCoins, userVip, userUnlocks;
 
@@ -263,7 +263,7 @@ function lunaUserInfo(type, dataSave) {
                             addEntity(item);
                             setTimeout(function () {
                                 setAnimation("idle");
-                            }, 1234);
+                            }, 100);
                         }
                         settingsDummy[item.name] = function () {};
                         break;
@@ -275,7 +275,7 @@ function lunaUserInfo(type, dataSave) {
                             addEntity(item);
                             setTimeout(function () {
                                 setAnimation("idle");
-                            }, 1234);
+                            }, 100);
                         }
                         settingsDummy[item.name] = function () {};
                         break;
@@ -287,7 +287,7 @@ function lunaUserInfo(type, dataSave) {
                             addEntity(item);
                             setTimeout(function () {
                                 setAnimation("idle");
-                            }, 1234);
+                            }, 100);
                         }
                         settingsDummy[item.name] = function () {};
                         break;
@@ -299,7 +299,7 @@ function lunaUserInfo(type, dataSave) {
                             addEntity(item);
                             setTimeout(function () {
                                 setAnimation("idle");
-                            }, 1234);
+                            }, 100);
                         }
                         settingsDummy[item.name] = function () {};
                         break;

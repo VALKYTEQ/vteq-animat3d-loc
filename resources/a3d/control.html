@@ -10,43 +10,13 @@
         <link type="text/css" rel="stylesheet" href="./animat3d.min.css">
         <!-- Valkyteq -->
         <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fonts.css">
+        <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fancy.css">
         <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/loader.css">
     </head>
     <body>
 
         <!-- Animat3D Container -->
         <div id="container" class="sticky-top"></div>
-
-        <!-- Animat3D Dynamic Content -->
-        <div class="content-bg-r"></div>
-        <div class="content-bg-l">
-            <div class="preview-content">
-                <img src="https://valkyteq.com/static/animat3d.png" alt="Animat3D" height="128" class="mb-5">
-                <br><large style="font-family: 'Mechsuit', sans-serif; letter-spacing: 0.1em; font-size: 0.8em;">ANImAT3D</large>
-                <hr style="border-color: white;">
-                <p>
-                    <u>Base:</u>
-                    <br><small>
-                    Animat3D is a proprietary 3D Web Engine based on <a href="https://threejs.org/" target="_blank" style="color: #e8e8e8;">ThreeJS. <i class="fad fa-external-link"></i></a>
-                    Thanks to Animat3D's API, it can be implemented in and controlled by any CMS.
-                </small><br><br>
-                    <u>3D Format:</u>
-                    <br><small>
-                    The engine uses custom <a href="https://en.wikipedia.org/wiki/GlTF" target="_blank" style="color: #e8e8e8;">glTF 2.0 objects <i class="fad fa-external-link"></i></a>
-                    created with an own plugin for <a href="https://www.autodesk.eu/products/3ds-max/overview" target="_blank" style="color: #e8e8e8;">Autodesk® 3DS Max. <i class="fad fa-external-link"></i></a>
-                </small><br><br>
-                    <u>Filetypes:</u>
-                    <br><small>
-                    Thanks to the glTF format, the generated A3D file grants the following features:
-                    <br> ➤     Embedded animations and textures
-                    <br> ➤     Separate files for animations and models
-                    <!--                <br> ➤     <a href="https://en.wikipedia.org/wiki/FastCGI" target="_blank" style="color: #e8e8e8;">FastCGI <i class="fad fa-external-link"></i></a> for session based application calls-->
-                    <br> ➤     Low file size with high resolution textures
-                    <br> ➤     On-the-fly manipulation of 3D Skeletons
-                </small>
-                </p>
-            </div>
-        </div>
 
         <!-- Animat3D Loading Screen -->
         <div id="loading-screen" class="loading-screen">
@@ -78,9 +48,10 @@
         </div>
 
         <!-- SCRIPTS -->
-        <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/loader.js"></script>
         <script type="text/javascript" src="./external_modules/jquery-3.6.0/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" src="./external_modules/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
-        <script type="module" src="./animat3d-preview.min.js"></script>
+        <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/flags.js"></script>
+        <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/loader.js"></script>
+        <script type="module" src="animat3d-control.min.js"></script>
     </body>
 </html>

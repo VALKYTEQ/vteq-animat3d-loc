@@ -1,3 +1,34 @@
+/*!
+  Script: animat3d.css
+    Proprietary 3D Web Engine based on Three.JS
+
+  About: Owner
+    Copyright (c) 2022, Valky Fischer
+    VALKYTEQ - All rights reserved
+
+  About: License
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+        * Redistributions of source code must retain the above copyright notice,
+          this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in the
+          documentation and/or other materials provided with the distribution.
+
+  About: Notice
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
 body {
 	margin: 0;
 	background-color: #000;
@@ -10,13 +41,14 @@ body {
 	background-position: center center;
 	background-attachment: fixed;
 	background-size: cover;
-	background-image: url("https://valkyteq.com/static/index/bg06r.webp");
+	background-image: url("./external_modules/valkyteq-0.1.1/css/images/bg.webp");
 	background-color: rgba(0, 0, 0, 0.24);
 }
 
 .login-wrap {
 	background-repeat: no-repeat;background-position: center center;background-attachment: fixed;background-size: cover;background-image: url("https://valkyteq.com/static/index/bg06r.webp");background-color: rgba(0, 0, 0, 0.24);color: #fff;
 }
+
 .tooltip {
 	z-index: 99999; /* A value higher than 1010 solves the PopperJS issue */
 	background-color: rgba(0, 0, 0, 0.75);
@@ -30,10 +62,41 @@ body {
 	font-size: medium;
 }
 
-.main {
-	height: 100%;
-	width: 100%;
-	margin-top: 25%;
+.main-wrap {
+	height: 100vh;
+	width: 100vw;
+	margin-top: 10vh;
+}
+
+.main-content-logo {
+	height: 256px;
+	width: 256px;
+	margin-bottom: 50px;
+}
+
+.copyright-logo {
+	right: 50px;
+	display: flex;
+	height: 128px;
+	width: 128px;
+	margin-bottom: 50px;
+	opacity: 0.5;
+}
+
+.preview-content {
+	position: fixed;
+	top: 30px;
+	bottom: 0;
+	left: 30px;
+	right: 0;
+	font-size: 1.337rem;
+	font-family: 'Philosopher', sans-serif;
+	height: 1px;
+	width: 25vw;
+}
+
+.loading-copyright {
+	text-align: right;
 }
 
 table {
