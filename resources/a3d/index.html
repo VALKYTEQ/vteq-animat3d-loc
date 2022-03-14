@@ -9,28 +9,52 @@
         <!-- Font Awesome -->
         <link type="text/css" rel="stylesheet" href="./external_modules/fontawesome-5.14.0/css/all.css" crossorigin="anonymous">
         <!-- Animat3D -->
-        <link type="text/css" rel="stylesheet" href="./animat3d.min.css">
+        <link type="text/css" rel="stylesheet" href="./animat3d.css">
         <!-- Valkyteq -->
         <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fonts.css">
         <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fancy.css">
         <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/loader.css">
     </head>
-    <body>
+    <body id="screen">
+
+        <!-- Animat3D Settings View -->
+        <div id="settings-wrap" class="text-center wrapper">
+            <div class="container text-center">
+                <div class="col-md-6 main-content-l">
+                </div>
+                <div class="col-md-6 main-content-r">
+                    <h1 class="text">Settings</h1>
+                    <hr>
+                    <div id="settings-lnk-maximize" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Button 1</div>
+                    <br><br>
+                    <div id="settings-lnk-editor" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Button 2</div>
+                    <br><br>
+                    <div id="settings-lnk-control" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Button 3</div>
+                    <br><br>
+                    <div id="settings-lnk-settings" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Button 4</div>
+                    <br><br>
+                    <div id="settings-lnk-logout" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Button 5</div>
+                </div>
+            </div>
+        </div>
 
         <!-- Animat3D Menu View -->
-        <div id="main-wrap" class="text-center main-wrap" style="display: none;">
+        <div id="main-wrap" class="text-center wrapper">
             <div class="container text-center">
-                <div class="col-md-6 main-content-l text-center">
+                <div class="col-md-6 main-content-l">
                 </div>
-                <div class="col-md-6 main-content-r text-center">
-                    <img src="https://valkyteq.com/static/vteq.png" class="main-content-logo" alt="VALKYTEQ">
-                    <div id="main-lnk-preview" class="btn btn-outline btn-menu">Public Preview</div>
+                <div class="col-md-6 main-content-r">
+                    <h1 class="text">Animat3D</h1>
                     <hr>
-                    <div id="main-lnk-editor" class="btn btn-outline btn-menu">Character Editor</div>
+                    <div id="main-lnk-preview" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Public Preview</div>
+                    <br><br>
+                    <div id="main-lnk-editor" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Character Editor</div>
                     <br>
-                    <div id="main-lnk-control" class="btn btn-outline btn-menu">Twitch Integration</div>
-                    <hr>
-                    <div id="main-lnk-logout" class="btn btn-outline btn-menu">Log Out</div>
+                    <div id="main-lnk-control" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Twitch Integration</div>
+                    <br><br>
+                    <div id="main-lnk-settings" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Settings</div>
+                    <br><br>
+                    <div id="main-lnk-logout" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Log Out</div>
                 </div>
             </div>
         </div>
@@ -62,7 +86,7 @@
                                 <label class="form-label" for="recap" hidden></label>
                             </div>
                             <br>
-                            <button name="submit" type="submit" class="btn btn-outline btn-block submit"><i class="fa fa-transporter-2"></i> LOG IN</button>
+                            <button name="submit" type="submit" class="btn animat3d-btn btn-block submit"><span class="animat3d-line"></span><i class="fa fa-transporter-2"></i> LOG IN</button>
                             <div class="login-footer">
                             </div>
                             <div class="login-links">
@@ -75,7 +99,7 @@
         </div>
 
         <!-- Animat3D Notification -->
-        <div class="fancy-message">
+        <div id="fancy-message" class="fancy-message">
             <p>
                 <i></i>
                 <b class="fancy-message-title">Error:</b><br>
@@ -99,6 +123,6 @@
         <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/flags.js"></script>
         <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/loader.js"></script>
         <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/md5.js"></script>
-        <script type="text/javascript" src="./animat3d.min.js"></script>
+        <script type="text/javascript" src="./animat3d.js"></script>
     </body>
 </html>

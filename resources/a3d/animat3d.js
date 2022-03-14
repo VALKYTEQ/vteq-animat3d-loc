@@ -90,7 +90,8 @@ function lunaUserLogout() {
     resetItemFlag("SRV_SIGN");
     $('#main-wrap').fadeOut();
     setTimeout(function () {
-        $('#login-wrap').fadeIn();
+        // $('#login-wrap').fadeIn();
+        window.close();
     }, 333)
 }
 
@@ -100,7 +101,7 @@ function lunaUserLogout() {
 
 lunaUserInfo("hash");
 
-if (getItemFlag("SRV_SIGN").length > 5) {
+if (getItemFlag("SRV_SIGN")) {
     $('#login-wrap').fadeOut();
     setTimeout(function () {
         $('#main-wrap').fadeIn();
@@ -235,9 +236,38 @@ $('#main-lnk-control').click(function () {
     else { location.href = "./control.html" }
 });
 
-$('#main-lnk-logout').click(function () {
-    lunaUserLogout()
+$('#main-lnk-settings').click(function () {
+    $('#main-wrap').fadeOut();
+    setTimeout(function () {
+        $('#settings-wrap').fadeIn();
+    }, 333)
 });
+
+$('#main-lnk-logout').click(function () {
+    lunaUserLogout();
+});
+
+
+
+
+$('#settings-lnk-maximize').click(function () {
+    console.log('resize|max');
+    // element which needs to enter full-screen mode
+    var element = document.querySelector("#screen");
+
+    // make the element go to full-screen mode
+    element.requestFullscreen()
+        .then(function() {
+            // element has entered fullscreen mode successfully
+        })
+        .catch(function(error) {
+            // element could not enter fullscreen mode
+        });
+    // window.moveTo(0, 0);
+    // window.resizeTo(screen.width, screen.height);
+});
+
+
 
 $('.submit').click(function() {
     if ($('#notbot').is(":checked")) {
