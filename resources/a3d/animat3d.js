@@ -32,6 +32,10 @@
 
 console.log(`Animat3D Version       : public@^0.9.7a`);
 
+
+
+
+
 // ****************************************************************************************************************** //
 //                                                 v  FUNCTIONS  v                                                    //
 // ****************************************************************************************************************** //
@@ -57,6 +61,7 @@ function readFileHash(file, hash) {
     rawFile.send(null);
 }
 
+
 function showFancyMessage(title, text, level, autohide) {
 
     var $fancyMessage = $('.fancy-message').removeClass('error success').addClass(level);
@@ -77,39 +82,111 @@ function showFancyMessage(title, text, level, autohide) {
     }
 }
 
+
 function lunaUserLogout() {
-    resetItemFlag("USER")
-    resetItemFlag("USER_ID")
-    resetItemFlag("USER_NAME")
-    resetItemFlag("USER_VIP")
-    resetItemFlag("USER_COINS")
-    resetItemFlag("USER_UNLOCKS")
-    resetItemFlag("CHAR_NAME")
-    resetItemFlag("CHAR_SET")
-    resetItemFlag("SRV_TIME")
+    resetItemFlag("SRV_TIME");
     resetItemFlag("SRV_SIGN");
+    resetItemFlag("USER");
+    resetItemFlag("USER_ID");
+    resetItemFlag("USER_NAME");
+    resetItemFlag("USER_VIP");
+    resetItemFlag("USER_COINS");
+    resetItemFlag("USER_UNLOCKS");
+    resetItemFlag("CHAR_NAME");
+    resetItemFlag("CHAR_SET");
     $('#main-wrap').fadeOut();
+    $('#login-wrapper').fadeOut();
     setTimeout(function () {
-        // $('#login-wrap').fadeIn();
-        window.close();
-    }, 333)
+        console.log('exit|logout');
+        $('#login-wrapper').fadeIn();
+        // window.close();
+    }, 400)
 }
+
+
+function lunaUserExit() {
+    $('#control-wrap').fadeOut();
+    $('#settings-wrap').fadeOut();
+    $('#main-wrap').fadeOut();
+    $('#login-wrapper').fadeOut();
+    setTimeout(function () {
+        console.log('exit|close');
+        window.close();
+    }, 400)
+}
+
+
+function clientFullscreen() {
+    let element = document.querySelector("#screen");
+    element.requestFullscreen()
+        .then(function() {
+            console.log('resize|fullscreen');
+            // clientScale(screen.height)
+        })
+        .catch(function(error) {
+            console.log('resize|error');
+            console.error(error)
+        });
+}
+
+
+function clientMaximize() {
+    console.log('resize|maximize');
+    window.moveTo(0, 0);
+    window.resizeTo(screen.width, screen.height);
+    // clientScale(screen.height)
+}
+
+
+function clientResize(width, height) {
+    console.log(`resize|${width}x${height}`);
+    window.resizeTo(width, height);
+    window.moveTo(((screen.width - width) / 2), ((screen.height - height) / 2));
+    // clientScale(height)
+}
+
+
+function clientScale(height) {
+    let scale, top;
+
+    if (height >= 1080) {
+        scale = 1;
+        // top = 100;
+    }
+    else {
+        scale = height / 1080;
+        // top = 100 * (scale / 4);
+    }
+
+    let elements = document.getElementsByClassName("wrapper")
+    let elArray = [].slice.call(elements, 0);
+
+    elArray.forEach((el) => {
+        // el.style.marginTop = `${top}px`
+        el.style.transform = `scale(${scale})`;
+        el.style['-o-transform'] = `scale(${scale})`;
+        el.style['-webkit-transform'] = `scale(${scale})`;
+        el.style['-moz-transform'] = `scale(${scale})`;
+    })
+
+    console.log(`scale|${scale}`);
+}
+
+
+function clientControls() {
+    var windowTopBar = document.getElementById('window-drag')
+    windowTopBar.style.webkitAppRegion = "drag"
+    var windowClose = document.getElementById('window-close')
+    windowClose.innerText = "X"
+}
+
+
+
+
 
 // ****************************************************************************************************************** //
 //                                                 v  USERDATA  v                                                     //
 // ****************************************************************************************************************** //
-
-lunaUserInfo("hash");
-
-if (getItemFlag("SRV_SIGN")) {
-    $('#login-wrap').fadeOut();
-    setTimeout(function () {
-        $('#main-wrap').fadeIn();
-    }, 333)
-}
-else {
-    $('#login-wrap').fadeIn();
-}
 
 function lunaUserInfo(type, dataSave) {
     // API: login user
@@ -200,8 +277,10 @@ function lunaUserInfo(type, dataSave) {
                 setItemFlag("CHAR_SET", obj.char_set)
                 setItemFlag("SRV_TIME", obj.timestamp)
                 setItemFlag("SRV_SIGN", obj.sign)
-                $('#login-wrap').fadeOut();
-                $('#main-wrap').fadeIn();
+                $('#login-wrapper').fadeOut();
+                setTimeout(function () {
+                    $('#main-wrap').fadeIn();
+                }, 400)
                 // location.href = "./electron.html"
             }
 
@@ -217,8 +296,12 @@ function lunaUserInfo(type, dataSave) {
 
 }
 
+
+
+
+
 // ****************************************************************************************************************** //
-//                                              v  MISCELLANEOUS  v                                                   //
+//                                                 v  MAIN MENU  v                                                    //
 // ****************************************************************************************************************** //
 
 $('#main-lnk-preview').click(function () {
@@ -240,64 +323,284 @@ $('#main-lnk-settings').click(function () {
     $('#main-wrap').fadeOut();
     setTimeout(function () {
         $('#settings-wrap').fadeIn();
-    }, 333)
+        $('#control-wrap').fadeIn();
+    }, 400)
 });
 
 $('#main-lnk-logout').click(function () {
     lunaUserLogout();
 });
 
-
-
-
-$('#settings-lnk-maximize').click(function () {
-    console.log('resize|max');
-    // element which needs to enter full-screen mode
-    var element = document.querySelector("#screen");
-
-    // make the element go to full-screen mode
-    element.requestFullscreen()
-        .then(function() {
-            // element has entered fullscreen mode successfully
-        })
-        .catch(function(error) {
-            // element could not enter fullscreen mode
-        });
-    // window.moveTo(0, 0);
-    // window.resizeTo(screen.width, screen.height);
+$('#main-lnk-exit').click(function () {
+    lunaUserExit();
 });
 
 
 
-$('.submit').click(function() {
+
+
+// ****************************************************************************************************************** //
+//                                                 v  SETTINGS  v                                                   //
+// ****************************************************************************************************************** //
+
+$('#settings-lnk-1').click(function () {
+    clientFullscreen();
+});
+
+$('#settings-lnk-2').click(function () {
+    clientMaximize();
+});
+
+$('#settings-lnk-3').click(function () {
+    clientResize(1920, 1080);
+});
+
+$('#settings-lnk-4').click(function () {
+    clientResize(1600, 900);
+});
+
+$('#settings-lnk-5').click(function () {
+    clientResize(2580, 1080);
+});
+
+$('#settings-lnk-6').click(function () {
+    clientResize(1720, 720);
+});
+
+
+
+
+
+// ****************************************************************************************************************** //
+//                                                  v  CONTROLS  v                                                    //
+// ****************************************************************************************************************** //
+
+var page = 1,
+    moving = false;
+var animationIteration = "animationiteration webkitAnimationIteration mozAnimationIteration oAnimationIteration oanimationiteration",
+    transitionEnd      = "transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd";
+$(".load-more").on("click", function() {
+    if ( moving == false ) {
+        moving = true;
+        $(".load-more").addClass("active");
+        setTimeout(function() {
+            $(".load-more").one(animationIteration, function() {
+                $(".load-more").removeClass("active");
+                $(".load-more").one(transitionEnd, function() {
+                    page++;
+                    moving = false;
+                });
+            });
+        }, 2000);
+    }
+});
+
+$('#control-wrap').click(function () {
+    $('#settings-wrap').fadeOut();
+    setTimeout(function () {
+        $('#control-wrap').fadeOut();
+        $('#main-wrap').fadeIn();
+    }, 400)
+})
+
+$('#window-close').click(function () {
+    lunaUserExit();
+});
+
+
+
+$('#sign-out').click(function () {
+    lunaUserExit();
+});
+
+$('#sign-in').click(function() {
     if ($('#notbot').is(":checked")) {
         lunaUserInfo('login');
-        var $this = $(this);
-        if ($this.hasClass('processing'))
-            return false;
-        $this.parents('form').submit();
-        $this.addClass('processing');
     }
     else {
         showFancyMessage("BOT CHECK", "Please accept the Checkbox!", "error", true)
     }
 });
 
-$('input').keypress(function(){
-    if(event.keyCode==13){
-        $(this).parents('form').submit();
-        return false;
-    }
-});
+
+
+
 
 $('.fancy-message .close-message').click(function() {
     $('.fancy-message').fadeOut();
     return false;
 });
 
-$('input').keyup(function(){
-    $('.fancy-message').fadeOut();
-    $('.row.error').removeClass('error');
+$('input').keypress(function(){
+    if(event.keyCode==13){
+        $('#sign-in').click();
+        return false;
+    }
 });
 
 
+
+
+
+// ****************************************************************************************************************** //
+//                                                  v  DESIGN  v                                                      //
+// ****************************************************************************************************************** //
+
+
+/**
+ * SLIDER
+ */
+var inputRange = document.getElementById('sld-ssaa'),
+    maxValue = 100, // the higher the smoother when dragging
+    speed = 1,
+    currValue, rafID;
+
+// set min/max value
+inputRange.min = 0;
+inputRange.max = maxValue;
+
+// listen for unlock
+function unlockStartHandler() {
+    // clear raf if trying again
+    window.cancelAnimationFrame(rafID);
+
+    // set to desired value
+    currValue = +this.value;
+}
+
+function unlockEndHandler() {
+    // store current value
+    currValue = +this.value;
+
+    // determine if we have reached success or not
+    rafID = window.requestAnimationFrame(animateHandler);
+}
+
+// handle range animation
+function animateHandler() {
+
+    // calculate gradient transition
+    var transX = currValue - maxValue;
+
+    // update input range
+    inputRange.value = currValue;
+
+    //Change slide thumb color on mouse up
+    if (currValue < 20) {
+        inputRange.classList.remove('ltpurple');
+    }
+    if (currValue < 40) {
+        inputRange.classList.remove('purple');
+    }
+    if (currValue < 60) {
+        inputRange.classList.remove('pink');
+    }
+
+    // determine if we need to continue
+    if(currValue > 0 && 20 > currValue) {
+        window.requestAnimationFrame(animateHandler);
+    }
+    else if(currValue > 20 && 40 > currValue) {
+        window.requestAnimationFrame(animateHandler);
+    }
+    else if(currValue > 40 && 60 > currValue) {
+        window.requestAnimationFrame(animateHandler);
+    }
+    else if(currValue > 60 && 80 > currValue) {
+        window.requestAnimationFrame(animateHandler);
+    }
+    else if(currValue > 80 && 100 > currValue) {
+        window.requestAnimationFrame(animateHandler);
+    }
+    else {
+        successHandler(currValue)
+    }
+
+    // decrement value
+    currValue = currValue - speed;
+}
+
+// handle successful unlock
+function successHandler(currValue) {
+    let samples = 0;
+    switch (currValue) {
+        case 20:
+            samples = 2;
+            break;
+        case 40:
+            samples = 4;
+            break;
+        case 60:
+            samples = 6;
+            break;
+        case 80:
+            samples = 8;
+            break;
+        case 100:
+            samples = 16;
+            break;
+    }
+
+    if (samples !== 0) {
+        $('#SSAA').text(`x${samples}`)
+    }
+    else {
+        $('#SSAA').text(`OFF`)
+    }
+}
+
+// bind events
+inputRange.addEventListener('mousedown', unlockStartHandler, false);
+inputRange.addEventListener('mousestart', unlockStartHandler, false);
+inputRange.addEventListener('mouseup', unlockEndHandler, false);
+inputRange.addEventListener('touchend', unlockEndHandler, false);
+
+// move gradient
+inputRange.addEventListener('input', function() {
+    //Change slide thumb color on way up
+    if (this.value > 20) {
+        inputRange.classList.add('ltpurple');
+    }
+    if (this.value > 40) {
+        inputRange.classList.add('purple');
+    }
+    if (this.value > 60) {
+        inputRange.classList.add('pink');
+    }
+
+    //Change slide thumb color on way down
+    if (this.value < 20) {
+        inputRange.classList.remove('ltpurple');
+    }
+    if (this.value < 40) {
+        inputRange.classList.remove('purple');
+    }
+    if (this.value < 60) {
+        inputRange.classList.remove('pink');
+    }
+});
+
+
+
+
+
+// ****************************************************************************************************************** //
+//                                                 v  START UP  v                                                     //
+// ****************************************************************************************************************** //
+
+clientControls();
+lunaUserInfo("hash");
+
+if (getItemFlag("SRV_SIGN") !== null && getItemFlag("SRV_SIGN").length > 5) {
+    // clientScale(document.documentElement.clientHeight);
+    $('#login-wrapper').fadeOut();
+    setTimeout(function () {
+        $('#control-wrap').fadeOut();
+        $('#main-wrap').fadeIn();
+    }, 400);
+}
+else {
+    // clientScale(document.documentElement.clientHeight);
+    $('#control-wrap').fadeOut();
+    $('#login-wrapper').fadeIn();
+}
