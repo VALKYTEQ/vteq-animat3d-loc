@@ -17,6 +17,11 @@
     </head>
     <body>
 
+    <!-- Animat3D Main Frame -->
+    <div id="frame-wrap" style="display:none;margin:0px;padding:0px;overflow:hidden;height:100%;width:100%;">
+        <iframe id="frame" frameborder="0" width="100%" height="100%" style="overflow:hidden;height:100%;width:100%;position:fixed;"></iframe>
+    </div>
+
         <!-- Animat3D Window Control -->
         <div id="window-wrap" class="window-wrap">
             <div id="window-drag" class="window-drag"></div>
@@ -51,13 +56,16 @@
                     <hr>
                     <h4 class="text-left">Anti Aliasing</h4>
                     <div class="sld-menu">
-                        <div class="text-left sld-text">FXAA: <span id="FXAA">OFF</span></div>
-                        <input id="sld-fxaa" type="range" min="-100" max="0" value="0" class="range blue sld-range"/>
+                        <div class="sld-text">
+                            <div class="sld-aa-l"><span id="FXAA">FXAA</span></div>
+                            <div class="sld-aa-r"><span id="SSAA">SSAA</span></div>
+                            <div class="sld-aa-c"><input id="sld-enable-aa" type="range" min="-100" max="0" value="0" class="range blue sld-range-enable"/></div>
+                        </div>
                     </div>
                     <br><br><br>
                     <div class="sld-menu">
-                        <div class="text-left sld-text">SSAA Samples: <span id="SSAA">OFF</span></div>
-                        <input id="sld-ssaa" type="range" min="-100" max="0" value="0" class="range blue sld-range"/>
+                        <div id="sld-ssaa-txt" class="text-left sld-text sld-ssaa-txt">SSAA Samples: <span id="SSAA-samples">OFF</span></div>
+                        <input disabled id="sld-ssaa" type="range" min="-100" max="0" value="0" class="range blue sld-range"/>
                     </div>
                 </div>
             </div>

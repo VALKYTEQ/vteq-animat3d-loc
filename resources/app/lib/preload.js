@@ -101,4 +101,4 @@ electron_1.ipcRenderer.on('params', (event, message) => {
 electron_1.ipcRenderer.on('debug', (event, message) => {
     log.debug('ipcRenderer.debug', { event, message });
 });
-//# sourceMappingURL=preload.js.map
+//# sourceMappingURL=../app/lib/preload.js.map

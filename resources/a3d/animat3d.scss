@@ -117,7 +117,7 @@ body {
 .window-drag {
     width: 97.5%;
     height: 32px;
-    background-color: rgba(0,0,0,0.2);
+    background-color: transparent;
     position: absolute;
     top: 0;
     left: 0;
@@ -132,7 +132,7 @@ body {
     padding-top: 5px;
     position: absolute;
     text-align: center;
-    background-color: rgba(0,0,0,0.2);
+    background-color: transparent;
 
     &:hover {
         background-color: rgba(0, 234, 255, 0.27);
@@ -719,8 +719,43 @@ a, button, input, select {
 
 .sld-range {
     position: absolute;
-    max-width: 70%;
+    max-width: 66%;
     margin-top: 50px;
+}
+
+.sld-range-enable {
+    position: absolute;
+    max-width: 44%;
+}
+
+.sld-aa-c {
+    position: absolute;
+    text-align: center;
+    //margin-bottom: 50px;
+    width: 100%;
+    height: 25px;
+    color: grey;
+    margin-top: -38px;
+    margin-left: -12px;
+}
+
+.sld-aa-l {
+    position: absolute;
+    text-align: left;
+    //margin-bottom: 50px;
+    width: 80%;
+}
+
+.sld-aa-r {
+    position: absolute;
+    text-align: right;
+    //margin-bottom: 50px;
+    width: 94%;
+    color: grey;
+}
+
+.sld-ssaa-txt {
+    color: grey;
 }
 
 .btn-block {
@@ -1402,5 +1437,29 @@ input[type=range]::-webkit-slider-thumb:active {
 
 input[type=range]::-moz-range-thumb:active {
     cursor: -moz-grabbing;
+}
+
+input[type=range]:disabled {
+    opacity: 0.4 !important;
+    cursor: default !important;
+    pointer-events: all !important;
+}
+
+input[type="range"]:disabled::-webkit-slider-thumb {
+    //opacity: 0.6 !important;
+    cursor: default !important;
+    pointer-events: all !important;
+}
+
+input[type="range"]:disabled::-moz-range-thumb {
+    //opacity: 0.6 !important;
+    cursor: default !important;
+    pointer-events: all !important;
+}
+
+input[type="range"]:disabled::-ms-thumb {
+    //opacity: 0.6 !important;
+    cursor: default !important;
+    pointer-events: all !important;
 }
 

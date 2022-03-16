@@ -83,6 +83,16 @@ function showFancyMessage(title, text, level, autohide) {
 }
 
 
+function showFrame(frame) {
+    $('#main-wrap').fadeOut();
+    setTimeout(function () {
+        $('#frame-wrap').fadeIn();
+        $('#control-wrap').fadeIn();
+        $("#frame").attr("src", `./${frame}.html`);
+    }, 400)
+}
+
+
 function lunaUserLogout() {
     resetItemFlag("SRV_TIME");
     resetItemFlag("SRV_SIGN");
@@ -306,17 +316,20 @@ function lunaUserInfo(type, dataSave) {
 
 $('#main-lnk-preview').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
-    else { location.href = "./preview.html" }
+    else { showFrame("preview") }
+    showFrame("preview")
 });
 
 $('#main-lnk-editor').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
-    else { location.href = "./editor.html" }
+    else { showFrame("editor") }
+    showFrame("editor")
 });
 
 $('#main-lnk-control').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
-    else { location.href = "./control.html" }
+    else { showFrame("control") }
+    showFrame("control")
 });
 
 $('#main-lnk-settings').click(function () {
@@ -397,9 +410,12 @@ $(".load-more").on("click", function() {
 
 $('#control-wrap').click(function () {
     $('#settings-wrap').fadeOut();
+    $('#frame-wrap').fadeOut();
     setTimeout(function () {
         $('#control-wrap').fadeOut();
         $('#main-wrap').fadeIn();
+        $("#frame").contents().find("body").html('');
+        $("#frame").contents().find("head").html('');
     }, 400)
 })
 
@@ -432,7 +448,7 @@ $('.fancy-message .close-message').click(function() {
 });
 
 $('input').keypress(function(){
-    if(event.keyCode==13){
+    if(event.keyCode === 13){
         $('#sign-in').click();
         return false;
     }
@@ -450,135 +466,238 @@ $('input').keypress(function(){
 /**
  * SLIDER
  */
-var inputRange = document.getElementById('sld-ssaa'),
-    maxValue = 100, // the higher the smoother when dragging
-    speed = 1,
-    currValue, rafID;
+let sliderSSAA = document.getElementById('sld-ssaa'),
+    sliderEnableAA = document.getElementById('sld-enable-aa'),
+    sliders = [sliderSSAA, sliderEnableAA],
+    sliderMin = 1,
+    sliderMax = 101,     // the higher the smoother
+    speed = 1;          // the lower the preciser
 
-// set min/max value
-inputRange.min = 0;
-inputRange.max = maxValue;
+sliders.forEach((slide) => {
 
-// listen for unlock
-function unlockStartHandler() {
-    // clear raf if trying again
-    window.cancelAnimationFrame(rafID);
+    let currValue, rafID, setting;
 
-    // set to desired value
-    currValue = +this.value;
-}
+    // Get and set user settings
+    if (slide === sliderSSAA) {
+        setting = getItemFlag("SETTING_SSAA");
+    }
+    else if (slide === sliderEnableAA) {
+        setting = getItemFlag("SETTING_ENABLE_AA");
+    }
 
-function unlockEndHandler() {
-    // store current value
-    currValue = +this.value;
+    if (setting !== null) {
+        currValue = parseInt(setting)+1;
+        slide.value = currValue;
+        thumbHandler(slide, currValue);
+        window.requestAnimationFrame(function () {
+            animateHandler(slide, currValue);
+        });
+    }
 
-    // determine if we have reached success or not
-    rafID = window.requestAnimationFrame(animateHandler);
+    // set min/max value
+    slide.min = sliderMin;
+    slide.max = sliderMax;
+
+    // bind events
+    slide.addEventListener('mousedown', function () {
+        window.cancelAnimationFrame(rafID);
+        currValue = +this.value;
+    }, false);
+    slide.addEventListener('mousestart', function () {
+        window.cancelAnimationFrame(rafID);
+        currValue = +this.value;
+    }, false);
+    slide.addEventListener('mouseup', function () {
+        currValue = +this.value;
+        rafID = window.requestAnimationFrame(function () {
+            animateHandler(slide, currValue);
+        });
+    }, false);
+    slide.addEventListener('touchend', function () {
+        currValue = +this.value;
+        rafID = window.requestAnimationFrame(function () {
+            animateHandler(slide, currValue);
+        });
+    }, false);
+    slide.addEventListener('input', function() {
+        currValue = +this.value;
+        thumbHandler(slide, currValue);
+    });
+
+})
+
+function thumbHandler(slide, currValue) {
+    // Update ssaa sample text
+    if (slide === sliderSSAA) {
+        if (currValue >= 0) {
+            $('#SSAA-samples').text(`OFF`)
+        }
+        if (currValue > 25) {
+            $('#SSAA-samples').text(`x2`)
+        }
+        if (currValue > 50) {
+            $('#SSAA-samples').text(`x4`)
+        }
+        if (currValue > 75) {
+            $('#SSAA-samples').text(`x8`)
+        }
+        if (currValue > 100) {
+            $('#SSAA-samples').text(`x16`)
+        }
+    }
+
+    // Change slide thumb color on way up
+    if (currValue > 25) {
+        slide.classList.add('ltpurple');
+    }
+    if (currValue > 50) {
+        slide.classList.add('purple');
+    }
+    if (currValue > 75) {
+        slide.classList.add('pink');
+    }
+
+    // Change slide thumb color on way down
+    if (currValue < 25) {
+        slide.classList.remove('ltpurple');
+    }
+    if (currValue < 50) {
+        slide.classList.remove('purple');
+    }
+    if (currValue < 75) {
+        slide.classList.remove('pink');
+    }
 }
 
 // handle range animation
-function animateHandler() {
+function animateHandler(slide, currValue) {
 
     // calculate gradient transition
-    var transX = currValue - maxValue;
+    var transX = currValue - sliderMax;
 
     // update input range
-    inputRange.value = currValue;
+    slide.value = currValue;
+    if (currValue !== 101) currValue = currValue - speed;
 
-    //Change slide thumb color on mouse up
-    if (currValue < 20) {
-        inputRange.classList.remove('ltpurple');
+    // Change slide thumb color on mouse up
+    if (currValue < 25) {
+        slide.classList.remove('ltpurple');
     }
-    if (currValue < 40) {
-        inputRange.classList.remove('purple');
+    if (currValue < 50) {
+        slide.classList.remove('purple');
     }
-    if (currValue < 60) {
-        inputRange.classList.remove('pink');
+    if (currValue < 75) {
+        slide.classList.remove('pink');
     }
 
-    // determine if we need to continue
-    if(currValue > 0 && 20 > currValue) {
-        window.requestAnimationFrame(animateHandler);
+    // determine if we continue SSAA slider animation
+    if (slide === sliderSSAA) {
+        if (currValue > 0 && 25 > currValue) {
+            window.requestAnimationFrame(function () {
+                animateHandler(slide, currValue);
+            });
+        } else if (currValue > 25 && 50 > currValue) {
+            window.requestAnimationFrame(function () {
+                animateHandler(slide, currValue);
+            });
+        } else if (currValue > 50 && 75 > currValue) {
+            window.requestAnimationFrame(function () {
+                animateHandler(slide, currValue);
+            });
+        } else if (currValue > 75 && 100 > currValue) {
+            window.requestAnimationFrame(function () {
+                animateHandler(slide, currValue);
+            });
+        } else {
+            successHandler(slide, currValue)
+        }
     }
-    else if(currValue > 20 && 40 > currValue) {
-        window.requestAnimationFrame(animateHandler);
+    // determine if we continue FXAA slider animation
+    else if (slide === sliderEnableAA) {
+        if (currValue > 0 && 100 > currValue) {
+            window.requestAnimationFrame(function () {
+                if (getItemFlag("SETTING_ENABLE_AA") !== "100" || getItemFlag("SETTING_ENABLE_AA") !== "101") {
+                    $('#FXAA').css('color', 'grey')
+                    $('#SSAA').css('color', 'white')
+                }
+                else {
+                    setItemFlag("SETTING_ENABLE_AA", "0")
+                    $('#SSAA').css('color', 'grey')
+                    $('#FXAA').css('color', 'white')
+                }
+                animateHandler(slide, currValue);
+            });
+        } else {
+            successHandler(slide, currValue)
+        }
     }
-    else if(currValue > 40 && 60 > currValue) {
-        window.requestAnimationFrame(animateHandler);
-    }
-    else if(currValue > 60 && 80 > currValue) {
-        window.requestAnimationFrame(animateHandler);
-    }
-    else if(currValue > 80 && 100 > currValue) {
-        window.requestAnimationFrame(animateHandler);
-    }
+    // error
     else {
-        successHandler(currValue)
+        console.error(slide, currValue)
     }
-
-    // decrement value
-    currValue = currValue - speed;
 }
 
 // handle successful unlock
-function successHandler(currValue) {
-    let samples = 0;
-    switch (currValue) {
-        case 20:
-            samples = 2;
-            break;
-        case 40:
-            samples = 4;
-            break;
-        case 60:
-            samples = 6;
-            break;
-        case 80:
-            samples = 8;
-            break;
-        case 100:
-            samples = 16;
-            break;
-    }
+function successHandler(slide, currValue) {
+    // SSAA
+    if (slide === sliderSSAA) {
+        let samples = 0;
+        switch (currValue) {
+            case 25:
+                samples = 2;
+                break;
+            case 50:
+                samples = 4;
+                break;
+            case 75:
+                samples = 8;
+                break;
+            case 100:
+            case 101:
+                samples = 16;
+                break;
+        }
 
-    if (samples !== 0) {
-        $('#SSAA').text(`x${samples}`)
+        if (samples !== 0) {
+            setItemFlag("SETTING_SSAA", `${currValue}`)
+            $('#SSAA-samples').text(`x${samples}`)
+            slide.value = currValue;
+        } else {
+            setItemFlag("SETTING_SSAA", `${currValue}`)
+            $('#SSAA-samples').text(`OFF`)
+            slide.value = currValue;
+        }
     }
+    // Enable AA Type
+    else if (slide === sliderEnableAA) {
+        // FXAA
+        if (currValue === 0) {
+            setItemFlag("SETTING_ENABLE_AA", `${currValue}`)
+            $('#FXAA').css('color', 'white')
+            $('#SSAA').css('color', 'grey')
+            slide.value = currValue;
+            // Set and disable SSAA Samples slide
+            window.requestAnimationFrame(function () {
+                animateHandler(sliderSSAA, currValue);
+            });
+            $('#sld-ssaa').prop('disabled', true);
+            $('#sld-ssaa-txt').css('color', 'grey')
+        }
+        // SSAA
+        else {
+            setItemFlag("SETTING_ENABLE_AA", `${currValue}`)
+            $('#sld-ssaa').prop('disabled', false);
+            $('#sld-ssaa-txt').css('color', 'white')
+            $('#FXAA').css('color', 'grey')
+            $('#SSAA').css('color', 'white')
+            slide.value = currValue;
+        }
+    }
+    // error
     else {
-        $('#SSAA').text(`OFF`)
+        console.error(slide, currValue)
     }
 }
-
-// bind events
-inputRange.addEventListener('mousedown', unlockStartHandler, false);
-inputRange.addEventListener('mousestart', unlockStartHandler, false);
-inputRange.addEventListener('mouseup', unlockEndHandler, false);
-inputRange.addEventListener('touchend', unlockEndHandler, false);
-
-// move gradient
-inputRange.addEventListener('input', function() {
-    //Change slide thumb color on way up
-    if (this.value > 20) {
-        inputRange.classList.add('ltpurple');
-    }
-    if (this.value > 40) {
-        inputRange.classList.add('purple');
-    }
-    if (this.value > 60) {
-        inputRange.classList.add('pink');
-    }
-
-    //Change slide thumb color on way down
-    if (this.value < 20) {
-        inputRange.classList.remove('ltpurple');
-    }
-    if (this.value < 40) {
-        inputRange.classList.remove('purple');
-    }
-    if (this.value < 60) {
-        inputRange.classList.remove('pink');
-    }
-});
 
 
 
