@@ -29,12 +29,12 @@
     ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-import * as THREE from './animat3d_modules/build/three.module.js';
-import { GLTFLoader } from './animat3d_modules/loaders/GLTFLoader.js';
-import * as SkeletonUtils from './animat3d_modules/utils/SkeletonUtils.js';
-// import {GUI} from "./animat3d_modules/libs/lil-gui.module.min.js";
-// import Stats from './animat3d_modules/libs/stats.module.js';
-// import { Water } from './animat3d_modules/objects/Water2.js';
+import * as THREE from '../animat3d_modules/build/three.module.js';
+import { GLTFLoader } from '../animat3d_modules/loaders/GLTFLoader.js';
+import * as SkeletonUtils from '../animat3d_modules/utils/SkeletonUtils.js';
+// import {GUI} from "../animat3d_modules/libs/lil-gui.module.min.js";
+// import Stats from '../animat3d_modules/libs/stats.module.js';
+// import { Water } from '../animat3d_modules/objects/Water2.js';
 
 
 console.log(`Animat3D Version       : public@^0.9.7c`);

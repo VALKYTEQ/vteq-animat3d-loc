@@ -29,12 +29,12 @@
     ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-import * as THREE from './animat3d_modules/build/three.module.js';
-import { GLTFLoader } from './animat3d_modules/loaders/GLTFLoader.js';
-import * as SkeletonUtils from './animat3d_modules/utils/SkeletonUtils.js';
-import {GUI} from "./animat3d_modules/libs/lil-gui.module.min.js";
-import Stats from './animat3d_modules/libs/stats.module.js';
-import { Water } from './animat3d_modules/objects/Water2.js';
+import * as THREE from '../animat3d_modules/build/three.module.js';
+import { GLTFLoader } from '../animat3d_modules/loaders/GLTFLoader.js';
+import * as SkeletonUtils from '../animat3d_modules/utils/SkeletonUtils.js';
+import {GUI} from "../animat3d_modules/libs/lil-gui.module.min.js";
+import Stats from '../animat3d_modules/libs/stats.module.js';
+import { Water } from '../animat3d_modules/objects/Water2.js';
 
 console.log(`Animat3D Version       : public@^0.9.7a`);
 
@@ -403,12 +403,12 @@ function lunaUserInfo(type, dataSave) {
                 body[0].html(`${infoImage}${infoA3D}<br><b>${infoTitle}</b><br>${infoText}`);
                 body[1].html(`${info}`);
                 footer[0].html(`
-                    <b><i class="fal fa-user"></i> ${n}</b>     
+                    <b><i class="fal fa-user"></i> ${n}</b>     <br>
                     <span class="item_price"><i class="fal fa-coins"></i> <span id="coins">${obj.coins}</span> Ꝟ</span>     
                     <span class="success"><i class="fal fa-crown"></i> VIP:</span> ${vip}
                 `);
                 footer[1].html(`<a href="https://valkyteq.com/support/" target="_blank">Need Help? <i class="fal fa-external-link"></i></a>`);
-                footer[2].html(`<button type="button" class="a3d-modal-button btn btn-outline-luna" onclick="$('#a3d-modal').hide()">Close</button>`);
+                footer[2].html(`<button type="button" class="a3d-modal-button btn a3d-btn" onclick="$('#a3d-modal').hide()">Close</button>`);
 
                 // Bind function to buy buttons
                 btnIDs.forEach(function (id) {
@@ -435,6 +435,7 @@ function lunaUserInfo(type, dataSave) {
                     // Create Confirm Modal
                     let buyTitle = `<div class="item_grade_3">Congratulations!</div><div class="hr_grade_3">`;
                     let buyMessage = `${item.name_en} has been unlocked! Enjoy!`;
+                    // showFancyMessage("Hooray!", buyMessage, "success", true);
                     doConfirm(buyTitle, buyMessage);
                 }
                 // CHARACTER SAVED
@@ -442,6 +443,11 @@ function lunaUserInfo(type, dataSave) {
                     // Create Confirm Modal
                     let buyTitle = `<div class="item_grade_3">Congratulations!</div><div class="hr_grade_3">`;
                     let buyMessage = `Your character has been saved!`;
+                    setItemFlag("CHAR_SET", obj.char);
+                    setItemFlag("USER_VIP", obj.vip);
+                    setItemFlag("USER_COINS", obj.coins);
+                    setItemFlag("USER_UNLOCKS", obj.unlocks);
+                    // showFancyMessage("Hooray!", buyMessage, "success", true);
                     doConfirm(buyTitle, buyMessage);
                 }
             }
@@ -977,9 +983,15 @@ function init(opt) {
 //     }
 // }
 
-function showScenery( visibility ) {
-    world.visible = visibility;
-    water.visible = visibility;
+function showScenery( ) {
+    if (world.visible) {
+        world.visible = false;
+        water.visible = false;
+    }
+    else {
+        world.visible = true;
+        water.visible = true;
+    }
 }
 
 // function updateEquipment(item) {
@@ -1401,8 +1413,9 @@ function stylePanelSetting(element) {
     cssWidget.height = '2.5rem';
 
     // button
+    element.domElement.children[0].children[0].classList.add("a3d-modal-button");
     element.domElement.children[0].children[0].classList.add("btn");
-    element.domElement.children[0].children[0].classList.add("btn-outline-luna");
+    element.domElement.children[0].children[0].classList.add("a3d-btn");
     let cssButton = element.domElement.children[0].children[0].style;
     cssButton.height = '2.5rem';
     cssButton.fontSize = '1rem';

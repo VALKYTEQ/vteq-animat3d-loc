@@ -243,14 +243,21 @@ function lunaUserInfo(type, dataSave) {
         }
         if (status !== "success") window.open("https://valkyteq.com/", "_self");
         else {
+
             if (obj.status !== "success") {
                 console.log(obj)
             }
             else {
                 for (let file in obj.hash) {
-                    readFileHash(file, obj.hash[file])
+                    let path = "./";
+                    let ext = file.split(".")[file.split(".").length - 1];
+                    if (ext !== "html") {
+                        path = "./animat3d_client/";
+                    }
+                    readFileHash(path + file, obj.hash[file])
                 }
             }
+
         }
     }
 
@@ -392,14 +399,14 @@ var page = 1,
     moving = false;
 var animationIteration = "animationiteration webkitAnimationIteration mozAnimationIteration oAnimationIteration oanimationiteration",
     transitionEnd      = "transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd";
-$(".load-more").on("click", function() {
+$(".a3d-arrow").on("click", function() {
     if ( moving == false ) {
         moving = true;
-        $(".load-more").addClass("active");
+        $(".a3d-arrow").addClass("active");
         setTimeout(function() {
-            $(".load-more").one(animationIteration, function() {
-                $(".load-more").removeClass("active");
-                $(".load-more").one(transitionEnd, function() {
+            $(".a3d-arrow").one(animationIteration, function() {
+                $(".a3d-arrow").removeClass("active");
+                $(".a3d-arrow").one(transitionEnd, function() {
                     page++;
                     moving = false;
                 });
@@ -707,19 +714,20 @@ function successHandler(slide, currValue) {
 //                                                 v  START UP  v                                                     //
 // ****************************************************************************************************************** //
 
-clientControls();
-lunaUserInfo("hash");
+if (location.pathname.split("/")[location.pathname.split("/").length-1].split(".")[0] === "index") {
+    clientControls();
+    lunaUserInfo("hash");
 
-if (getItemFlag("SRV_SIGN") !== null && getItemFlag("SRV_SIGN").length > 5) {
-    // clientScale(document.documentElement.clientHeight);
-    $('#login-wrapper').fadeOut();
-    setTimeout(function () {
+    if (getItemFlag("SRV_SIGN") !== null && getItemFlag("SRV_SIGN").length > 5) {
+        // clientScale(document.documentElement.clientHeight);
+        $('#login-wrapper').fadeOut();
+        setTimeout(function () {
+            $('#control-wrap').fadeOut();
+            $('#main-wrap').fadeIn();
+        }, 400);
+    } else {
+        // clientScale(document.documentElement.clientHeight);
         $('#control-wrap').fadeOut();
-        $('#main-wrap').fadeIn();
-    }, 400);
-}
-else {
-    // clientScale(document.documentElement.clientHeight);
-    $('#control-wrap').fadeOut();
-    $('#login-wrapper').fadeIn();
+        $('#login-wrapper').fadeIn();
+    }
 }

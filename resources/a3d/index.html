@@ -9,7 +9,7 @@
         <!-- Font Awesome -->
         <link type="text/css" rel="stylesheet" href="./external_modules/fontawesome-5.14.0/css/all.css" crossorigin="anonymous">
         <!-- Animat3D -->
-        <link type="text/css" rel="stylesheet" href="./animat3d.css">
+        <link type="text/css" rel="stylesheet" href="./animat3d_client/animat3d.css">
         <!-- Valkyteq -->
         <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fonts.css">
         <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fancy.css">
@@ -17,10 +17,10 @@
     </head>
     <body>
 
-    <!-- Animat3D Main Frame -->
-    <div id="frame-wrap" style="display:none;margin:0px;padding:0px;overflow:hidden;height:100%;width:100%;">
-        <iframe id="frame" frameborder="0" width="100%" height="100%" style="overflow:hidden;height:100%;width:100%;position:fixed;"></iframe>
-    </div>
+        <!-- Animat3D Main Frame -->
+        <div id="frame-wrap" style="display:none;margin:0px;padding:0px;overflow:hidden;height:100%;width:100%;">
+            <iframe id="frame" frameborder="0" width="100%" height="100%" style="overflow:hidden;height:100%;width:100%;position:fixed;"></iframe>
+        </div>
 
         <!-- Animat3D Window Control -->
         <div id="window-wrap" class="window-wrap">
@@ -30,7 +30,7 @@
 
         <!-- Animat3D Client Control -->
         <div id="control-wrap" class="">
-            <span class="load-more"></span>
+            <span class="a3d-arrow"></span>
         </div>
 
         <!-- Animat3D Settings View -->
@@ -42,17 +42,17 @@
                     <h1 class="text">Settings</h1>
                     <hr>
                     <h4 class="text-left">Resolution</h4>
-                    <div id="settings-lnk-2" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Maximize</div>
+                    <div id="settings-lnk-2" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Maximize</div>
                     <br><br>
-                    <div id="settings-lnk-1" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Fullscreen</div>
+                    <div id="settings-lnk-1" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Fullscreen</div>
                     <br><br>
-                    <div id="settings-lnk-3" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>1920 x 1080 (16:9)</div>
+                    <div id="settings-lnk-3" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>1920 x 1080 (16:9)</div>
                     <br><br>
-                    <div id="settings-lnk-4" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>1600 x 900 (16:9)</div>
+                    <div id="settings-lnk-4" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>1600 x 900 (16:9)</div>
                     <!--<br><br>
-                    <div id="settings-lnk-5" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>2580 x 1080 (21:9)</div>
+                    <div id="settings-lnk-5" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>2580 x 1080 (21:9)</div>
                     <br><br>
-                    <div id="settings-lnk-6" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>1720 x 720 (21:9)</div>-->
+                    <div id="settings-lnk-6" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>1720 x 720 (21:9)</div>-->
                     <hr>
                     <h4 class="text-left">Anti Aliasing</h4>
                     <div class="sld-menu">
@@ -79,17 +79,17 @@
                 <div class="col-md-6 main-content-r">
                     <h1 class="text">Animat3D</h1>
                     <hr>
-                    <div id="main-lnk-preview" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Public Preview</div>
+                    <div id="main-lnk-preview" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Public Preview</div>
                     <br><br>
-                    <div id="main-lnk-editor" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Character Editor</div>
+                    <div id="main-lnk-editor" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Character Editor</div>
                     <br><br>
-                    <div id="main-lnk-control" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Twitch Integration</div>
+                    <div id="main-lnk-control" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Twitch Integration</div>
                     <br><br>
-                    <div id="main-lnk-settings" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Settings</div>
+                    <div id="main-lnk-settings" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Settings</div>
                     <br><hr>
-                    <div id="main-lnk-logout" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Log Out</div>
+                    <div id="main-lnk-logout" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Log Out</div>
                     <br><br>
-                    <div id="main-lnk-exit" class="btn animat3d-btn btn-menu"><span class="animat3d-line"></span>Exit</div>
+                    <div id="main-lnk-exit" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Exit</div>
                 </div>
             </div>
         </div>
@@ -121,14 +121,14 @@
                             <label class="form-label" for="recap" hidden></label>
                         </div>
                         <br>
-                        <button id="sign-in" name="submit" type="submit" class="btn animat3d-btn btn-block submit"><span class="animat3d-line"></span><i class="fa fa-transporter-2"></i> LOG IN</button>
+                        <button id="sign-in" name="submit" type="submit" class="btn a3d-btn btn-block submit"><span class="a3d-line"></span><i class="fa fa-transporter-2"></i> LOG IN</button>
                         <div class="login-footer">
                         </div>
                         <div class="login-links">
                             <p class="text-center">Don't have account? <a class="txt-brand" href="https://valkyteq.com/reg/" target="_blank"><font color=#29aafe>Register now</font></a></p>
                         </div>
                         <br><br>
-<!--                        <button id="sign-out" class="btn animat3d-btn btn-block"><span class="animat3d-line"></span><i class="fa fa-sign-out"></i> Close</button>-->
+<!--                        <button id="sign-out" class="btn a3d-btn btn-block"><span class="a3d-line"></span><i class="fa fa-sign-out"></i> Close</button>-->
                     </div>
                 </div>
             </div>
@@ -159,6 +159,6 @@
         <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/flags.js"></script>
         <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/loader.js"></script>
         <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/md5.js"></script>
-        <script type="text/javascript" src="./animat3d.js"></script>
+        <script type="text/javascript" src="./animat3d_client/animat3d.js"></script>
     </body>
 </html>
