@@ -206,7 +206,7 @@ lunaUserInfo("get")
 // ****************************************************************************************************************** //
 
 
-let serverEvents = new EventSource(`https://valkyteq.com:${p}/user/${uid}/a3d/?m=${m}&u=${u}&s=${x}`);
+let serverEvents = new EventSource(`https://valkyteq.com:${p}/animat3d/event/${uid}/?m=${m}&u=${u}&s=${x}`);
 
 serverEvents.addEventListener('message', function(event){
 
@@ -901,7 +901,7 @@ function setAnimation(clip) {
                     "propose":11,
                     "request":12,
                     "shy":13,
-                    "smile":14,
+                    "laugh":14,
                     "taunt":16,
                     "victory":17,
                     "worry":18
@@ -919,7 +919,7 @@ function setAnimation(clip) {
             "kid": {
                 "fast": {},
                 "mid": {
-                    "angry":0, "dance":9, "fear":1, "greet":2,
+                    "angry":0, "dance":9, "worry":1, "greet":2,
                     "idle":11, "laugh":3, "propose":7, "run":10,
                     "cry":4, "shy":5, "talk":6, "walk":8
                 },
