@@ -430,24 +430,21 @@ function lunaUserInfo(type, dataSave) {
                     // Update Coins Display
                     parent.postMessage(userCoins, '*');
                     $('#coins').html(userCoins);
+                    setItemFlag("USER_COINS", userCoins)
                     // Delete Image from Locked Items panel
                     $(`#block${item.id}`).remove()
                     // Create Confirm Modal
                     let buyTitle = `<div class="item_grade_3">Congratulations!</div><div class="hr_grade_3">`;
                     let buyMessage = `${item.name_en} has been unlocked! Enjoy!`;
-                    // showFancyMessage("Hooray!", buyMessage, "success", true);
                     doConfirm(buyTitle, buyMessage);
                 }
                 // CHARACTER SAVED
                 else {
+                    // Updated Info
+                    lunaUserUpdate(obj);
                     // Create Confirm Modal
                     let buyTitle = `<div class="item_grade_3">Congratulations!</div><div class="hr_grade_3">`;
                     let buyMessage = `Your character has been saved!`;
-                    setItemFlag("CHAR_SET", obj.char);
-                    setItemFlag("USER_VIP", obj.vip);
-                    setItemFlag("USER_COINS", obj.coins);
-                    setItemFlag("USER_UNLOCKS", obj.unlocks);
-                    // showFancyMessage("Hooray!", buyMessage, "success", true);
                     doConfirm(buyTitle, buyMessage);
                 }
             }

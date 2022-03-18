@@ -1,0 +1,55 @@
+[Version]
+signature="$CHICAGO$"
+
+[DefaultInstall]
+CopyFiles = Scheme.Cur, 
+AddReg    = Scheme.Reg
+
+[DestinationDirs]
+Scheme.Cur = 10,"%CUR_DIR%"
+Scheme.Txt = 10,"%CUR_DIR%"
+
+[Scheme.Reg]
+HKCU,"Control Panel\Cursors\Schemes","%SCHEME_NAME%",,"%10%\%CUR_DIR%\%pointer%,%10%\%CUR_DIR%\%help%,%10%\%CUR_DIR%\%work%,%10%\%CUR_DIR%\%busy%,%10%\%CUR_DIR%\%Cross%,%10%\%CUR_DIR%\%Text%,%10%\%CUR_DIR%\%Hand%,%10%\%CUR_DIR%\%Unavailiable%,%10%\%CUR_DIR%\%Vert%,%10%\%CUR_DIR%\%Horz%,%10%\%CUR_DIR%\%Dgn1%,%10%\%CUR_DIR%\%Dgn2%,%10%\%CUR_DIR%\%move%,%10%\%CUR_DIR%\%alternate%,%10%\%CUR_DIR%\%link%,%10%\%CUR_DIR%\%pin%,%10%\%CUR_DIR%\%person%"
+
+; -- Common Information
+
+[Scheme.Cur]
+"A3D Normal Select.ani"
+"A3D Help Select.ani"
+"A3D Working In Background.ani"
+"A3D Busy.ani"
+"A3D Precision Select.ani"
+"A3D Text Select.ani"
+"A3D Handwriting.ani"
+"A3D Unavailable.ani"
+"A3D Vertical Resize.ani"
+"A3D Horizontal Resize.ani"
+"A3D Diagonal Resize 1.ani"
+"A3D Diagonal Resize 2.ani"
+"A3D Move.ani"
+"A3D Alternate Select.ani"
+"A3D Link Select.ani"
+"A3D Location Select.ani"
+"A3D Person Select.ani"
+
+[Strings]
+CUR_DIR                    = "Cursors\Animat3D"
+SCHEME_NAME        = "Animat3D"
+pointer		= "A3D Normal Select.ani"
+help		= "A3D Help Select.ani"
+work		= "A3D Working In Background.ani"
+busy		= "A3D Busy.ani"
+cross		= "A3D Precision Select.ani"
+text		= "A3D Text Select.ani"
+hand		= "A3D Handwriting.ani"
+unavailiable	= "A3D Unavailable.ani"
+vert		= "A3D Vertical Resize.ani"
+horz		= "A3D Horizontal Resize.ani"
+dgn1		= "A3D Diagonal Resize 1.ani"
+dgn2		= "A3D Diagonal Resize 2.ani"
+move		= "A3D Move.ani"
+alternate	                  = "A3D Alternate Select.ani"
+link		= "A3D Link Select.ani"
+pin		= "A3D Location Select.ani"
+person		= "A3D Person Select.ani"

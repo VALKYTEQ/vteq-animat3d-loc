@@ -94,6 +94,18 @@ function showFrame(frame) {
 
 
 function lunaUserLogout() {
+    lunaUserClear();
+    $('#main-wrap').fadeOut();
+    $('#login-wrapper').fadeOut();
+    setTimeout(function () {
+        console.log('exit|logout');
+        $('#login-wrapper').fadeIn();
+        // window.close();
+    }, 400)
+}
+
+
+function lunaUserClear() {
     resetItemFlag("SRV_TIME");
     resetItemFlag("SRV_SIGN");
     resetItemFlag("USER");
@@ -104,13 +116,20 @@ function lunaUserLogout() {
     resetItemFlag("USER_UNLOCKS");
     resetItemFlag("CHAR_NAME");
     resetItemFlag("CHAR_SET");
-    $('#main-wrap').fadeOut();
-    $('#login-wrapper').fadeOut();
-    setTimeout(function () {
-        console.log('exit|logout');
-        $('#login-wrapper').fadeIn();
-        // window.close();
-    }, 400)
+}
+
+
+function lunaUserUpdate(obj) {
+    setItemFlag("USER", obj.acc)
+    setItemFlag("USER_ID", obj.acc_id)
+    setItemFlag("USER_NAME", obj.acc_name)
+    setItemFlag("USER_VIP", obj.vip)
+    setItemFlag("USER_COINS", obj.coins)
+    setItemFlag("USER_UNLOCKS", obj.unlocks)
+    setItemFlag("CHAR_NAME", obj.char_name)
+    setItemFlag("CHAR_SET", obj.char_set)
+    setItemFlag("SRV_TIME", obj.timestamp)
+    setItemFlag("SRV_SIGN", obj.sign)
 }
 
 
@@ -270,30 +289,12 @@ function lunaUserInfo(type, dataSave) {
 
             if (obj.status !== "success") {
                 // console.log(obj)
-                showFancyMessage("CREDENTIALS", "Wrong Username or Password!", "error", true)
-                resetItemFlag("USER")
-                resetItemFlag("USER_ID")
-                resetItemFlag("USER_NAME")
-                resetItemFlag("USER_VIP")
-                resetItemFlag("USER_COINS")
-                resetItemFlag("USER_UNLOCKS")
-                resetItemFlag("CHAR_NAME")
-                resetItemFlag("CHAR_SET")
-                resetItemFlag("SRV_TIME")
-                resetItemFlag("SRV_SIGN")
+                showFancyMessage("CREDENTIALS", "Wrong Username or Password!", "error", true);
+                lunaUserClear();
             } else {
                 // console.log(obj)
-                showFancyMessage("Yay!", "Welcome!", "success", true)
-                setItemFlag("USER", obj.acc)
-                setItemFlag("USER_ID", obj.acc_id)
-                setItemFlag("USER_NAME", obj.acc_name)
-                setItemFlag("USER_VIP", obj.vip)
-                setItemFlag("USER_COINS", obj.coins)
-                setItemFlag("USER_UNLOCKS", obj.unlocks)
-                setItemFlag("CHAR_NAME", obj.char_name)
-                setItemFlag("CHAR_SET", obj.char_set)
-                setItemFlag("SRV_TIME", obj.timestamp)
-                setItemFlag("SRV_SIGN", obj.sign)
+                showFancyMessage("Yay!", "Welcome!", "success", true);
+                lunaUserUpdate(obj);
                 $('#login-wrapper').fadeOut();
                 setTimeout(function () {
                     $('#main-wrap').fadeIn();

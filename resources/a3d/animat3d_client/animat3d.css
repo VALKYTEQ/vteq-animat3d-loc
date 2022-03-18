@@ -46,6 +46,10 @@ body {
   background-color: rgba(0, 0, 0, 0.24);
 }
 
+body, html {
+  cursor: url("../animat3d_modules/cursor/A3D Normal Select.ani"), url("../animat3d_modules/cursor/static/A3D Normal Select.cur"), auto;
+}
+
 .login-wrapper {
   background-repeat: no-repeat;
   background-position: center center;
@@ -67,6 +71,10 @@ body {
   background: -webkit-linear-gradient(rgba(255, 255, 255, 0.75), #00d6fc);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.text-main {
+  font-family: "Mechsuit", sans-serif;
+  font-size: 1rem;
 }
 
 .tooltip {
@@ -97,6 +105,9 @@ body {
   font-size: 5rem;
   margin-bottom: -15px;
 }
+.wrapper h1.text-main {
+  font-size: 3rem;
+}
 
 .wrapper h4 {
   font-size: 2rem;
@@ -108,7 +119,9 @@ body {
 .wrapper hr {
   margin-top: 50px;
   margin-bottom: 50px;
-  border-color: #00d6fc;
+  border-color: transparent;
+  background: linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
+  height: 2px;
 }
 
 .window-drag {
@@ -119,6 +132,7 @@ body {
   top: 0;
   left: 0;
   text-align: right;
+  cursor: url("../animat3d_modules/cursor/A3D Normal Select.ani"), url("../animat3d_modules/cursor/static/A3D Normal Select.cur"), auto;
 }
 
 .window-close {
@@ -133,7 +147,7 @@ body {
 }
 .window-close:hover {
   background-color: rgba(0, 234, 255, 0.27);
-  cursor: pointer;
+  cursor: url("../animat3d_modules/cursor/A3D Normal Select.ani"), url("../animat3d_modules/cursor/static/A3D Normal Select.cur"), auto;
 }
 
 .main-content-logo {
@@ -170,19 +184,48 @@ table {
   width: 100%;
 }
 
+button {
+  cursor: url("../animat3d_modules/cursor/A3D Link Select.ani"), url("../animat3d_modules/cursor/static/A3D Link Select.cur"), auto;
+  text-transform: uppercase;
+  font-size: 25px;
+}
+
+input {
+  cursor: url("../animat3d_modules/cursor/A3D Link Select.ani"), url("../animat3d_modules/cursor/static/A3D Link Select.cur"), auto;
+}
+
+select {
+  cursor: url("../animat3d_modules/cursor/A3D Location Select.ani"), url("../animat3d_modules/cursor/static/A3D Location Select.cur"), auto;
+}
+
+label {
+  cursor: url("../animat3d_modules/cursor/A3D Location Select.ani"), url("../animat3d_modules/cursor/static/A3D Location Select.cur"), auto;
+}
+
+input[type=checkbox] {
+  cursor: url("../animat3d_modules/cursor/A3D Location Select.ani"), url("../animat3d_modules/cursor/static/A3D Location Select.cur"), auto;
+}
+
+input[type=text] {
+  cursor: url("../animat3d_modules/cursor/A3D Text Select.ani"), url("../animat3d_modules/cursor/static/A3D Text Select.cur"), auto;
+}
+
+input[type=password] {
+  cursor: url("../animat3d_modules/cursor/A3D Text Select.ani"), url("../animat3d_modules/cursor/static/A3D Text Select.cur"), auto;
+}
+
+input[type=range] {
+  cursor: url("../animat3d_modules/cursor/A3D Location Select.ani"), url("../animat3d_modules/cursor/static/A3D Location Select.cur"), auto;
+}
+
 a {
   color: #fff;
   text-decoration: none;
+  cursor: url("../animat3d_modules/cursor/A3D Link Select.ani"), url("../animat3d_modules/cursor/static/A3D Link Select.cur"), auto;
 }
 
 a:hover {
   text-decoration: underline;
-}
-
-button {
-  cursor: pointer;
-  text-transform: uppercase;
-  font-size: 25px;
 }
 
 #info {
@@ -240,7 +283,7 @@ a, button, input, select {
   color: #ffffff;
   padding: 12px 18px;
   text-transform: uppercase;
-  cursor: pointer;
+  cursor: url("../animat3d_modules/cursor/A3D Link Select.ani"), url("../animat3d_modules/cursor/static/A3D Link Select.cur"), auto;
 }
 
 #notSupported {
@@ -464,7 +507,7 @@ a, button, input, select {
   padding: 2px;
   text-align: center;
   width: 80px;
-  cursor: pointer;
+  cursor: url("../animat3d_modules/cursor/A3D Link Select.ani"), url("../animat3d_modules/cursor/static/A3D Link Select.cur"), auto;
 }
 
 #a3d-confirm-modal .a3d-confirm-header {
@@ -488,7 +531,7 @@ a, button, input, select {
 .a3d-arrow {
   position: absolute;
   display: block;
-  cursor: pointer;
+  cursor: url("../animat3d_modules/cursor/A3D Link Select.ani"), url("../animat3d_modules/cursor/static/A3D Link Select.cur"), auto;
   width: 40px;
   height: 40px;
   top: 50px;
@@ -557,7 +600,7 @@ a, button, input, select {
   width: 60px;
   height: 1px;
   transform: translateY(-1px);
-  background: #00d6fc;
+  background: linear-gradient(45deg, #3bade3 0%, #8057e6 100%);
   transition: all 0.25s ease;
 }
 .a3d-btn:after {
@@ -568,7 +611,7 @@ a, button, input, select {
   width: 60px;
   height: 1px;
   transform: translateY(1px);
-  background: #00d6fc;
+  background: linear-gradient(45deg, #9844b7 0%, #ff357f 100%);
   transition: all 0.25s ease;
 }
 .a3d-btn:hover {
@@ -590,6 +633,25 @@ a, button, input, select {
 .a3d-btn:hover .a3d-line:after {
   top: 0;
 }
+.a3d-btn:focus {
+  box-shadow: 1px 1px 8px rgba(0, 214, 252, 0.3);
+  color: #00d6fc;
+  text-shadow: 0 0 8px rgba(0, 214, 252, 0.4);
+}
+.a3d-btn:focus.a3d-btn:before {
+  left: 0;
+  width: 20px;
+}
+.a3d-btn:focus.a3d-btn:after {
+  right: 0;
+  width: 20px;
+}
+.a3d-btn:focus .a3d-line:before {
+  bottom: 0;
+}
+.a3d-btn:focus .a3d-line:after {
+  top: 0;
+}
 .a3d-line:before {
   content: "";
   position: absolute;
@@ -598,7 +660,7 @@ a, button, input, select {
   width: 1px;
   height: 20px;
   transform: translateX(1px);
-  background: #00d6fc;
+  background: #ff357f;
   transition: all 0.25s ease;
 }
 .a3d-line:after {
@@ -609,7 +671,7 @@ a, button, input, select {
   width: 1px;
   height: 20px;
   transform: translateX(-1px);
-  background: #00d6fc;
+  background: #3bade3;
   transition: all 0.25s ease;
 }
 .a3d-modal {
@@ -771,7 +833,7 @@ a, button, input, select {
   text-align: center;
   text-decoration: none;
   vertical-align: middle;
-  cursor: pointer;
+  cursor: url("../animat3d_modules/cursor/A3D Link Select.ani"), url("../animat3d_modules/cursor/static/A3D Link Select.cur"), auto;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
@@ -779,7 +841,6 @@ a, button, input, select {
   padding: 0.5rem 2rem;
   font-size: 0.888rem;
   border-radius: 0.1rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1237,7 +1298,7 @@ a, button, input, select {
 
 .fancy-message p i {
   float: left;
-  background-image: url("./external_modules/valkyteq-0.1.1/css/images/spritesheet.png");
+  background-image: url("../external_modules/valkyteq-0.1.1/css/images/spritesheet.png");
   background-repeat: no-repeat;
   display: block;
   background-position: -132px -134px;
@@ -1268,7 +1329,7 @@ a, button, input, select {
 }
 
 .fancy-message .close-message a {
-  background-image: url("./external_modules/valkyteq-0.1.1/css/images/spritesheet.png");
+  background-image: url("../external_modules/valkyteq-0.1.1/css/images/spritesheet.png");
   background-repeat: no-repeat;
   display: block;
   position: absolute;
@@ -1360,7 +1421,7 @@ a, button, input, select {
   border-color: #3bade3;
 }
 .range.ltpurple::-webkit-slider-thumb {
-  border-color: #576fe6;
+  border-color: #8057e6;
 }
 .range.purple::-webkit-slider-thumb {
   border-color: #9844b7;
@@ -1372,7 +1433,7 @@ a, button, input, select {
   border-color: #3bade3;
 }
 .range.ltpurple::-moz-range-thumb {
-  border-color: #576fe6;
+  border-color: #8057e6;
 }
 .range.purple::-moz-range-thumb {
   border-color: #9844b7;
@@ -1384,24 +1445,24 @@ a, button, input, select {
 input[type=range]::-webkit-slider-runnable-track {
   -webkit-appearance: none;
   background: #3bade3;
-  background: -moz-linear-gradient(45deg, #3bade3 0%, #576fe6 25%, #9844b7 51%, #ff357f 100%);
-  background: -webkit-gradient(left bottom, right top, color-stop(0%, #3bade3), color-stop(25%, #576fe6), color-stop(51%, #9844b7), color-stop(100%, #ff357f));
-  background: -webkit-linear-gradient(45deg, #3bade3 0%, #576fe6 25%, #9844b7 51%, #ff357f 100%);
-  background: -o-linear-gradient(45deg, #3bade3 0%, #576fe6 25%, #9844b7 51%, #ff357f 100%);
-  background: -ms-linear-gradient(45deg, #3bade3 0%, #576fe6 25%, #9844b7 51%, #ff357f 100%);
-  background: linear-gradient(45deg, #3bade3 0%, #576fe6 25%, #9844b7 51%, #ff357f 100%);
+  background: -moz-linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
+  background: -webkit-gradient(left bottom, right top, color-stop(0%, #3bade3), color-stop(25%, #8057e6), color-stop(51%, #9844b7), color-stop(100%, #ff357f));
+  background: -webkit-linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
+  background: -o-linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
+  background: -ms-linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
+  background: linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3bade3 ", endColorstr="#ff357f ", GradientType=1);
   height: 2px;
 }
 input[type=range]::-moz-range-track {
   -moz-appearance: none;
   background: #3bade3;
-  background: -moz-linear-gradient(45deg, #3bade3 0%, #576fe6 25%, #9844b7 51%, #ff357f 100%);
-  background: -webkit-gradient(left bottom, right top, color-stop(0%, #3bade3), color-stop(25%, #576fe6), color-stop(51%, #9844b7), color-stop(100%, #ff357f));
-  background: -webkit-linear-gradient(45deg, #3bade3 0%, #576fe6 25%, #9844b7 51%, #ff357f 100%);
-  background: -o-linear-gradient(45deg, #3bade3 0%, #576fe6 25%, #9844b7 51%, #ff357f 100%);
-  background: -ms-linear-gradient(45deg, #3bade3 0%, #576fe6 25%, #9844b7 51%, #ff357f 100%);
-  background: linear-gradient(45deg, #3bade3 0%, #576fe6 25%, #9844b7 51%, #ff357f 100%);
+  background: -moz-linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
+  background: -webkit-gradient(left bottom, right top, color-stop(0%, #3bade3), color-stop(25%, #8057e6), color-stop(51%, #9844b7), color-stop(100%, #ff357f));
+  background: -webkit-linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
+  background: -o-linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
+  background: -ms-linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
+  background: linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3bade3 ", endColorstr="#ff357f ", GradientType=1);
   height: 2px;
 }
@@ -1415,7 +1476,7 @@ input[type=range]::-webkit-slider-thumb {
   position: relative;
   bottom: 11px;
   background-color: #1d1c25;
-  cursor: -webkit-grab;
+  cursor: url("../animat3d_modules/cursor/A3D Location Select.ani"), url("../animat3d_modules/cursor/static/A3D Location Select.cur"), auto;
   -webkit-transition: border 1000ms ease;
   transition: border 1000ms ease;
 }
@@ -1429,34 +1490,34 @@ input[type=range]::-moz-range-thumb {
   position: relative;
   bottom: 11px;
   background-color: #1d1c25;
-  cursor: -moz-grab;
+  cursor: url("../animat3d_modules/cursor/A3D Location Select.ani"), url("../animat3d_modules/cursor/static/A3D Location Select.cur"), auto;
   -moz-transition: border 1000ms ease;
   transition: border 1000ms ease;
 }
 input[type=range]::-webkit-slider-thumb:active {
-  cursor: -webkit-grabbing;
+  cursor: url("../animat3d_modules/cursor/A3D Location Select.ani"), url("../animat3d_modules/cursor/static/A3D Location Select.cur"), auto;
 }
 input[type=range]::-moz-range-thumb:active {
-  cursor: -moz-grabbing;
+  cursor: url("../animat3d_modules/cursor/A3D Location Select.ani"), url("../animat3d_modules/cursor/static/A3D Location Select.cur"), auto;
 }
 input[type=range]:focus {
   outline: none;
 }
 input[type=range]:disabled {
   opacity: 0.4 !important;
-  cursor: default !important;
+  cursor: url("../animat3d_modules/cursor/A3D Normal Select.ani"), url("../animat3d_modules/cursor/static/A3D Normal Select.cur"), auto;
   pointer-events: all !important;
 }
 input[type=range]:disabled::-webkit-slider-thumb {
-  cursor: default !important;
+  cursor: url("../animat3d_modules/cursor/A3D Normal Select.ani"), url("../animat3d_modules/cursor/static/A3D Normal Select.cur"), auto;
   pointer-events: all !important;
 }
 input[type=range]:disabled::-moz-range-thumb {
-  cursor: default !important;
+  cursor: url("../animat3d_modules/cursor/A3D Normal Select.ani"), url("../animat3d_modules/cursor/static/A3D Normal Select.cur"), auto;
   pointer-events: all !important;
 }
 input[type=range]:disabled::-ms-thumb {
-  cursor: default !important;
+  cursor: url("../animat3d_modules/cursor/A3D Normal Select.ani"), url("../animat3d_modules/cursor/static/A3D Normal Select.cur"), auto;
   pointer-events: all !important;
 }
 
