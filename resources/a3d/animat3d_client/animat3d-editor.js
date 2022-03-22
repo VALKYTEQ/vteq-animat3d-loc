@@ -35,8 +35,29 @@ import * as SkeletonUtils from '../animat3d_modules/utils/SkeletonUtils.js';
 import {GUI} from "../animat3d_modules/libs/lil-gui.module.min.js";
 import Stats from '../animat3d_modules/libs/stats.module.js';
 import { Water } from '../animat3d_modules/objects/Water2.js';
+import { EffectComposer } from '../animat3d_modules/postprocessing/EffectComposer.js';
+import { RenderPass } from '../animat3d_modules/postprocessing/RenderPass.js';
+import { ShaderPass } from '../animat3d_modules/postprocessing/ShaderPass.js';
+import { CopyShader } from '../animat3d_modules/shaders/CopyShader.js';
+import { FXAAShader } from '../animat3d_modules/shaders/FXAAShader.js';
+import {GammaCorrectionShader} from "../animat3d_modules/shaders/GammaCorrectionShader.js";
 
 console.log(`Animat3D Version       : public@^0.9.7a`);
+
+let itemFlags = {
+    "AA":false,
+    "MSAA":getItemFlag("SETTING_MSAA"),
+    "FXAA":getItemFlag("SETTING_FXAA"),
+    "SSAA":getItemFlag("SETTING_SSAA")
+};
+
+for (let [key, val] of Object.entries(itemFlags)) {
+    if (val === "true") {
+        itemFlags['AA'] = true;
+        console.log(`Anti Aliasing          : ${key}`)
+    }
+}
+if (!itemFlags['AA']) console.log(`Anti Aliasing          : OFF`)
 
 let camera, scene, renderer;
 let stats1, stats2, stats3;
@@ -45,6 +66,7 @@ let settingsA3D, settingsDummy;
 let settingsA3Dbuy = {};
 
 let userCoins, userVip, userUnlocks;
+let composer, fxaaPass, container;
 
 let dirFace, dirHair, dirHorn, dirBody;
 let dirRTitle, dirRChar, dirRTitleSet, dirRA3D, dirRA3Dsave;
@@ -736,6 +758,8 @@ optionsCastaFem = {
 
 function init(opt) {
 
+    container = document.getElementById( 'container' );
+
     // load all animations
     gltfLoadBase();
 
@@ -791,18 +815,18 @@ function init(opt) {
     });
 
     // omni light
-    // const omniLight = new THREE.HemisphereLight( opt.light.skycolor, opt.light.groundcolor );
-    // omniLight.position.set( 0, 50, 0 );
-    // omniLight.intensity = 1.2;
-    // scene.add(omniLight);
+    const omniLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+    omniLight.position.set(0, 100, 0);
+    omniLight.intensity = 0.3;
+    scene.add(omniLight);
 
     // ambient light
-    const ambientLight = new THREE.AmbientLight( 0xb8bbfc, 1 );
-    scene.add( ambientLight );
+    const ambientLight = new THREE.AmbientLight(0xb8bbfc, 0.5);
+    scene.add(ambientLight);
 
     // directional light
-    const dirLight = new THREE.DirectionalLight( 0xb8bbfc, 2.75 );
-    dirLight.position.set( - 0, 100, - 100 );
+    const dirLight = new THREE.DirectionalLight( 0xffffff, 1.2 );
+    dirLight.position.set( 100, 200, -200 );
     dirLight.castShadow = true;
     dirLight.shadow.camera.top = 400;
     dirLight.shadow.camera.bottom = -400;
@@ -838,7 +862,7 @@ function init(opt) {
                 object.castShadow = opt.light.shadow;
                 object.receiveShadow = opt.light.shadow;
                 object.material.transparency = true;
-                object.material.opacity = 1;
+                // object.material.opacity = 1;
             }
         } );
 
@@ -935,23 +959,68 @@ function init(opt) {
         // document.body.appendChild(stats3.domElement);
 
         // stats = new Stats();
-        const container = document.getElementById('a3d-stat-container');
-        container.appendChild(stats1.domElement);
-        container.appendChild(stats2.domElement);
-        container.appendChild(stats3.domElement);
+        const containerStats = document.getElementById('a3d-stat-container');
+        containerStats.appendChild(stats1.domElement);
+        containerStats.appendChild(stats2.domElement);
+        containerStats.appendChild(stats3.domElement);
     }
 
     // renderer
-    renderer = new THREE.WebGLRenderer( { antialias: true ? getItemFlag("SETTING_MSAA") === "true" : false } );
+    if (getItemFlag("SETTING_MSAA") === "true") {
+        renderer = new THREE.WebGLRenderer({antialias: true, samples: 4});
+    }
+    else {
+        renderer = new THREE.WebGLRenderer();
+    }
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
-    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.8;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap; // softer shadows
-    renderer.physicallyCorrectLights = true;
     renderer.shadowMap.enabled = opt.light.shadow;
 
+
+    const target = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBAFormat,
+        encoding: THREE.sRGBEncoding
+    });
+
     // build page
-    document.body.appendChild( renderer.domElement );
+    container.appendChild( renderer.domElement );
+
+
+    const renderPass = new RenderPass( scene, camera );
+    const gammaPass =  new ShaderPass( GammaCorrectionShader );
+
+    // SETTING FXAA
+    if (getItemFlag("SETTING_FXAA") === "true") {
+        const pixelRatio = renderer.getPixelRatio();
+        fxaaPass = new ShaderPass(FXAAShader);
+        fxaaPass.material.uniforms['resolution'].value.x = 1 / (container.offsetWidth * pixelRatio);
+        fxaaPass.material.uniforms['resolution'].value.y = 1 / (container.offsetHeight * pixelRatio);
+
+        composer = new EffectComposer(renderer, target);
+        composer.addPass(gammaPass);
+        composer.addPass(renderPass);
+        composer.addPass(fxaaPass);
+    }
+    // SETTING MSAA
+    else if (getItemFlag("SETTING_MSAA") === "true") {
+        composer = new EffectComposer(renderer);
+        composer.addPass(gammaPass);
+        composer.addPass(renderPass);
+    }
+    // SETTING NO AA
+    else {
+        const copyPass = new ShaderPass( CopyShader );
+        composer = new EffectComposer(renderer, target);
+        composer.addPass(gammaPass);
+        composer.addPass(renderPass);
+        composer.addPass(copyPass);
+    }
+
 
     // add resize event
     window.addEventListener( 'resize', onWindowResize );
@@ -1119,6 +1188,11 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
 
     renderer.setSize( window.innerWidth, window.innerHeight );
+    composer.setSize( window.innerWidth, window.innerHeight );
+    const pixelRatio = renderer.getPixelRatio();
+
+    fxaaPass.material.uniforms[ 'resolution' ].value.x = 1 / ( container.offsetWidth * pixelRatio );
+    fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / ( container.offsetHeight * pixelRatio );
 }
 
 
@@ -2074,7 +2148,8 @@ function animate() {
     // stats2.update();
     // stats3.update();
 
-    renderer.render( scene, camera );
+    composer.render(scene, camera);
+    // renderer.render( scene, camera );
 
 }
 

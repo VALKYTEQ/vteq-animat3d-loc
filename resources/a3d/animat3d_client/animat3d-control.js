@@ -582,10 +582,10 @@ function init(opt) {
         // document.body.appendChild(stats3.domElement);
 
         // stats = new Stats();
-        const container = document.getElementById('a3d-stat-container');
-        container.appendChild(stats1.domElement);
-        container.appendChild(stats2.domElement);
-        container.appendChild(stats3.domElement);
+        const containerStats = document.getElementById('a3d-stat-container');
+        containerStats.appendChild(stats1.domElement);
+        containerStats.appendChild(stats2.domElement);
+        containerStats.appendChild(stats3.domElement);
     }
 
     // renderer
@@ -598,7 +598,7 @@ function init(opt) {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 2;
+    renderer.toneMappingExposure = 1.8;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap; // softer shadows
     renderer.shadowMap.enabled = opt.light.shadow;
 
