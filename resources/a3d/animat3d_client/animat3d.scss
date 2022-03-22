@@ -126,7 +126,7 @@ body, html {
 }
 
 .wrapper hr {
-    margin-top: 50px;
+    margin-top: 40px;
     margin-bottom: 50px;
     border-color: transparent;
     background: linear-gradient(45deg, rgba(59, 173, 227, 1) 0%, rgba(128, 87, 230, 1) 25%, rgba(152, 68, 183, 1) 51%, rgba(255, 53, 127, 1) 100%);
@@ -195,13 +195,13 @@ table {
 }
 
 button {
-    cursor: url('../animat3d_modules/cursor/A3D Link Select.ani'), url('../animat3d_modules/cursor/static/A3D Link Select.cur'), auto;
+    cursor: url('../animat3d_modules/cursor/A3D Location Select.ani'), url('../animat3d_modules/cursor/static/A3D Location Select.cur'), auto;
     text-transform: uppercase;
     font-size: 25px;
 }
 
 input {
-    cursor: url('../animat3d_modules/cursor/A3D Link Select.ani'), url('../animat3d_modules/cursor/static/A3D Link Select.cur'), auto;
+    cursor: url('../animat3d_modules/cursor/A3D Location Select.ani'), url('../animat3d_modules/cursor/static/A3D Location Select.cur'), auto;
 }
 
 select {
@@ -231,11 +231,15 @@ input[type=range] {
 a {
     color: #fff;
     text-decoration: none;
-    cursor: url('../animat3d_modules/cursor/A3D Link Select.ani'), url('../animat3d_modules/cursor/static/A3D Link Select.cur'), auto;
+    cursor: url('../animat3d_modules/cursor/A3D Location Select.ani'), url('../animat3d_modules/cursor/static/A3D Location Select.cur'), auto;
 }
 
 a:hover {
     text-decoration: underline;
+}
+
+.cursor-link {
+    cursor: url('../animat3d_modules/cursor/A3D Location Select.ani'), url('../animat3d_modules/cursor/static/A3D Location Select.cur'), auto;
 }
 
 #info {
@@ -294,7 +298,7 @@ a, button, input, select {
     color: #ffffff;
     padding: 12px 18px;
     text-transform: uppercase;
-    cursor: url('../animat3d_modules/cursor/A3D Link Select.ani'), url('../animat3d_modules/cursor/static/A3D Link Select.cur'), auto;
+    cursor: url('../animat3d_modules/cursor/A3D Location Select.ani'), url('../animat3d_modules/cursor/static/A3D Location Select.cur'), auto;
 }
 
 #notSupported {
@@ -522,7 +526,7 @@ a, button, input, select {
     padding: 2px;
     text-align: center;
     width: 80px;
-    cursor: url('../animat3d_modules/cursor/A3D Link Select.ani'), url('../animat3d_modules/cursor/static/A3D Link Select.cur'), auto;
+    cursor: url('../animat3d_modules/cursor/A3D Location Select.ani'), url('../animat3d_modules/cursor/static/A3D Location Select.cur'), auto;
 }
 
 #a3d-confirm-modal .a3d-confirm-header {
@@ -549,7 +553,7 @@ a, button, input, select {
     &-arrow {
         position: absolute;
         display: block;
-        cursor: url('../animat3d_modules/cursor/A3D Link Select.ani'), url('../animat3d_modules/cursor/static/A3D Link Select.cur'), auto;
+        cursor: url('../animat3d_modules/cursor/A3D Location Select.ani'), url('../animat3d_modules/cursor/static/A3D Location Select.cur'), auto;
         width: 40px;
         height: 40px;
         top: 50px;
@@ -909,7 +913,7 @@ a, button, input, select {
     text-align: center;
     text-decoration: none;
     vertical-align: middle;
-    cursor: url('../animat3d_modules/cursor/A3D Link Select.ani'), url('../animat3d_modules/cursor/static/A3D Link Select.cur'), auto;
+    cursor: url('../animat3d_modules/cursor/A3D Location Select.ani'), url('../animat3d_modules/cursor/static/A3D Location Select.cur'), auto;
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
@@ -1662,3 +1666,129 @@ input[type=range] {
     }
 }
 
+
+
+.tgl-menu {
+    width: 70%;
+    max-width: 70%;
+}
+
+.switch{
+    margin-left: 50%;
+    margin-top: -10px;
+    //top: 50%;
+    //left: 50%;
+    width: 73px;
+    height: 40px;
+}
+
+.toggle{
+    position: absolute;
+    border: 1px solid #444249;
+    border-radius: 20px;
+    -webkit-transition: border-color .6s  ease-out;
+    transition: border-color .6s  ease-out;
+    box-sizing: border-box;
+}
+
+.toggle.toggle-on{
+    border-color: rgba(255, 53, 127, 1);
+    -webkit-transition: all .5s .15s ease-out;
+    transition: all .5s .15s ease-out;
+}
+
+.toggle-button{
+    position: absolute;
+    top: 4px;
+    width: 28px;
+    bottom: 4px;
+    right: 39px;
+    background-color: #444249;
+    border-radius: 19px;
+    cursor: url('../animat3d_modules/cursor/A3D Location Select.ani'), url('../animat3d_modules/cursor/static/A3D Location Select.cur'), auto;
+    -webkit-transition: all .3s .1s, width .1s, top .1s, bottom .1s;
+    transition: all .3s .1s, width .1s, top .1s, bottom .1s;
+}
+
+.toggle-on .toggle-button{
+    top: 3px;
+    width: 65px;
+    bottom: 3px;
+    right: 3px;
+    border-radius: 23px;
+    background-color: #89c2da;
+    box-shadow: 0 0 16px #4b7a8d;
+    -webkit-transition: all .2s .1s, right .1s;
+    transition: all .2s .1s, right .1s;
+}
+
+
+.toggle-text-on{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    line-height: 36px;
+    text-align: center;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 18px;
+    font-weight: normal;
+    cursor: url('../animat3d_modules/cursor/A3D Location Select.ani'), url('../animat3d_modules/cursor/static/A3D Location Select.cur'), auto;
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+
+
+    color: rgba(0,0,0,0);
+}
+
+.toggle-on .toggle-text-on{
+    color: rgba(255, 53, 127, 1);
+    -webkit-transition: color .3s .15s ;
+    transition: color .3s .15s ;
+}
+
+.toggle-text-off{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 6px;
+    line-height: 36px;
+    text-align: center;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+
+    cursor: url('../animat3d_modules/cursor/A3D Location Select.ani'), url('../animat3d_modules/cursor/static/A3D Location Select.cur'), auto;
+
+    color: grey;
+}
+
+.toggle-on .toggle-text-off{
+    color: rgba(0,0,0,0);
+}
+
+/* used for streak effect */
+.glow-comp{
+    position: absolute;
+    opacity: 0;
+    top: 10px;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    border-radius: 6px;
+    background-color: rgba(75, 122, 141, .1);
+    box-shadow: 0 0 12px rgba(75, 122, 141, .2);
+    -webkit-transition: opacity 4.5s 1s;
+    transition: opacity 4.5s 1s;
+}
+
+.toggle-on .glow-comp{
+    opacity: 1;
+    -webkit-transition: opacity 1s;
+    transition: opacity 1s;
+}

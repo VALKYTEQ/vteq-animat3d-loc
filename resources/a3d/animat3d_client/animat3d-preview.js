@@ -308,8 +308,32 @@ function init(opt) {
         scene.add(helper);
     }
 
+    // load stats
+    if (getItemFlag("SETTING_STATS") === "true") {
+        stats1 = new Stats();
+        stats1.showPanel(0); // Panel 0 = fps
+        stats1.domElement.style.cssText = 'position:absolute;top:32px;right:0px;padding-right:2%;';
+        // document.body.appendChild(stats1.domElement);
+
+        stats2 = new Stats();
+        stats2.showPanel(1); // Panel 1 = ms
+        stats2.domElement.style.cssText = 'position:absolute;top:32px;right:80px;padding-right:2%;';
+        // document.body.appendChild(stats2.domElement);
+
+        stats3 = new Stats();
+        stats3.showPanel(2); // Panel 2 = vram
+        stats3.domElement.style.cssText = 'position:absolute;top:32px;right:160px;padding-right:2%;';
+        // document.body.appendChild(stats3.domElement);
+
+        // stats = new Stats();
+        const container = document.getElementById('a3d-stat-container');
+        container.appendChild(stats1.domElement);
+        container.appendChild(stats2.domElement);
+        container.appendChild(stats3.domElement);
+    }
+
     // renderer
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
+    renderer = new THREE.WebGLRenderer( { antialias: true ? getItemFlag("SETTING_MSAA") === "true" : false } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.outputEncoding = THREE.sRGBEncoding;
@@ -317,28 +341,6 @@ function init(opt) {
     renderer.shadowMap.enabled = true;
     // renderer.shadowMap.renderReverseSided = true;
     container.appendChild( renderer.domElement );
-
-    // load stats
-    stats1 = new Stats();
-    stats1.showPanel(0); // Panel 0 = fps
-    stats1.domElement.style.cssText = 'position:absolute;bottom:100px;right:0px;padding-right:2%;';
-    document.body.appendChild(stats1.domElement);
-
-    stats2 = new Stats();
-    stats2.showPanel(1); // Panel 1 = ms
-    stats2.domElement.style.cssText = 'position:absolute;bottom:100px;right:80px;padding-right:2%;';
-    document.body.appendChild(stats2.domElement);
-
-    stats3 = new Stats();
-    stats3.showPanel(2); // Panel 2 = vram
-    stats3.domElement.style.cssText = 'position:absolute;bottom:100px;right:160px;padding-right:2%;';
-    document.body.appendChild(stats3.domElement);
-
-    // stats = new Stats();
-    // const container = document.getElementById('container');
-    container.appendChild(stats1.domElement);
-    container.appendChild(stats2.domElement);
-    container.appendChild(stats3.domElement);
 
     window.addEventListener( 'resize', onWindowResize );
 
@@ -688,8 +690,10 @@ function animate() {
     // Update the animation mixer, the stats panel, and render this frame
     mixer.update( mixerUpdateDelta );
 
-    for ( let stats of [stats1, stats2, stats3]) {
-        stats.update();
+    if (getItemFlag("SETTING_STATS") === "true") {
+        for (let stats of [stats1, stats2, stats3]) {
+            stats.update();
+        }
     }
 
     renderer.render( scene, camera );

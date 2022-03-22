@@ -33,13 +33,35 @@ import * as THREE from '../animat3d_modules/build/three.module.js';
 import { GLTFLoader } from '../animat3d_modules/loaders/GLTFLoader.js';
 import * as SkeletonUtils from '../animat3d_modules/utils/SkeletonUtils.js';
 // import {GUI} from "../animat3d_modules/libs/lil-gui.module.min.js";
-// import Stats from '../animat3d_modules/libs/stats.module.js';
+import Stats from '../animat3d_modules/libs/stats.module.js';
 // import { Water } from '../animat3d_modules/objects/Water2.js';
+import { EffectComposer } from '../animat3d_modules/postprocessing/EffectComposer.js';
+import { RenderPass } from '../animat3d_modules/postprocessing/RenderPass.js';
+import { ShaderPass } from '../animat3d_modules/postprocessing/ShaderPass.js';
+import { CopyShader } from '../animat3d_modules/shaders/CopyShader.js';
+import { FXAAShader } from '../animat3d_modules/shaders/FXAAShader.js';
+import {GammaCorrectionShader} from "../animat3d_modules/shaders/GammaCorrectionShader.js";
 
 
 console.log(`Animat3D Version       : public@^0.9.7c`);
 
+let itemFlags = {
+    "AA":false,
+    "MSAA":getItemFlag("SETTING_MSAA"),
+    "FXAA":getItemFlag("SETTING_FXAA"),
+    "SSAA":getItemFlag("SETTING_SSAA")
+};
+
+for (let [key, val] of Object.entries(itemFlags)) {
+    if (val === "true") {
+        itemFlags['AA'] = true;
+        console.log(`Anti Aliasing          : ${key}`)
+    }
+}
+if (!itemFlags['AA']) console.log(`Anti Aliasing          : OFF`)
+
 let camera, scene, renderer;
+let stats1, stats2, stats3;
 let clock, character, settingsA3D;
 
 let userCoins, userVip, userUnlocks;
@@ -56,6 +78,7 @@ let listBody = {};
 let scale;
 
 let options, optionsCastaFem, optionsCastaKid;
+let composer, fxaaPass, container;
 
 // so we can use degrees as input
 let degree = Math.PI / 180;
@@ -118,17 +141,18 @@ function lunaUserInfo(type) {
 
     // user lookup
     function _lunaGet() {
+        let jsonData = JSON.stringify({
+            "m": m,
+            "u": u,
+            "s": x
+        })
         $.ajax({
 
             url: "https://valkyteq.com:50000/animat3d/get",
             dataType: "json",
             type: "POST",
             async: true,
-            data: {
-                "m": m,
-                "u": u,
-                "s": x
-            },
+            data: jsonData,
 
             success: _resHandler
 
@@ -206,7 +230,12 @@ lunaUserInfo("get")
 // ****************************************************************************************************************** //
 
 
-let serverEvents = new EventSource(`https://valkyteq.com:${p}/animat3d/event/${uid}/?m=${m}&u=${u}&s=${x}`);
+let eventData = JSON.stringify({
+    "m": `${m}`,
+    "u": `${u}`,
+    "s": `${x}`
+})
+let serverEvents = new EventSource(`https://valkyteq.com:${p}/animat3d/event/${uid}?${eventData}`);
 
 serverEvents.addEventListener('message', function(event){
 
@@ -249,7 +278,7 @@ settingsA3D = {
 
 
 optionsCastaKid = {
-    "stats":true,
+    "stats":getItemFlag("SETTING_STATS") === "true",
     "debug":true,
     "gizmo":10,
     "cpanel":true,
@@ -284,7 +313,7 @@ optionsCastaKid = {
     }
 };
 optionsCastaFem = {
-    "stats":true,
+    "stats":getItemFlag("SETTING_STATS") === "true",
     "debug":true,
     "gizmo":200,
     "cpanel":true,
@@ -353,6 +382,8 @@ optionsCastaFem = {
 
 function init(opt) {
 
+    container = document.getElementById( 'container' );
+
     // load all animations
     gltfLoadBase();
 
@@ -407,27 +438,28 @@ function init(opt) {
     //     scene.background = texture;
     // });
 
+
     // omni light
-    // const omniLight = new THREE.HemisphereLight( opt.light.skycolor, opt.light.groundcolor );
-    // omniLight.position.set( 0, 50, 0 );
-    // omniLight.intensity = 1.2;
-    // scene.add(omniLight);
+    const omniLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+    omniLight.position.set(0, 100, 0);
+    omniLight.intensity = 0.8;
+    scene.add(omniLight);
 
     // ambient light
-    const ambientLight = new THREE.AmbientLight( 0xb8bbfc, 1 );
-    scene.add( ambientLight );
+    const ambientLight = new THREE.AmbientLight(0xb8bbfc, 0.8);
+    scene.add(ambientLight);
 
     // directional light
-    const dirLight = new THREE.DirectionalLight( 0xb8bbfc, 2.75 );
-    dirLight.position.set( - 0, 100, - 100 );
+    const dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
+    dirLight.position.set( 100, 200, -200 );
     dirLight.castShadow = true;
-    dirLight.shadow.camera.top = 400;
-    dirLight.shadow.camera.bottom = -400;
-    dirLight.shadow.camera.left = -167;
-    dirLight.shadow.camera.right = 233;
-    dirLight.shadow.camera.near = 0.001;
-    dirLight.shadow.camera.far = 400;
-    dirLight.shadow.bias = -0.0065;
+    // dirLight.shadow.camera.top = 400;
+    // dirLight.shadow.camera.bottom = -400;
+    // dirLight.shadow.camera.left = -167;
+    // dirLight.shadow.camera.right = 233;
+    // dirLight.shadow.camera.near = 0.001;
+    // dirLight.shadow.camera.far = 400;
+    // dirLight.shadow.bias = -0.0065;
     scene.add( dirLight );
 
 
@@ -532,24 +564,86 @@ function init(opt) {
     //     showGizmo( false );
     // }
 
-    // load stats
-    // if (opt.stats) {
-    //     stats = new Stats();
-    //     const container = document.getElementById('container');
-    //     container.appendChild(stats.dom);
-    // }
+    // SETTING STATS
+    if (getItemFlag("SETTING_STATS") === "true") {
+        stats1 = new Stats();
+        stats1.showPanel(0); // Panel 0 = fps
+        stats1.domElement.style.cssText = 'position:absolute;top:32px;right:0px;padding-right:2%;';
+        // document.body.appendChild(stats1.domElement);
+
+        stats2 = new Stats();
+        stats2.showPanel(1); // Panel 1 = ms
+        stats2.domElement.style.cssText = 'position:absolute;top:32px;right:80px;padding-right:2%;';
+        // document.body.appendChild(stats2.domElement);
+
+        stats3 = new Stats();
+        stats3.showPanel(2); // Panel 2 = vram
+        stats3.domElement.style.cssText = 'position:absolute;top:32px;right:160px;padding-right:2%;';
+        // document.body.appendChild(stats3.domElement);
+
+        // stats = new Stats();
+        const container = document.getElementById('a3d-stat-container');
+        container.appendChild(stats1.domElement);
+        container.appendChild(stats2.domElement);
+        container.appendChild(stats3.domElement);
+    }
 
     // renderer
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
+    if (getItemFlag("SETTING_MSAA") === "true") {
+        renderer = new THREE.WebGLRenderer({antialias: true, samples: 4});
+    }
+    else {
+        renderer = new THREE.WebGLRenderer();
+    }
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
-    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 2;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap; // softer shadows
-    renderer.physicallyCorrectLights = true;
     renderer.shadowMap.enabled = opt.light.shadow;
 
+
+    const target = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBAFormat,
+        encoding: THREE.sRGBEncoding
+    });
+
     // build page
-    document.body.appendChild( renderer.domElement );
+    container.appendChild( renderer.domElement );
+
+
+    const renderPass = new RenderPass( scene, camera );
+    const gammaPass =  new ShaderPass( GammaCorrectionShader );
+
+    // SETTING FXAA
+    if (getItemFlag("SETTING_FXAA") === "true") {
+        const pixelRatio = renderer.getPixelRatio();
+        fxaaPass = new ShaderPass(FXAAShader);
+        fxaaPass.material.uniforms['resolution'].value.x = 1 / (container.offsetWidth * pixelRatio);
+        fxaaPass.material.uniforms['resolution'].value.y = 1 / (container.offsetHeight * pixelRatio);
+
+        composer = new EffectComposer(renderer, target);
+        composer.addPass(gammaPass);
+        composer.addPass(renderPass);
+        composer.addPass(fxaaPass);
+    }
+    // SETTING MSAA
+    else if (getItemFlag("SETTING_MSAA") === "true") {
+        composer = new EffectComposer(renderer);
+        composer.addPass(gammaPass);
+        composer.addPass(renderPass);
+    }
+    // SETTING NO AA
+    else {
+        const copyPass = new ShaderPass( CopyShader );
+        composer = new EffectComposer(renderer, target);
+        composer.addPass(gammaPass);
+        composer.addPass(renderPass);
+        composer.addPass(copyPass);
+    }
+
 
     // add resize event
     window.addEventListener( 'resize', onWindowResize );
@@ -601,6 +695,11 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
 
     renderer.setSize( window.innerWidth, window.innerHeight );
+    composer.setSize( window.innerWidth, window.innerHeight );
+    const pixelRatio = renderer.getPixelRatio();
+
+    fxaaPass.material.uniforms[ 'resolution' ].value.x = 1 / ( container.offsetWidth * pixelRatio );
+    fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / ( container.offsetHeight * pixelRatio );
 
 }
 
@@ -1132,8 +1231,18 @@ function animate() {
         mixer.update(delta);
     }
 
-    // stats.update();
-    renderer.render( scene, camera );
+    if (getItemFlag("SETTING_STATS") === "true") {
+        for (let stats of [stats1, stats2, stats3]) {
+            stats.update();
+        }
+    }
+
+    // if (getItemFlag("SETTING_FXAA") === "true") {
+        composer.render(scene, camera);
+    // }
+    // else {
+    //     renderer.render(scene, camera);
+    // }
 
 }
 

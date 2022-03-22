@@ -161,17 +161,18 @@ function lunaUserInfo(type, dataSave) {
 
     // API: get all infos
     function lunaGet() {
+        let jsonData = JSON.stringify({
+            "m": m,
+            "u": u,
+            "s": x
+        });
         $.ajax({
 
             url: "https://valkyteq.com:50000/animat3d/get",
             dataType: "json",
             type: "POST",
             async: true,
-            data: {
-                "m": m,
-                "u": u,
-                "s": x
-            },
+            data: jsonData,
 
             success: _getHandler
 
@@ -180,18 +181,19 @@ function lunaUserInfo(type, dataSave) {
 
     // API: user save char
     function lunaSet(save) {
+        let jsonData = JSON.stringify({
+            "m": m,
+            "u": u,
+            "s": x,
+            "save": save
+        });
         $.ajax({
 
             url: "https://valkyteq.com:50000/animat3d/set",
             dataType: "json",
             type: "POST",
             async: true,
-            data: {
-                "m": m,
-                "u": u,
-                "s": x,
-                "save": save
-            },
+            data: jsonData,
 
             success: _resHandler
 
@@ -200,18 +202,19 @@ function lunaUserInfo(type, dataSave) {
 
     // API: user buy item
     function lunaBuy(item) {
+        let jsonData = JSON.stringify({
+            "m": m,
+            "u": u,
+            "s": x,
+            "item": item
+        });
         $.ajax({
 
             url: "https://valkyteq.com:50000/animat3d/buy",
             dataType: "json",
             type: "POST",
             async: true,
-            data: {
-                "m": m,
-                "u": u,
-                "s": x,
-                "item": item
-            },
+            data: jsonData,
 
             success: _resHandler
 
@@ -220,18 +223,19 @@ function lunaUserInfo(type, dataSave) {
 
     // API: ping
     function lunaPing() {
+        let jsonData = JSON.stringify({
+            "m": m,
+            "u": u,
+            "s": x,
+            "ping": `${Date.now()/1000}`
+        });
         $.ajax({
 
             url: "https://valkyteq.com:50000/ping",
             dataType: "json",
             type: "POST",
             async: true,
-            data: {
-                "m": m,
-                "u": u,
-                "s": x,
-                "ping": `${Date.now()/1000}`
-            },
+            data: jsonData,
 
             success: _resHandler
 
@@ -628,7 +632,7 @@ settingsA3D = {
 
 
 optionsCastaKid = {
-    "stats":true,
+    "stats":getItemFlag("SETTING_STATS") === "true",
     "debug":true,
     "gizmo":10,
     "cpanel":true,
@@ -663,7 +667,7 @@ optionsCastaKid = {
     }
 };
 optionsCastaFem = {
-    "stats":true,
+    "stats":getItemFlag("SETTING_STATS") === "true",
     "debug":true,
     "gizmo":200,
     "cpanel":true,
@@ -914,20 +918,20 @@ function init(opt) {
     }
 
     // load stats
-    if (opt.stats) {
+    if (getItemFlag("SETTING_STATS") === "true") {
         stats1 = new Stats();
         stats1.showPanel(0); // Panel 0 = fps
-        stats1.domElement.style.cssText = 'position:absolute;bottom:100px;left:0px;padding-left:2%;';
+        stats1.domElement.style.cssText = 'position:absolute;top:32px;right:0px;padding-right:2%;';
         // document.body.appendChild(stats1.domElement);
 
         stats2 = new Stats();
         stats2.showPanel(1); // Panel 1 = ms
-        stats2.domElement.style.cssText = 'position:absolute;bottom:100px;left:80px;padding-left:2%;';
+        stats2.domElement.style.cssText = 'position:absolute;top:32px;right:80px;padding-right:2%;';
         // document.body.appendChild(stats2.domElement);
 
         stats3 = new Stats();
         stats3.showPanel(2); // Panel 2 = vram
-        stats3.domElement.style.cssText = 'position:absolute;bottom:100px;left:160px;padding-left:2%;';
+        stats3.domElement.style.cssText = 'position:absolute;top:32px;right:160px;padding-right:2%;';
         // document.body.appendChild(stats3.domElement);
 
         // stats = new Stats();
@@ -938,7 +942,7 @@ function init(opt) {
     }
 
     // renderer
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
+    renderer = new THREE.WebGLRenderer( { antialias: true ? getItemFlag("SETTING_MSAA") === "true" : false } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.outputEncoding = THREE.sRGBEncoding;
@@ -2061,8 +2065,10 @@ function animate() {
         mixer.update(delta);
     }
 
-    for ( let stats of [stats1, stats2, stats3]) {
-        stats.update();
+    if (getItemFlag("SETTING_STATS") === "true") {
+        for (let stats of [stats1, stats2, stats3]) {
+            stats.update();
+        }
     }
     // stats1.update();
     // stats2.update();

@@ -41,36 +41,72 @@
                 <div class="col-md-6 main-content-r">
                     <h1 class="text">Settings</h1>
                     <hr>
-                    <h4 class="text-left">Resolution</h4>
-                    <div class="sld-menu">
-                        <div id="sld-scale-txt" class="text-left sld-text">UI Scaling: <span id="scale">1</span></div>
-                        <input id="sld-scale" type="range" min="-100" max="0" value="70" class="range purple sld-range"/>
+                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').fadeIn();$('#setting-menu-aliasing').hide();$('#setting-menu-renderer').hide();" title="Click To Show / Hide">
+                        <span><i class="fas fa-angle-down mr-3"></i> Resolution</span>
+                    </h4>
+<!--                    <h4 class="text-left">Resolution</h4>-->
+                    <div id="setting-menu-resolution" style="display: none;">
+                        <div id="settings-lnk-1" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Maximize</div>
+                        <br><br>
+                        <div id="settings-lnk-2" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Set Default</div>
                     </div>
-                    <br><br><br><br>
-                    <div id="settings-lnk-2" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Maximize</div>
-                    <!--<br><br>
-                    <div id="settings-lnk-1" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Fullscreen</div>
-                    <br><br>
-                    <div id="settings-lnk-3" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>1920 x 1080 (16:9)</div>-->
-                    <br><br>
-                    <div id="settings-lnk-4" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Set Default</div>
-                    <!--<br><br>
-                    <div id="settings-lnk-5" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>2580 x 1080 (21:9)</div>
-                    <br><br>
-                    <div id="settings-lnk-6" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>1720 x 720 (21:9)</div>-->
                     <hr>
-                    <h4 class="text-left">Anti Aliasing</h4>
-                    <div class="sld-menu">
-                        <div class="sld-text">
-                            <div class="sld-aa-l"><span id="FXAA">FXAA</span></div>
-                            <div class="sld-aa-r"><span id="SSAA">SSAA</span></div>
-                            <div class="sld-aa-c"><input id="sld-enable-aa" type="range" min="-100" max="0" value="0" class="range blue sld-range-enable"/></div>
+                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').hide();$('#setting-menu-aliasing').fadeIn();$('#setting-menu-renderer').hide();" title="Click To Show / Hide">
+                        <span><i class="fas fa-angle-down mr-3"></i> Anti Aliasing</span>
+                    </h4>
+<!--                    <h4 class="text-left">Anti Aliasing</h4>-->
+                    <div id="setting-menu-aliasing" style="display: none;">
+                        <div class="tgl-menu">
+                            <div class="sld-text text-left">Enable MSAA</div>
+                            <div class='toggle switch' id='switch-msaa'>
+                                <div class='toggle-text-off'>OFF</div>
+                                <div class='glow-comp'></div>
+                                <div class='toggle-button'></div>
+                                <div class='toggle-text-on'>ON</div>
+                            </div>
                         </div>
+                        <br><br>
+                        <div class="tgl-menu">
+                            <div class="sld-text text-left">Enable FXAA</div>
+                            <div class='toggle switch' id='switch-fxaa'>
+                                <div class='toggle-text-off'>OFF</div>
+                                <div class='glow-comp'></div>
+                                <div class='toggle-button'></div>
+                                <div class='toggle-text-on'>ON</div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="tgl-menu">
+                            <div class="sld-text text-left">Enable SSAA</div>
+                            <div class='toggle switch' id='switch-ssaa'>
+                                <div class='toggle-text-off'>OFF</div>
+                                <div class='glow-comp'></div>
+                                <div class='toggle-button'></div>
+                                <div class='toggle-text-on'>ON</div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="sld-menu">
+                            <div id="sld-ssaa-txt" class="text-left sld-text sld-ssaa-txt">SSAA Samples: <span id="SSAA-samples">OFF</span></div>
+                            <input disabled id="sld-ssaa" type="range" min="-100" max="0" value="0" class="range blue sld-range"/>
+                        </div>
+                        <br><br>
                     </div>
-                    <br><br>
-                    <div class="sld-menu">
-                        <div id="sld-ssaa-txt" class="text-left sld-text sld-ssaa-txt">SSAA Samples: <span id="SSAA-samples">OFF</span></div>
-                        <input disabled id="sld-ssaa" type="range" min="-100" max="0" value="0" class="range blue sld-range"/>
+                    <hr>
+                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').hide();$('#setting-menu-aliasing').hide();$('#setting-menu-renderer').fadeIn();" title="Click To Show / Hide">
+                        <span><i class="fas fa-angle-down mr-3"></i> Renderer</span>
+                    </h4>
+<!--                    <h4 class="text-left">Renderer</h4>-->
+                    <div id="setting-menu-renderer" style="display: none;">
+                        <div class="tgl-menu">
+                            <div class="sld-text text-left">Show Stats</div>
+                            <div class='toggle switch' id='switch-stats'>
+                                <div class='toggle-text-off'>OFF</div>
+                                <div class='glow-comp'></div>
+                                <div class='toggle-button'></div>
+                                <div class='toggle-text-on'>ON</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -105,6 +105,14 @@ function lunaUserLogout() {
 }
 
 
+function clientSettingsClear() {
+    resetItemFlag("SETTING_FXAA");
+    resetItemFlag("SETTING_SSAA");
+    resetItemFlag("SETTING_SSAA_SAMPLE");
+    resetItemFlag("SETTING_STATS");
+}
+
+
 function lunaUserClear() {
     resetItemFlag("SRV_TIME");
     resetItemFlag("SRV_SIGN");
@@ -175,23 +183,23 @@ function clientResize(width, height) {
 }
 
 
-function clientScale(height) {
-    let scale, top;
-
-    if (height >= 1080) {
-        scale = 1;
-        // top = 100;
-    }
-    else {
-        scale = height / 1080;
-        // top = 100 * (scale / 4);
-    }
+function clientScale(scale) {
+    // let scale, top;
+    //
+    // if (height >= 1080) {
+    //     scale = 1;
+    //     // top = 100;
+    // }
+    // else {
+    //     scale = height / 1080;
+    //     // top = 100 * (scale / 4);
+    // }
 
     let elements = document.getElementsByClassName("wrapper")
     let elArray = [].slice.call(elements, 0);
 
     elArray.forEach((el) => {
-        // el.style.marginTop = `${top}px`
+        // el.style.marginTop = `0px`
         el.style.transform = `scale(${scale})`;
         el.style['-o-transform'] = `scale(${scale})`;
         el.style['-webkit-transform'] = `scale(${scale})`;
@@ -221,11 +229,12 @@ function lunaUserInfo(type, dataSave) {
     // API: login user
     function lunaHash() {
         let jsonData = JSON.stringify({
+            "p": `placeholder`,
             "s": `${$('#recap').val()}`
         })
         $.ajax({
 
-            url: "https://valkyteq.com:50000/a3dhash",
+            url: "https://valkyteq.com:50000/animat3d/hash",
             dataType: "json",
             type: "POST",
             async: true,
@@ -245,7 +254,7 @@ function lunaUserInfo(type, dataSave) {
         })
         $.ajax({
 
-            url: "https://valkyteq.com:50000/a3dlogin",
+            url: "https://valkyteq.com:50000/animat3d/login",
             dataType: "json",
             type: "POST",
             async: true,
@@ -364,29 +373,30 @@ $('#main-lnk-exit').click(function () {
 //                                                 v  SETTINGS  v                                                   //
 // ****************************************************************************************************************** //
 
-$('#settings-lnk-1').click(function () {
-    clientFullscreen();
-});
 
-$('#settings-lnk-2').click(function () {
+$('#settings-lnk-1').click(function () {
     clientMaximize();
 });
 
-$('#settings-lnk-3').click(function () {
-    clientResize(1920, 1080);
-});
-
-$('#settings-lnk-4').click(function () {
+$('#settings-lnk-2').click(function () {
     clientResize(1600, 900);
 });
 
-$('#settings-lnk-5').click(function () {
-    clientResize(2580, 1080);
-});
-
-$('#settings-lnk-6').click(function () {
-    clientResize(1720, 720);
-});
+// $('#settings-lnk-3').click(function () {
+//     clientResize(1920, 1080);
+// });
+//
+// $('#settings-lnk-4').click(function () {
+//     clientFullscreen();
+// });
+//
+// $('#settings-lnk-5').click(function () {
+//     clientResize(2580, 1080);
+// });
+//
+// $('#settings-lnk-6').click(function () {
+//     clientResize(1720, 720);
+// });
 
 
 
@@ -465,6 +475,93 @@ $('input').keypress(function(){
 
 
 
+$('#switch-msaa').click(function(e){
+    // disable ssaa and fxaa
+    if (getItemFlag("SETTING_SSAA") === "true") {
+        setItemFlag("SETTING_SSAA", "false")
+        $('#switch-ssaa').removeClass('toggle-on');
+    }
+    if (getItemFlag("SETTING_FXAA") === "true") {
+        setItemFlag("SETTING_FXAA", "false")
+        $('#switch-fxaa').removeClass('toggle-on');
+    }
+
+    if (getItemFlag("SETTING_MSAA") === "true") {
+        setItemFlag("SETTING_MSAA", "false")
+        $('#switch-msaa').removeClass('toggle-on');
+        $('#sld-ssaa').prop('disabled', true);
+        $('#sld-ssaa-txt').css('color', 'grey');
+    }
+    else {
+        setItemFlag("SETTING_MSAA", "true")
+        $('#switch-msaa').addClass('toggle-on');
+        $('#sld-ssaa').prop('disabled', true);
+        $('#sld-ssaa-txt').css('color', 'grey');
+    }
+});
+
+$('#switch-fxaa').click(function(e){
+    if (getItemFlag("SETTING_MSAA") === "true") {
+        setItemFlag("SETTING_MSAA", "false")
+        $('#switch-msaa').removeClass('toggle-on');
+    }
+    if (getItemFlag("SETTING_SSAA") === "true") {
+        setItemFlag("SETTING_SSAA", "false")
+        $('#switch-ssaa').removeClass('toggle-on');
+    }
+
+    if (getItemFlag("SETTING_FXAA") === "true") {
+        setItemFlag("SETTING_FXAA", "false")
+        $('#switch-fxaa').removeClass('toggle-on');
+        $('#sld-ssaa').prop('disabled', true);
+        $('#sld-ssaa-txt').css('color', 'grey');
+    }
+    else {
+        setItemFlag("SETTING_FXAA", "true")
+        $('#switch-fxaa').addClass('toggle-on');
+        $('#sld-ssaa').prop('disabled', true);
+        $('#sld-ssaa-txt').css('color', 'grey');
+    }
+});
+
+$('#switch-ssaa').click(function(e){
+    if (getItemFlag("SETTING_MSAA") === "true") {
+        setItemFlag("SETTING_MSAA", "false")
+        $('#switch-msaa').removeClass('toggle-on');
+    }
+    if (getItemFlag("SETTING_FXAA") === "true") {
+        setItemFlag("SETTING_FXAA", "false")
+        $('#switch-fxaa').removeClass('toggle-on');
+    }
+
+    if (getItemFlag("SETTING_SSAA") === "true") {
+        setItemFlag("SETTING_SSAA", "false")
+        $('#switch-ssaa').removeClass('toggle-on');
+        $('#sld-ssaa').prop('disabled', true);
+        $('#sld-ssaa-txt').css('color', 'grey');
+    }
+    else {
+        setItemFlag("SETTING_SSAA", "true")
+        $('#switch-ssaa').addClass('toggle-on');
+        $('#sld-ssaa').prop('disabled', false);
+        $('#sld-ssaa-txt').css('color', 'white');
+    }
+});
+
+$('#switch-stats').click(function(e){
+    if (getItemFlag("SETTING_STATS") === "true") {
+        setItemFlag("SETTING_STATS", "false")
+        $('#switch-stats').removeClass('toggle-on');
+    }
+    else {
+        setItemFlag("SETTING_STATS", "true")
+        $('#switch-stats').addClass('toggle-on');
+    }
+});
+
+
+
+
 
 // ****************************************************************************************************************** //
 //                                                  v  DESIGN  v                                                      //
@@ -475,64 +572,82 @@ $('input').keypress(function(){
  * SLIDER
  */
 let sliderSSAA = document.getElementById('sld-ssaa'),
-    sliderEnableAA = document.getElementById('sld-enable-aa'),
-    sliders = [sliderSSAA, sliderEnableAA],
+    // sliderEnableAA = document.getElementById('sld-enable-aa'),
+    // sliderScaleUI = document.getElementById('sld-scale'),
+    sliders = [sliderSSAA],
     sliderMin = 1,
     sliderMax = 101,     // the higher the smoother
     speed = 1;          // the lower the preciser
 
-sliders.forEach((slide) => {
+function slideHandler () {
 
-    let currValue, rafID, setting;
+    sliders.forEach((slide) => {
 
-    // Get and set user settings
-    if (slide === sliderSSAA) {
-        setting = getItemFlag("SETTING_SSAA");
-    }
-    else if (slide === sliderEnableAA) {
-        setting = getItemFlag("SETTING_ENABLE_AA");
-    }
+        let currValue, rafID, setting;
 
-    if (setting !== null) {
-        currValue = parseInt(setting)+1;
-        slide.value = currValue;
-        thumbHandler(slide, currValue);
-        window.requestAnimationFrame(function () {
-            animateHandler(slide, currValue);
+        // Get and set user settings
+        if (slide === sliderSSAA) {
+            setting = getItemFlag("SETTING_SSAA_SAMPLE");
+        }
+        // else if (slide === sliderEnableAA) {
+        //     setting = getItemFlag("SETTING_ENABLE_AA");
+        // }
+        // else if (slide === sliderScaleUI) {
+        //     setting = getItemFlag("SETTING_SCALE_UI");
+        // }
+
+        if (setting !== null) {
+            currValue = parseInt(setting) + 1;
+            slide.value = currValue;
+            thumbHandler(slide, currValue);
+            window.requestAnimationFrame(function () {
+                animateHandler(slide, currValue);
+            });
+        }
+        // else {
+        //     if (slide === sliderScaleUI) {
+        //         setItemFlag("SETTING_SCALE_UI", "66");
+        //         currValue = parseInt("66") + 1;
+        //         slide.value = currValue;
+        //         thumbHandler(slide, currValue);
+        //         window.requestAnimationFrame(function () {
+        //             animateHandler(slide, currValue);
+        //         });
+        //     }
+        // }
+
+        // set min/max value
+        slide.min = sliderMin;
+        slide.max = sliderMax;
+
+        // bind events
+        slide.addEventListener('mousedown', function () {
+            window.cancelAnimationFrame(rafID);
+            currValue = +this.value;
+        }, false);
+        slide.addEventListener('mousestart', function () {
+            window.cancelAnimationFrame(rafID);
+            currValue = +this.value;
+        }, false);
+        slide.addEventListener('mouseup', function () {
+            currValue = +this.value;
+            rafID = window.requestAnimationFrame(function () {
+                animateHandler(slide, currValue);
+            });
+        }, false);
+        slide.addEventListener('touchend', function () {
+            currValue = +this.value;
+            rafID = window.requestAnimationFrame(function () {
+                animateHandler(slide, currValue);
+            });
+        }, false);
+        slide.addEventListener('input', function () {
+            currValue = +this.value;
+            thumbHandler(slide, currValue);
         });
-    }
 
-    // set min/max value
-    slide.min = sliderMin;
-    slide.max = sliderMax;
-
-    // bind events
-    slide.addEventListener('mousedown', function () {
-        window.cancelAnimationFrame(rafID);
-        currValue = +this.value;
-    }, false);
-    slide.addEventListener('mousestart', function () {
-        window.cancelAnimationFrame(rafID);
-        currValue = +this.value;
-    }, false);
-    slide.addEventListener('mouseup', function () {
-        currValue = +this.value;
-        rafID = window.requestAnimationFrame(function () {
-            animateHandler(slide, currValue);
-        });
-    }, false);
-    slide.addEventListener('touchend', function () {
-        currValue = +this.value;
-        rafID = window.requestAnimationFrame(function () {
-            animateHandler(slide, currValue);
-        });
-    }, false);
-    slide.addEventListener('input', function() {
-        currValue = +this.value;
-        thumbHandler(slide, currValue);
-    });
-
-})
+    })
+}
 
 function thumbHandler(slide, currValue) {
     // Update ssaa sample text
@@ -553,6 +668,20 @@ function thumbHandler(slide, currValue) {
             $('#SSAA-samples').text(`x16`)
         }
     }
+    // else if (slide === sliderScaleUI) {
+    //     if (currValue >= 0) {
+    //         $('#scale').text(`x0.5`)
+    //     }
+    //     if (currValue > 33) {
+    //         $('#scale').text(`x0.75`)
+    //     }
+    //     if (currValue > 66) {
+    //         $('#scale').text(`x1`)
+    //     }
+    //     if (currValue > 100) {
+    //         $('#scale').text(`x1.25`)
+    //     }
+    // }
 
     // Change slide thumb color on way up
     if (currValue > 25) {
@@ -621,24 +750,42 @@ function animateHandler(slide, currValue) {
         }
     }
     // determine if we continue FXAA slider animation
-    else if (slide === sliderEnableAA) {
-        if (currValue > 0 && 100 > currValue) {
-            window.requestAnimationFrame(function () {
-                if (getItemFlag("SETTING_ENABLE_AA") !== "100" || getItemFlag("SETTING_ENABLE_AA") !== "101") {
-                    $('#FXAA').css('color', 'grey')
-                    $('#SSAA').css('color', 'white')
-                }
-                else {
-                    setItemFlag("SETTING_ENABLE_AA", "0")
-                    $('#SSAA').css('color', 'grey')
-                    $('#FXAA').css('color', 'white')
-                }
-                animateHandler(slide, currValue);
-            });
-        } else {
-            successHandler(slide, currValue)
-        }
-    }
+    // else if (slide === sliderEnableAA) {
+    //     if (currValue > 0 && 100 > currValue) {
+    //         window.requestAnimationFrame(function () {
+    //             if (getItemFlag("SETTING_ENABLE_AA") !== "100" || getItemFlag("SETTING_ENABLE_AA") !== "101") {
+    //                 $('#FXAA').css('color', 'grey')
+    //                 $('#SSAA').css('color', 'white')
+    //             }
+    //             else {
+    //                 setItemFlag("SETTING_ENABLE_AA", "0")
+    //                 $('#SSAA').css('color', 'grey')
+    //                 $('#FXAA').css('color', 'white')
+    //             }
+    //             animateHandler(slide, currValue);
+    //         });
+    //     } else {
+    //         successHandler(slide, currValue)
+    //     }
+    // }
+    // determine if we continue scale slider animation
+    // else if (slide === sliderScaleUI) {
+    //     if (currValue > 0 && 33 > currValue) {
+    //         window.requestAnimationFrame(function () {
+    //             animateHandler(slide, currValue);
+    //         });
+    //     } else if (currValue > 33 && 66 > currValue) {
+    //         window.requestAnimationFrame(function () {
+    //             animateHandler(slide, currValue);
+    //         });
+    //     } else if (currValue > 66 && 100 > currValue) {
+    //         window.requestAnimationFrame(function () {
+    //             animateHandler(slide, currValue);
+    //         });
+    //     } else {
+    //         successHandler(slide, currValue)
+    //     }
+    // }
     // error
     else {
         console.error(slide, currValue)
@@ -667,40 +814,64 @@ function successHandler(slide, currValue) {
         }
 
         if (samples !== 0) {
-            setItemFlag("SETTING_SSAA", `${currValue}`)
+            setItemFlag("SETTING_SSAA_SAMPLE", `${currValue}`)
             $('#SSAA-samples').text(`x${samples}`)
             slide.value = currValue;
         } else {
-            setItemFlag("SETTING_SSAA", `${currValue}`)
+            setItemFlag("SETTING_SSAA_SAMPLE", `${currValue}`)
             $('#SSAA-samples').text(`OFF`)
             slide.value = currValue;
         }
     }
     // Enable AA Type
-    else if (slide === sliderEnableAA) {
-        // FXAA
-        if (currValue === 0) {
-            setItemFlag("SETTING_ENABLE_AA", `${currValue}`)
-            $('#FXAA').css('color', 'white')
-            $('#SSAA').css('color', 'grey')
-            slide.value = currValue;
-            // Set and disable SSAA Samples slide
-            window.requestAnimationFrame(function () {
-                animateHandler(sliderSSAA, currValue);
-            });
-            $('#sld-ssaa').prop('disabled', true);
-            $('#sld-ssaa-txt').css('color', 'grey')
-        }
-        // SSAA
-        else {
-            setItemFlag("SETTING_ENABLE_AA", `${currValue}`)
-            $('#sld-ssaa').prop('disabled', false);
-            $('#sld-ssaa-txt').css('color', 'white')
-            $('#FXAA').css('color', 'grey')
-            $('#SSAA').css('color', 'white')
-            slide.value = currValue;
-        }
-    }
+    // else if (slide === sliderEnableAA) {
+    //     // FXAA
+    //     if (currValue === 0) {
+    //         setItemFlag("SETTING_ENABLE_AA", `${currValue}`)
+    //         $('#FXAA').css('color', 'white')
+    //         $('#SSAA').css('color', 'grey')
+    //         slide.value = currValue;
+    //         // Set and disable SSAA Samples slide
+    //         window.requestAnimationFrame(function () {
+    //             animateHandler(sliderSSAA, currValue);
+    //         });
+    //         $('#sld-ssaa').prop('disabled', true);
+    //         $('#sld-ssaa-txt').css('color', 'grey')
+    //     }
+    //     // SSAA
+    //     else {
+    //         setItemFlag("SETTING_ENABLE_AA", `${currValue}`)
+    //         $('#sld-ssaa').prop('disabled', false);
+    //         $('#sld-ssaa-txt').css('color', 'white')
+    //         $('#FXAA').css('color', 'grey')
+    //         $('#SSAA').css('color', 'white')
+    //         slide.value = currValue;
+    //     }
+    // }
+    // Set client scaling
+    // else if (slide === sliderScaleUI) {
+    //     let scaling = 1;
+    //     switch (currValue) {
+    //         case 0:
+    //             scaling = 0.5;
+    //             break;
+    //         case 33:
+    //             scaling = 0.75;
+    //             break;
+    //         case 66:
+    //             scaling = 1;
+    //             break;
+    //         case 100:
+    //         case 101:
+    //             scaling = 1.25;
+    //             break;
+    //     }
+    //
+    //     setItemFlag("SETTING_SCALE_UI", `${currValue}`);
+    //     $('#scale').text(`x${scaling}`);
+    //     slide.value = currValue;
+    //     clientScale(scaling);
+    // }
     // error
     else {
         console.error(slide, currValue)
@@ -716,8 +887,28 @@ function successHandler(slide, currValue) {
 // ****************************************************************************************************************** //
 
 if (location.pathname.split("/")[location.pathname.split("/").length-1].split(".")[0] === "index") {
+
+    slideHandler();
     clientControls();
     lunaUserInfo("hash");
+
+    if (getItemFlag("SETTING_SSAA") === "true") {
+        $('#switch-ssaa').addClass('toggle-on');
+        $('#sld-ssaa').prop('disabled', false);
+        $('#sld-ssaa-txt').css('color', 'white');
+    }
+
+    if (getItemFlag("SETTING_FXAA") === "true") {
+        $('#switch-fxaa').addClass('toggle-on');
+    }
+
+    if (getItemFlag("SETTING_MSAA") === "true") {
+        $('#switch-msaa').addClass('toggle-on');
+    }
+
+    if (getItemFlag("SETTING_STATS") === "true") {
+        $('#switch-stats').addClass('toggle-on');
+    }
 
     if (getItemFlag("SRV_SIGN") !== null && getItemFlag("SRV_SIGN").length > 5) {
         // clientScale(document.documentElement.clientHeight);
