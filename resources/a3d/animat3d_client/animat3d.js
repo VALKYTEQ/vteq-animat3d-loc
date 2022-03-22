@@ -277,8 +277,11 @@ function lunaUserInfo(type, dataSave) {
                 for (let file in obj.hash) {
                     let path = "./";
                     let ext = file.split(".")[file.split(".").length - 1];
-                    if (ext !== "html") {
+                    if (ext === "css" || ext === "js") {
                         path = "./animat3d_client/";
+                    }
+                    else if (ext === "json") {
+                        path = "../app/"
                     }
                     readFileHash(path + file, obj.hash[file])
                 }
@@ -332,19 +335,19 @@ function lunaUserInfo(type, dataSave) {
 $('#main-lnk-preview').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
     else { showFrame("preview") }
-    showFrame("preview")
+    // showFrame("preview")
 });
 
 $('#main-lnk-editor').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
     else { showFrame("editor") }
-    showFrame("editor")
+    // showFrame("editor")
 });
 
 $('#main-lnk-control').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
     else { showFrame("control") }
-    showFrame("control")
+    // showFrame("control")
 });
 
 $('#main-lnk-settings').click(function () {
