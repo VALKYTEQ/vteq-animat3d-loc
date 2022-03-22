@@ -40,24 +40,9 @@ import { RenderPass } from '../animat3d_modules/postprocessing/RenderPass.js';
 import { ShaderPass } from '../animat3d_modules/postprocessing/ShaderPass.js';
 import { CopyShader } from '../animat3d_modules/shaders/CopyShader.js';
 import { FXAAShader } from '../animat3d_modules/shaders/FXAAShader.js';
+import { SSAARenderPass } from '../animat3d_modules/postprocessing/SSAARenderPass.js';
 import {GammaCorrectionShader} from "../animat3d_modules/shaders/GammaCorrectionShader.js";
 
-console.log(`Animat3D Version       : public@^0.9.7a`);
-
-let itemFlags = {
-    "AA":false,
-    "MSAA":getItemFlag("SETTING_MSAA"),
-    "FXAA":getItemFlag("SETTING_FXAA"),
-    "SSAA":getItemFlag("SETTING_SSAA")
-};
-
-for (let [key, val] of Object.entries(itemFlags)) {
-    if (val === "true") {
-        itemFlags['AA'] = true;
-        console.log(`Anti Aliasing          : ${key}`)
-    }
-}
-if (!itemFlags['AA']) console.log(`Anti Aliasing          : OFF`)
 
 let camera, scene, renderer;
 let stats1, stats2, stats3;
@@ -66,7 +51,7 @@ let settingsA3D, settingsDummy;
 let settingsA3Dbuy = {};
 
 let userCoins, userVip, userUnlocks;
-let composer, fxaaPass, container;
+let composer, fxaaPass, ssaaPass, container;
 
 let dirFace, dirHair, dirHorn, dirBody;
 let dirRTitle, dirRChar, dirRTitleSet, dirRA3D, dirRA3Dsave;
@@ -111,7 +96,7 @@ let arrs = [
     arrBody
 ];
 
-let gizmo, helper;
+let gizmo, helper, samples;
 let world, water, scale;
 
 let options, optionsCastaFem, optionsCastaKid;
@@ -490,7 +475,6 @@ function lunaUserInfo(type, dataSave) {
     }
 
 }
-lunaUserInfo("get")
 
 
 // ****************************************************************************************************************** //
@@ -1012,6 +996,15 @@ function init(opt) {
         composer.addPass(gammaPass);
         composer.addPass(renderPass);
     }
+    // SETTING SSAA
+    else if (getItemFlag("SETTING_SSAA") === "true") {
+        ssaaPass = new SSAARenderPass( scene, camera );
+        composer = new EffectComposer(renderer, target);
+        composer.setPixelRatio( 1 ); // ensure pixel ratio is always 1 for performance reasons
+        composer.addPass(gammaPass);
+        composer.addPass(renderPass);
+        composer.addPass(ssaaPass);
+    }
     // SETTING NO AA
     else {
         const copyPass = new ShaderPass( CopyShader );
@@ -1064,30 +1057,6 @@ function showScenery( ) {
     }
 }
 
-// function updateEquipment(item) {
-//     switch (item.category.toLowerCase()) {
-//         case "body":
-//             elCharBody.domElement.remove();
-//             elCharBody = dirRChar.add(settingsDummy, 'body');
-//             stylePanelBtn(elCharBody, item);
-//             break;
-//         case "face":
-//             elCharFace.domElement.remove();
-//             elCharFace = dirRChar.add(settingsDummy, 'face');
-//             stylePanelBtn(elCharFace, item);
-//             break;
-//         case "hair":
-//             elCharHair.domElement.remove();
-//             elCharHair = dirRChar.add(settingsDummy, 'hair');
-//             stylePanelBtn(elCharHair, item);
-//             break;
-//         case "horn":
-//             elCharHorn.domElement.remove();
-//             elCharHorn = dirRChar.add(settingsDummy, 'horn');
-//             stylePanelBtn(elCharHorn, item);
-//             break;
-//     }
-// }
 
 function updateEquipment(item) {
     switch (item.category.toLowerCase()) {
@@ -1189,10 +1158,13 @@ function onWindowResize() {
 
     renderer.setSize( window.innerWidth, window.innerHeight );
     composer.setSize( window.innerWidth, window.innerHeight );
-    const pixelRatio = renderer.getPixelRatio();
 
-    fxaaPass.material.uniforms[ 'resolution' ].value.x = 1 / ( container.offsetWidth * pixelRatio );
-    fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / ( container.offsetHeight * pixelRatio );
+    if (getItemFlag("SETTING_FXAA") === "true") {
+        const pixelRatio = renderer.getPixelRatio();
+
+        fxaaPass.material.uniforms['resolution'].value.x = 1 / (container.offsetWidth * pixelRatio);
+        fxaaPass.material.uniforms['resolution'].value.y = 1 / (container.offsetHeight * pixelRatio);
+    }
 }
 
 
@@ -2144,9 +2116,11 @@ function animate() {
             stats.update();
         }
     }
-    // stats1.update();
-    // stats2.update();
-    // stats3.update();
+
+    if (getItemFlag("SETTING_SSAA") === "true") {
+        ssaaPass.sampleLevel = samples;
+        ssaaPass.unbiased = true;
+    }
 
     composer.render(scene, camera);
     // renderer.render( scene, camera );
@@ -2158,4 +2132,54 @@ function animate() {
 //                                                v    -R-U-N-    v                                                   //
 // ****************************************************************************************************************** //
 
-setTimeout(function (){animate()}, 7000)
+
+
+console.log(`Animat3D Loader        : Editor`);
+
+let itemFlags = {
+    "AA":false,
+    "MSAA":getItemFlag("SETTING_MSAA"),
+    "FXAA":getItemFlag("SETTING_FXAA"),
+    "SSAA":getItemFlag("SETTING_SSAA")
+};
+
+
+if (getItemFlag("SETTING_SSAA") === "true") {
+    // TODO: - Fix this workaround
+    //       - If SSAA Sample > 2 the FPS drop to 10
+    //       - Its caused by scene.water and scene.world
+    setItemFlag("SETTING_SSAA_SAMPLE", "0");
+    switch (Number(getItemFlag("SETTING_SSAA_SAMPLE"))) {
+        case 0:
+            samples = 2;
+            break;
+        case 25:
+            samples = 4;
+            break;
+        case 50:
+            samples = 8;
+            break;
+        case 75:
+            samples = 16;
+            break;
+        case 100:
+        case 101:
+            samples = 32;
+            break;
+    }
+}
+
+for (let [key, val] of Object.entries(itemFlags)) {
+    if (val === "true") {
+        itemFlags['AA'] = true;
+        if (key !== "SSAA") {
+            samples = '';
+        }
+        console.log(`Anti Aliasing          : ${key} ${samples}`)
+    }
+}
+if (!itemFlags['AA']) console.log(`Anti Aliasing          : OFF`);
+
+
+lunaUserInfo("get");
+setTimeout(function (){animate()}, 7000);

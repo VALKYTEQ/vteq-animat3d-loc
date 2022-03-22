@@ -41,17 +41,17 @@
                 <div class="col-md-6 main-content-r">
                     <h1 class="text">Settings</h1>
                     <hr>
-                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').fadeIn();$('#setting-menu-aliasing').hide();$('#setting-menu-renderer').hide();" title="Click To Show / Hide">
+                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').fadeToggle();$('#setting-menu-aliasing').hide();$('#setting-menu-renderer').hide();" title="Click To Show / Hide">
                         <span><i class="fas fa-angle-down mr-3"></i> Resolution</span>
                     </h4>
 <!--                    <h4 class="text-left">Resolution</h4>-->
-                    <div id="setting-menu-resolution" style="display: none;">
+                    <div id="setting-menu-resolution">
                         <div id="settings-lnk-1" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Maximize</div>
                         <br><br>
                         <div id="settings-lnk-2" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Set Default</div>
                     </div>
                     <hr>
-                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').hide();$('#setting-menu-aliasing').fadeIn();$('#setting-menu-renderer').hide();" title="Click To Show / Hide">
+                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').hide();$('#setting-menu-aliasing').fadeToggle();$('#setting-menu-renderer').hide();" title="Click To Show / Hide">
                         <span><i class="fas fa-angle-down mr-3"></i> Anti Aliasing</span>
                     </h4>
 <!--                    <h4 class="text-left">Anti Aliasing</h4>-->
@@ -93,7 +93,7 @@
                         <br><br>
                     </div>
                     <hr>
-                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').hide();$('#setting-menu-aliasing').hide();$('#setting-menu-renderer').fadeIn();" title="Click To Show / Hide">
+                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').hide();$('#setting-menu-aliasing').hide();$('#setting-menu-renderer').fadeToggle();" title="Click To Show / Hide">
                         <span><i class="fas fa-angle-down mr-3"></i> Renderer</span>
                     </h4>
 <!--                    <h4 class="text-left">Renderer</h4>-->
@@ -124,7 +124,7 @@
                     <br><br>
                     <div id="main-lnk-editor" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Character Editor</div>
                     <br><br>
-                    <div id="main-lnk-control" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Twitch Integration</div>
+                    <div id="main-lnk-control" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Character Control</div>
                     <br><br>
                     <div id="main-lnk-settings" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Settings</div>
                     <br><hr>

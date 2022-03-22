@@ -39,30 +39,15 @@ import { RenderPass } from '../animat3d_modules/postprocessing/RenderPass.js';
 import { ShaderPass } from '../animat3d_modules/postprocessing/ShaderPass.js';
 import { CopyShader } from '../animat3d_modules/shaders/CopyShader.js';
 import { FXAAShader } from '../animat3d_modules/shaders/FXAAShader.js';
+import { SSAARenderPass } from '../animat3d_modules/postprocessing/SSAARenderPass.js';
 import {GammaCorrectionShader} from "../animat3d_modules/shaders/GammaCorrectionShader.js";
 
-console.log(`Animat3D Version       : public@^0.9.7a`);
-
-let itemFlags = {
-    "AA":false,
-    "MSAA":getItemFlag("SETTING_MSAA"),
-    "FXAA":getItemFlag("SETTING_FXAA"),
-    "SSAA":getItemFlag("SETTING_SSAA")
-};
-
-for (let [key, val] of Object.entries(itemFlags)) {
-    if (val === "true") {
-        itemFlags['AA'] = true;
-        console.log(`Anti Aliasing          : ${key}`)
-    }
-}
-if (!itemFlags['AA']) console.log(`Anti Aliasing          : OFF`)
 
 let scene, renderer, camera, stats;
-let stats1, stats2, stats3;
+let stats1, stats2, stats3, samples;
 let model, skeleton, mixer, clock;
 let water, world, gizmo, helper;
-let composer, fxaaPass, container;
+let composer, fxaaPass, ssaaPass, container;
 
 const crossFadeControls = [];
 
@@ -118,7 +103,7 @@ settings = {
     'water flowY': 0
 };
 
-init({
+let options = {
     "debug":true,
     "camera":{
         "fov":35,
@@ -141,7 +126,7 @@ init({
         "skycolor":0xffffff,
         "groundcolor":0x444444
     }
-});
+};
 
 function init(opt) {
 
@@ -401,6 +386,15 @@ function init(opt) {
         composer = new EffectComposer(renderer);
         composer.addPass(gammaPass);
         composer.addPass(renderPass);
+    }
+    // SETTING SSAA
+    else if (getItemFlag("SETTING_SSAA") === "true") {
+        ssaaPass = new SSAARenderPass( scene, camera );
+        composer = new EffectComposer(renderer, target);
+        composer.setPixelRatio( 1 ); // ensure pixel ratio is always 1 for performance reasons
+        composer.addPass(gammaPass);
+        composer.addPass(renderPass);
+        composer.addPass(ssaaPass);
     }
     // SETTING NO AA
     else {
@@ -719,6 +713,14 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
 
     renderer.setSize( window.innerWidth, window.innerHeight );
+    composer.setSize( window.innerWidth, window.innerHeight );
+
+    if (getItemFlag("SETTING_FXAA") === "true") {
+        const pixelRatio = renderer.getPixelRatio();
+
+        fxaaPass.material.uniforms['resolution'].value.x = 1 / (container.offsetWidth * pixelRatio);
+        fxaaPass.material.uniforms['resolution'].value.y = 1 / (container.offsetHeight * pixelRatio);
+    }
 
 }
 
@@ -766,7 +768,67 @@ function animate() {
         }
     }
 
+    if (getItemFlag("SETTING_SSAA") === "true") {
+        ssaaPass.sampleLevel = samples;
+        ssaaPass.unbiased = true;
+    }
+
     composer.render(scene, camera);
     // renderer.render( scene, camera );
 
 }
+
+
+// ****************************************************************************************************************** //
+//                                                v    -R-U-N-    v                                                   //
+// ****************************************************************************************************************** //
+
+
+
+console.log(`Animat3D Loader        : Preview`);
+
+let itemFlags = {
+    "AA":false,
+    "MSAA":getItemFlag("SETTING_MSAA"),
+    "FXAA":getItemFlag("SETTING_FXAA"),
+    "SSAA":getItemFlag("SETTING_SSAA")
+};
+
+
+if (getItemFlag("SETTING_SSAA") === "true") {
+    // TODO: - Fix this workaround
+    //       - If SSAA Sample > 2 the FPS drop to 10
+    //       - Its caused by scene.water and scene.world
+    setItemFlag("SETTING_SSAA_SAMPLE", "0");
+    switch (Number(getItemFlag("SETTING_SSAA_SAMPLE"))) {
+        case 0:
+            samples = 2;
+            break;
+        case 25:
+            samples = 4;
+            break;
+        case 50:
+            samples = 8;
+            break;
+        case 75:
+            samples = 16;
+            break;
+        case 100:
+        case 101:
+            samples = 32;
+            break;
+    }
+}
+
+for (let [key, val] of Object.entries(itemFlags)) {
+    if (val === "true") {
+        itemFlags['AA'] = true;
+        if (key !== "SSAA") {
+            samples = '';
+        }
+        console.log(`Anti Aliasing          : ${key} ${samples}`)
+    }
+}
+if (!itemFlags['AA']) console.log(`Anti Aliasing          : OFF`);
+
+init(options);

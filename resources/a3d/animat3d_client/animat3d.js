@@ -30,8 +30,6 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-console.log(`Animat3D Version       : public@^0.9.7a`);
-
 
 
 
@@ -653,19 +651,19 @@ function thumbHandler(slide, currValue) {
     // Update ssaa sample text
     if (slide === sliderSSAA) {
         if (currValue >= 0) {
-            $('#SSAA-samples').text(`OFF`)
-        }
-        if (currValue > 25) {
             $('#SSAA-samples').text(`x2`)
         }
-        if (currValue > 50) {
+        if (currValue > 25) {
             $('#SSAA-samples').text(`x4`)
         }
-        if (currValue > 75) {
+        if (currValue > 50) {
             $('#SSAA-samples').text(`x8`)
         }
-        if (currValue > 100) {
+        if (currValue > 75) {
             $('#SSAA-samples').text(`x16`)
+        }
+        if (currValue > 100) {
+            $('#SSAA-samples').text(`x32`)
         }
     }
     // else if (slide === sliderScaleUI) {
@@ -796,32 +794,28 @@ function animateHandler(slide, currValue) {
 function successHandler(slide, currValue) {
     // SSAA
     if (slide === sliderSSAA) {
-        let samples = 0;
+        let samples;
         switch (currValue) {
-            case 25:
+            case 0:
                 samples = 2;
                 break;
-            case 50:
+            case 25:
                 samples = 4;
                 break;
-            case 75:
+            case 50:
                 samples = 8;
+                break;
+            case 75:
+                samples = 16;
                 break;
             case 100:
             case 101:
-                samples = 16;
+                samples = 32;
                 break;
         }
-
-        if (samples !== 0) {
-            setItemFlag("SETTING_SSAA_SAMPLE", `${currValue}`)
-            $('#SSAA-samples').text(`x${samples}`)
-            slide.value = currValue;
-        } else {
-            setItemFlag("SETTING_SSAA_SAMPLE", `${currValue}`)
-            $('#SSAA-samples').text(`OFF`)
-            slide.value = currValue;
-        }
+        setItemFlag("SETTING_SSAA_SAMPLE", `${currValue}`)
+        $('#SSAA-samples').text(`x${samples}`)
+        slide.value = currValue;
     }
     // Enable AA Type
     // else if (slide === sliderEnableAA) {
@@ -887,6 +881,10 @@ function successHandler(slide, currValue) {
 // ****************************************************************************************************************** //
 
 if (location.pathname.split("/")[location.pathname.split("/").length-1].split(".")[0] === "index") {
+
+    console.log(`Animat3D Version       : public@^0.9.7j`);
+    console.log(`Animat3D Loader        : Client`);
+
 
     slideHandler();
     clientControls();
