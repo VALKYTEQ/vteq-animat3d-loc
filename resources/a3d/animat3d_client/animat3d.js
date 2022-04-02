@@ -126,9 +126,9 @@ function lunaUserClear() {
 
 
 function lunaUserUpdate(obj) {
-    setItemFlag("USER", obj.acc)
-    setItemFlag("USER_ID", obj.acc_id)
-    setItemFlag("USER_NAME", obj.acc_name)
+    setItemFlag("USER", `${obj.user_id}-${obj.user_name}-${obj.char_set}-${obj.timestamp}`)
+    setItemFlag("USER_ID", obj.user_id)
+    setItemFlag("USER_NAME", obj.user_name)
     setItemFlag("USER_VIP", obj.vip)
     setItemFlag("USER_COINS", obj.coins)
     setItemFlag("USER_UNLOCKS", obj.unlocks)
@@ -274,7 +274,7 @@ function lunaUserInfo(type, dataSave) {
                 console.log(obj)
             }
             else {
-                for (let file in obj.hash) {
+                for (let file in obj.payload) {
                     let path = "./";
                     let ext = file.split(".")[file.split(".").length - 1];
                     if (ext === "css" || ext === "js") {
@@ -283,7 +283,7 @@ function lunaUserInfo(type, dataSave) {
                     else if (ext === "json") {
                         path = "../app/"
                     }
-                    readFileHash(path + file, obj.hash[file])
+                    readFileHash(path + file, obj.payload[file])
                 }
             }
 
@@ -885,7 +885,7 @@ function successHandler(slide, currValue) {
 
 if (location.pathname.split("/")[location.pathname.split("/").length-1].split(".")[0] === "index") {
 
-    console.log(`Animat3D Version       : public@^0.9.7j`);
+    console.log(`Animat3D Version       : public@^0.9.9b`);
     console.log(`Animat3D Loader        : Client`);
 
 

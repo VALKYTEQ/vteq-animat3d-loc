@@ -264,7 +264,7 @@ function lunaUserInfo(type, dataSave) {
             }
 
             // Go through all items from database
-            obj.items.forEach(function (item) {
+            obj.payload.forEach(function (item) {
                 switch (item.category) {
                     case "Body":
                         arrBody.push(item)
@@ -343,7 +343,7 @@ function lunaUserInfo(type, dataSave) {
             //
             // LOCKED ITEMS FOUND
             // =====================
-            if (obj.buy) {
+            if (obj.status === "itemToBuy") {
 
                 let btnIDs = [];
                 let info = ``;
@@ -357,7 +357,7 @@ function lunaUserInfo(type, dataSave) {
                 }
 
                 // Design Item List (Right Panel)
-                obj.buy.forEach(function (item) {
+                obj.payload.forEach(function (item) {
 
                     btnIDs.push(item.id)
                     settingsA3Dbuy[`${item.id}`] = function() {
@@ -434,10 +434,10 @@ function lunaUserInfo(type, dataSave) {
             //
             // CONFIRM RESPONSE
             // ===================
-            else if (obj.res) {
+            else if (obj.status === "success") {
                 // ITEM BOUGHT
-                if (obj.res.constructor === Array) {
-                    let item = obj.res[0];
+                if (obj.payload.constructor === Array) {
+                    let item = obj.payload[0];
                     // Update Coins Display
                     parent.postMessage(userCoins, '*');
                     $('#coins').html(userCoins);

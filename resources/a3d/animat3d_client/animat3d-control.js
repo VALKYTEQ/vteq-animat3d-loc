@@ -151,7 +151,7 @@ function lunaUserInfo(type) {
             } else {
                 userUnlocks = "empty";
             }
-            obj.items.forEach(function (item) {
+            obj.payload.forEach(function (item) {
                 switch (item.category) {
                     case "Body":
                         arrBody.push(item)
