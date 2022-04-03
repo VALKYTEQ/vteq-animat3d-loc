@@ -50,6 +50,24 @@ body, html {
   cursor: url("../animat3d_modules/cursor/A3D Normal Select.ani"), url("../animat3d_modules/cursor/static/A3D Normal Select.cur"), auto;
 }
 
+.txt-brand {
+  color: #29aafe;
+}
+.txt-brand:hover {
+  color: #00d6fc;
+  text-shadow: 0 0 8px rgba(0, 214, 252, 0.4);
+  text-decoration: none;
+}
+
+.branding {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.666);
+  bottom: 5px;
+  right: 15px;
+  padding: 0;
+  margin: 0;
+}
+
 .login-wrapper {
   background-repeat: no-repeat;
   background-position: center center;
@@ -122,6 +140,10 @@ body, html {
   border-color: transparent;
   background: linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
   height: 2px;
+}
+.wrapper hr.login-hr {
+  margin-top: 40px;
+  margin-bottom: 30px;
 }
 
 .window-drag {
@@ -883,6 +905,19 @@ a, button, input, select {
 
 .sld-menu {
   width: 70%;
+}
+
+.lin-menu {
+  display: inline;
+  width: 70%;
+  font-size: 1rem;
+}
+
+.lin-button {
+  display: inline;
+  width: 35%;
+  padding: 6px;
+  font-size: 0.666rem;
 }
 
 .sld-text {

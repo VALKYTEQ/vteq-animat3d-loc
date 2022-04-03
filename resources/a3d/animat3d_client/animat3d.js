@@ -83,6 +83,7 @@ function showFancyMessage(title, text, level, autohide) {
 
 function showFrame(frame) {
     $('#main-wrap').fadeOut();
+    $('#login-wrapper').fadeOut();
     setTimeout(function () {
         $('#frame-wrap').fadeIn();
         $('#control-wrap').fadeIn();
@@ -104,6 +105,7 @@ function lunaUserLogout() {
 
 
 function clientSettingsClear() {
+    resetItemFlag("SETTING_MSAA");
     resetItemFlag("SETTING_FXAA");
     resetItemFlag("SETTING_SSAA");
     resetItemFlag("SETTING_SSAA_SAMPLE");
@@ -335,19 +337,19 @@ function lunaUserInfo(type, dataSave) {
 $('#main-lnk-preview').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
     else { showFrame("preview") }
-    // showFrame("preview")
+    showFrame("preview")
 });
 
 $('#main-lnk-editor').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
     else { showFrame("editor") }
-    // showFrame("editor")
+    showFrame("editor")
 });
 
 $('#main-lnk-control').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
     else { showFrame("control") }
-    // showFrame("control")
+    showFrame("control")
 });
 
 $('#main-lnk-settings').click(function () {
@@ -364,6 +366,10 @@ $('#main-lnk-logout').click(function () {
 
 $('#main-lnk-exit').click(function () {
     lunaUserExit();
+});
+
+$('#lnk-preview').click(function () {
+    showFrame("preview")
 });
 
 
@@ -432,7 +438,11 @@ $('#control-wrap').click(function () {
     $('#frame-wrap').fadeOut();
     setTimeout(function () {
         $('#control-wrap').fadeOut();
-        $('#main-wrap').fadeIn();
+        if (getItemFlag("SRV_SIGN") !== null && getItemFlag("SRV_SIGN").length > 5) {
+            $('#main-wrap').fadeIn();
+        } else {
+            $('#login-wrapper').fadeIn();
+        }
         $("#frame").contents().find("body").html('');
         $("#frame").contents().find("head").html('');
     }, 400)
@@ -495,6 +505,7 @@ $('#switch-msaa').click(function(e){
     }
     else {
         setItemFlag("SETTING_MSAA", "true")
+        $('#branding').attr('title',`Anti Aliasing: MSAA`)
         $('#switch-msaa').addClass('toggle-on');
         $('#sld-ssaa').prop('disabled', true);
         $('#sld-ssaa-txt').css('color', 'grey');
@@ -519,6 +530,7 @@ $('#switch-fxaa').click(function(e){
     }
     else {
         setItemFlag("SETTING_FXAA", "true")
+        $('#branding').attr('title',`Anti Aliasing: FXAA`)
         $('#switch-fxaa').addClass('toggle-on');
         $('#sld-ssaa').prop('disabled', true);
         $('#sld-ssaa-txt').css('color', 'grey');
@@ -543,6 +555,7 @@ $('#switch-ssaa').click(function(e){
     }
     else {
         setItemFlag("SETTING_SSAA", "true")
+        $('#branding').attr('title',`Anti Aliasing: SSAA`)
         $('#switch-ssaa').addClass('toggle-on');
         $('#sld-ssaa').prop('disabled', false);
         $('#sld-ssaa-txt').css('color', 'white');
@@ -885,8 +898,39 @@ function successHandler(slide, currValue) {
 
 if (location.pathname.split("/")[location.pathname.split("/").length-1].split(".")[0] === "index") {
 
-    console.log(`Animat3D Version       : public@^0.9.9b`);
-    console.log(`Animat3D Loader        : Client`);
+    const brand = "VALKYTEQ";
+    const version = "0.9.10";
+    const name = "Animat3D";
+    let source;
+
+    let itemFlags = {
+        "AA":false,
+        "MSAA":getItemFlag("SETTING_MSAA"),
+        "FXAA":getItemFlag("SETTING_FXAA"),
+        "SSAA":getItemFlag("SETTING_SSAA")
+    };
+
+    let aliasing = "OFF";
+    for (let [key, val] of Object.entries(itemFlags)) {
+        if (val === "true") {
+            itemFlags['AA'] = true;
+            aliasing = key;
+        }
+    }
+
+    if (location.hostname === "valkyteq.com" || location.hostname === "www.valkyteq.com") {
+        source = "Web";
+        $('#window-wrap').hide();
+        setItemFlag("SETTING_MSAA", "true");
+        setItemFlag("SETTING_FXAA", "false");
+        setItemFlag("SETTING_SSAA", "false");
+    } else {
+        source = "Client";
+    }
+
+    console.log(`Animat3D Version       : public@^${version}`);
+    console.log(`Animat3D Loader        : ${source}`);
+    $('#branding').text(`${brand}@^${version}-${name}-${source}`).attr('title',`Anti Aliasing: ${aliasing}`);
 
 
     slideHandler();

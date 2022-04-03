@@ -44,7 +44,6 @@
                     <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').fadeToggle();$('#setting-menu-aliasing').hide();$('#setting-menu-renderer').hide();" title="Click To Show / Hide">
                         <span><i class="fas fa-angle-down mr-3"></i> Resolution</span>
                     </h4>
-<!--                    <h4 class="text-left">Resolution</h4>-->
                     <div id="setting-menu-resolution">
                         <div id="settings-lnk-1" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Maximize</div>
                         <br><br>
@@ -54,7 +53,6 @@
                     <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').hide();$('#setting-menu-aliasing').fadeToggle();$('#setting-menu-renderer').hide();" title="Click To Show / Hide">
                         <span><i class="fas fa-angle-down mr-3"></i> Anti Aliasing</span>
                     </h4>
-<!--                    <h4 class="text-left">Anti Aliasing</h4>-->
                     <div id="setting-menu-aliasing" style="display: none;">
                         <div class="tgl-menu">
                             <div class="sld-text text-left">Enable MSAA</div>
@@ -96,7 +94,6 @@
                     <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').hide();$('#setting-menu-aliasing').hide();$('#setting-menu-renderer').fadeToggle();" title="Click To Show / Hide">
                         <span><i class="fas fa-angle-down mr-3"></i> Renderer</span>
                     </h4>
-<!--                    <h4 class="text-left">Renderer</h4>-->
                     <div id="setting-menu-renderer" style="display: none;">
                         <div class="tgl-menu">
                             <div class="sld-text text-left">Show Stats</div>
@@ -141,8 +138,8 @@
                 <div class="col-md-6 main-content-l">
                 </div>
                 <div class="col-md-6 main-content-r">
-                    <h1 class="text">Log In</h1>
-                    <hr>
+                    <h1 id="login-head" class="text">Log In</h1>
+                    <hr class="login-hr">
                     <div class="login-form">
                         <h2 class=''>Username</h2>
                         <div class="input-group"> <span class="input-group-addon"><i class="fa fa-user ti-user"></i></span>
@@ -154,22 +151,23 @@
                         </div>
                         <br>
                         <fieldset class="" >
-                            <input class="form-check-input" type="checkbox" id="notbot" name="notbot" value="No" />
-                            <label class="form-check-label" for="notbot">I am not a bot... ┬─┬ ノ( ゜-゜ノ)</label>
+                            <input class="form-check-input txt-brand" type="checkbox" id="notbot" name="notbot" value="No" />
+                            <label class="form-check-label txt-brand" for="notbot">I am not a bot... ノ( ゜-゜ノ)</label>
                         </fieldset>
                         <div hidden>
                             <input class="form-control" type="text" id="recap" name="recap" value="6LfLXcQbAAAAACnsmwzDIykT8iA79hHmibgcfzH9" hidden/>
                             <label class="form-label" for="recap" hidden></label>
                         </div>
                         <br>
-                        <button id="sign-in" name="submit" type="submit" class="btn a3d-btn btn-block submit"><span class="a3d-line"></span><i class="fa fa-transporter-2"></i> LOG IN</button>
-                        <div class="login-footer">
-                        </div>
-                        <div class="login-links">
-                            <p class="text-center">Don't have account? <a class="txt-brand" href="https://valkyteq.com/reg/" target="_blank"><font color=#29aafe>Register now</font></a></p>
-                        </div>
-                        <br><br>
-<!--                        <button id="sign-out" class="btn a3d-btn btn-block"><span class="a3d-line"></span><i class="fa fa-sign-out"></i> Close</button>-->
+                        <button id="sign-in" name="submit" type="submit" class="btn a3d-btn btn-block submit"><span class="a3d-line"></span><i class="fa fa-sign-in"></i> LOG IN</button>
+                    </div>
+                    <hr class="login-hr">
+                    <div class="login-footer">
+                        <p class="text-center">
+                            <h2>Don't have account?</h2>
+                            <a class="txt-brand" href="https://valkyteq.com/reg/" target="_blank">Register Now</a> or have a look at the
+                            <a href="#" id="lnk-preview" class="txt-brand">Public Preview</a>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -193,6 +191,9 @@
                 </video>
             </div>
         </div>
+
+        <!-- Animat3D Branding -->
+        <div id="branding" class="branding"></div>
 
         <!-- SCRIPTS -->
         <script type="text/javascript" src="./external_modules/jquery-3.6.0/jquery-3.6.0.min.js"></script>
