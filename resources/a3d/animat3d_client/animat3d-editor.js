@@ -159,6 +159,7 @@ let animationSkeleton = [];
 
 const m = getItemFlag("CHAR_NAME");
 const u = getItemFlag("USER");
+const uid = getItemFlag("USER_ID");
 const n = getItemFlag("USER_NAME");
 const s = getItemFlag("CHAR_SET").split("x");
 const x = getItemFlag("SRV_SIGN");
@@ -481,19 +482,21 @@ function lunaUserInfo(type, dataSave) {
 //                                               v  SERVER EVENTS  v                                                  //
 // ****************************************************************************************************************** //
 
-
-// let serverEvents = new EventSource(`https://valkyteq.com:${p}/user/${uid}/a3d/?m=${m}&u=${u}&s=${x}`);
+// let p = 50000;
+// let eventData = JSON.stringify({
+//     "m": `${m}`,
+//     "u": `${u}`,
+//     "s": `${x}`
+// })
+// let serverEvents = new EventSource(`https://valkyteq.com:${p}/animat3d/event/${uid}?${eventData}`);
 //
 // serverEvents.addEventListener('message', function(event){
 //
 //     // chat command
 //     function _aiCmd(command) {
-//
 //         const cmd = (command[0].toString().toLowerCase()).replace("/", "")
 //         setAnimation(cmd);
-//
 //     }
-//
 //     let msg = event.data.split(" ")
 //     _aiCmd(msg)
 //
@@ -778,14 +781,27 @@ function init(opt) {
     }
 
     // water
-    const waterGeometry = new THREE.PlaneGeometry( 300, 400 );
-    water = new Water( waterGeometry, {
+    let skyMap;
+    const waterTexture = new THREE.TextureLoader();
+    let waterOptions = {
         color: settingsA3D['Water Color'],
         scale: settingsA3D['Water Scale'],
+        flowSpeed: 0.00001,
         flowDirection: new THREE.Vector2( settingsA3D['Water Flow X'], settingsA3D['Water Flow Y'] ),
+        flowMap: waterTexture.load('animat3d_textures/water/Water_1_M_Flow.jpg'),
         textureWidth: 1024,
         textureHeight: 1024
-    } );
+    };
+    if (getItemFlag("SETTING_ENV") === "ruins") {
+        waterOptions['flowSpeed'] = 0.01;
+        skyMap = 'animat3d_textures/sky/night1.jpg';
+    }
+    else {
+        waterOptions['flowSpeed'] = 0.00001;
+        skyMap = 'animat3d_textures/sky/night.jpg';
+    }
+    const waterGeometry = new THREE.PlaneGeometry(300, 400);
+    water = new Water(waterGeometry, waterOptions);
     water.position.x = 0;
     water.position.y = -3;
     water.position.z = 100;
@@ -794,23 +810,23 @@ function init(opt) {
 
     // Load background texture
     const textureSky = new THREE.TextureLoader();
-    textureSky.load('animat3d_textures/sky/night1.jpg' , function(texture) {
+    textureSky.load(skyMap, function(texture) {
         scene.background = texture;
     });
 
     // omni light
     const omniLight = new THREE.HemisphereLight(0xffffff, 0x444444);
     omniLight.position.set(0, 100, 0);
-    omniLight.intensity = 0.3;
+    omniLight.intensity = 0.15;
     scene.add(omniLight);
 
     // ambient light
-    const ambientLight = new THREE.AmbientLight(0xb8bbfc, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xb8bbfc, 0.3);
     scene.add(ambientLight);
 
     // directional light
-    const dirLight = new THREE.DirectionalLight( 0xffffff, 1.2 );
-    dirLight.position.set( 100, 200, -200 );
+    const dirLight = new THREE.DirectionalLight( 0xb8bbfc, 1);
+    dirLight.position.set( 0, 100, -200 );
     dirLight.castShadow = true;
     dirLight.shadow.camera.top = 400;
     dirLight.shadow.camera.bottom = -400;
@@ -818,7 +834,7 @@ function init(opt) {
     dirLight.shadow.camera.right = 233;
     dirLight.shadow.camera.near = 0.001;
     dirLight.shadow.camera.far = 400;
-    dirLight.shadow.bias = -0.0065;
+    dirLight.shadow.bias = -0.065;
     scene.add( dirLight );
 
 
@@ -833,35 +849,61 @@ function init(opt) {
     //     scene.add(mesh);
     // }
 
-    // character loading
-    const loader = new GLTFLoader();
-    loader.load( './animat3d_objects/scenes/ruins.a3d', function ( gltf ) {
 
-        world = gltf.scene;
-        scene.add( world );
+    // world loading
+    const worldLoader = new GLTFLoader();
+    if (getItemFlag("SETTING_ENV") === "ruins") {
+        worldLoader.load('./animat3d_objects/scenes/ruins.a3d', function (gltf) {
 
-        // allow to cast shadow
-        world.traverse( function ( object ) {
-            if ( object.isMesh ) {
-                object.castShadow = opt.light.shadow;
-                object.receiveShadow = opt.light.shadow;
-                object.material.transparency = true;
-                // object.material.opacity = 1;
-            }
-        } );
+            world = gltf.scene;
 
-        // model.material.transparency = true;
-        // model.material.opacity = 0.1;
+            // allow to cast shadow
+            world.traverse(function (object) {
+                if (object.isMesh) {
+                    object.castShadow = opt.light.shadow;
+                    object.receiveShadow = opt.light.shadow;
+                    object.material.transparency = true;
+                    // object.material.opacity = 1;
+                }
+            });
 
-        world.position.x = 0;
-        world.position.y = -16.2;
-        world.position.z =300;
+            world.position.x = 0;
+            world.position.y = -16.2;
+            world.position.z = 300;
 
-        world.rotation.x = 0;
-        world.rotation.y = 180 * degree;
-        world.rotation.z = 0;
+            world.rotation.x = 0;
+            world.rotation.y = 180 * degree;
+            world.rotation.z = 0;
 
-    } );
+            scene.add(world);
+
+        });
+    }
+    else if ( getItemFlag("SETTING_ENV") !== "ruins" ) {
+        worldLoader.load('./animat3d_objects/scenes/stage.a3d', function (gltf) {
+
+            world = gltf.scene;
+
+            world.traverse(function (object) {
+                if (object.isMesh) {
+                    object.receiveShadow = opt.light.shadow;
+                    object.material.transparency = true;
+                }
+            });
+
+            world.position.x = -23;
+            world.position.y = -35.7;
+            world.position.z = 20;
+
+            world.rotation.x = 0;
+            world.rotation.y = 110 * degree;
+            world.rotation.z = 0;
+            world.scale.set(1.2 / inch, 1.2 / inch, 1.2 / inch);
+
+            scene.add(world);
+
+        });
+    }
 
     // chars
     // if (m !== "custom") {
@@ -911,7 +953,7 @@ function init(opt) {
 
 
     // debug
-    if (opt.debug) {
+    // if (opt.debug) {
         // world gizmo
         gizmo = new THREE.AxesHelper(opt.gizmo);
         gizmo.position.set(-33, 0.2, 0);
@@ -923,7 +965,7 @@ function init(opt) {
 
         // disable
         showGizmo( false );
-    }
+    // }
 
     // load stats
     if (getItemFlag("SETTING_STATS") === "true") {

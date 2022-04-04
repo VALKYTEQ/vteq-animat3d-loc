@@ -43,7 +43,7 @@ class Water extends Mesh {
 
 		const textureLoader = new TextureLoader();
 
-		const flowMap = options.flowMap || textureLoader.load( 'animat3d_textures/water/Water_1_M_Flow.jpg' );
+		const flowMap = options.flowMap || undefined;
 		const normalMap0 = options.normalMap0 || textureLoader.load( 'animat3d_textures/water/Water_1_M_Normal.jpg' );
 		const normalMap1 = options.normalMap1 || textureLoader.load( 'animat3d_textures/water/Water_2_M_Normal.jpg' );
 

@@ -82,6 +82,33 @@ settings = {
     'from run to walk': function () {
         prepareCrossFade( runAction, walkAction, 5.0 );
     },
+    'from idle to angry to idle': function () {
+        prepareCrossFade( idleAction, angryAction, 0.5 );
+    },
+    'from idle to fear to idle': function () {
+        prepareCrossFade( idleAction, fearAction, 0.5 );
+    },
+    'from idle to greet to idle': function () {
+        prepareCrossFade( idleAction, greetAction, 0.5 );
+    },
+    'from idle to laugh to idle': function () {
+        prepareCrossFade( idleAction, laughAction, 0.5 );
+    },
+    'from idle to sad to idle': function () {
+        prepareCrossFade( idleAction, sadAction, 0.5 );
+    },
+    'from idle to shy to idle': function () {
+        prepareCrossFade( idleAction, shyAction, 0.5 );
+    },
+    'from idle to talk to idle': function () {
+        prepareCrossFade( idleAction, talkAction, 0.5 );
+    },
+    'from idle to propose to idle': function () {
+        prepareCrossFade( idleAction, proposeAction, 0.5 );
+    },
+    'from idle to dance to idle': function () {
+        prepareCrossFade( idleAction, danceAction, 0.5 );
+    },
     'use default duration': true,
     'set custom duration': 3.5,
     'modify idle weight': 0.0,
@@ -167,11 +194,14 @@ function init(opt) {
     // }
 
     // water
+    const waterTexture = new THREE.TextureLoader();
     const waterGeometry = new THREE.PlaneGeometry( 300, 400 );
     water = new Water( waterGeometry, {
         color: settings['water color'],
         scale: settings['water scale'],
+        flowSpeed: 0.01,
         flowDirection: new THREE.Vector2( settings['water flowX'], settings['water flowY'] ),
+        flowMap: waterTexture.load('animat3d_textures/water/Water_1_M_Flow.jpg'),
         textureWidth: 1024,
         textureHeight: 1024
     } );
@@ -417,12 +447,12 @@ function createPanel() {
     panel.domElement.style.cssText = 'position:absolute;top:85px;right:2%;';
 
     const folder0 = panel.addFolder( '3D Web Engine Settings' );
-    const folder1 = panel.addFolder( 'Dynamic Water Control' );
-    const folder2 = panel.addFolder( 'Animation Activation' );
-    const folder3 = panel.addFolder( 'Animation Stepping' );
+    // const folder1 = panel.addFolder( 'Dynamic Water Control' );
+    // const folder2 = panel.addFolder( 'Animation Activation' );
+    // const folder3 = panel.addFolder( 'Animation Stepping' );
     const folder4 = panel.addFolder( 'Animation Fading' );
     const folder5 = panel.addFolder( 'Animation Weight' );
-    const folder6 = panel.addFolder( 'Animation Speed' );
+    // const folder6 = panel.addFolder( 'Animation Speed' );
 
     // 3D Model Visibility
     folder0.add( settings, 'show model' ).onChange( showModel );
@@ -431,10 +461,10 @@ function createPanel() {
     folder0.add( settings, 'show world gizmo' ).onChange( showGizmo );
 
     // Dynamic Water Setting
-    folder1.addColor( settings, 'water color' ).onChange( function ( value ) {
+    folder0.addColor( settings, 'water color' ).onChange( function ( value ) {
         water.material.uniforms[ 'color' ].value.set( value );
     } );
-    folder1.add( settings, 'water scale', 1, 10 ).onChange( function ( value ) {
+    folder0.add( settings, 'water scale', 1, 10 ).onChange( function ( value ) {
         water.material.uniforms[ 'config' ].value.w = value;
     } );
     // folder1.add( settings, 'water flowX', - 1, 1 ).step( 0.01 ).onChange( function ( value ) {
@@ -446,22 +476,32 @@ function createPanel() {
     //     water.material.uniforms[ 'flowDirection' ].value.normalize();
     // } );
 
-    // Animation Activation
-    folder2.add( settings, 'deactivate all' );
-    folder2.add( settings, 'activate all' );
-
-    // Animation Stepping
-    folder3.add( settings, 'pause/continue' );
-    folder3.add( settings, 'make single step' );
-    folder3.add( settings, 'modify step size', 0.01, 0.1, 0.001 );
+    // // Animation Activation
+    // folder2.add( settings, 'deactivate all' );
+    // folder2.add( settings, 'activate all' );
+    //
+    // // Animation Stepping
+    // folder3.add( settings, 'pause/continue' );
+    // folder3.add( settings, 'make single step' );
+    // folder3.add( settings, 'modify step size', 0.01, 0.1, 0.001 );
 
     // Animation Fading
     crossFadeControls.push( folder4.add( settings, 'from walk to idle' ) );
     crossFadeControls.push( folder4.add( settings, 'from idle to walk' ) );
     crossFadeControls.push( folder4.add( settings, 'from walk to run' ) );
     crossFadeControls.push( folder4.add( settings, 'from run to walk' ) );
+    crossFadeControls.push( folder4.add( settings, 'from idle to angry to idle' ) );
+    crossFadeControls.push( folder4.add( settings, 'from idle to dance to idle' ) );
+    crossFadeControls.push( folder4.add( settings, 'from idle to fear to idle' ) );
+    crossFadeControls.push( folder4.add( settings, 'from idle to greet to idle' ) );
+    crossFadeControls.push( folder4.add( settings, 'from idle to laugh to idle' ) );
+    crossFadeControls.push( folder4.add( settings, 'from idle to propose to idle' ) );
+    crossFadeControls.push( folder4.add( settings, 'from idle to sad to idle' ) );
+    crossFadeControls.push( folder4.add( settings, 'from idle to shy to idle' ) );
+    crossFadeControls.push( folder4.add( settings, 'from idle to talk to idle' ) );
     folder4.add( settings, 'use default duration' );
     folder4.add( settings, 'set custom duration', 0, 10, 0.01 );
+    folder4.add( settings, 'modify time scale', 0.0, 1.5, 0.01 ).onChange( modifyTimeScale );
 
     // Animation Weight
     folder5.add( settings, 'modify angry weight', 0.0, 1.0, 0.01 ).listen().onChange( function ( weight ) {
@@ -501,17 +541,13 @@ function createPanel() {
         setWeight( walkAction, weight );
     } );
 
-    // Animation Speed
-    folder6.add( settings, 'modify time scale', 0.0, 1.5, 0.01 ).onChange( modifyTimeScale );
-
     // show / hide
-    folder0.open();
-    folder1.close();
-    folder2.close();
-    folder3.close();
+    folder0.close();
+    // folder1.close();
+    // folder2.close();
+    // folder3.close();
     folder4.open();
     folder5.close();
-    folder6.close();
 
 }
 
@@ -648,7 +684,10 @@ function executeCrossFade( startAction, endAction, duration ) {
     endAction.time = 0;
 
     // Crossfade with warping - you can also try without warping by setting the third parameter to false
-    startAction.crossFadeTo( endAction, duration, true );
+    startAction.crossFadeTo( endAction, duration, false );
+    if ( endAction !== idleAction && endAction !== walkAction && endAction !== runAction ) {
+        prepareCrossFade( endAction, idleAction, 0 );
+    }
 
 }
 
@@ -688,6 +727,15 @@ function updateCrossFadeControls() {
         crossFadeControls[ 1 ].enable();
         crossFadeControls[ 2 ].disable();
         crossFadeControls[ 3 ].disable();
+        crossFadeControls[ 4 ].enable();
+        crossFadeControls[ 5 ].enable();
+        crossFadeControls[ 6 ].enable();
+        crossFadeControls[ 7 ].enable();
+        crossFadeControls[ 8 ].enable();
+        crossFadeControls[ 9 ].enable();
+        crossFadeControls[ 10 ].enable();
+        crossFadeControls[ 11 ].enable();
+        crossFadeControls[ 12 ].enable();
     }
 
     if ( idleWeight === 0 && walkWeight === 1 && runWeight === 0 ) {
@@ -695,6 +743,15 @@ function updateCrossFadeControls() {
         crossFadeControls[ 1 ].disable();
         crossFadeControls[ 2 ].enable();
         crossFadeControls[ 3 ].disable();
+        crossFadeControls[ 4 ].disable();
+        crossFadeControls[ 5 ].disable();
+        crossFadeControls[ 6 ].disable();
+        crossFadeControls[ 7 ].disable();
+        crossFadeControls[ 8 ].disable();
+        crossFadeControls[ 9 ].disable();
+        crossFadeControls[ 10 ].disable();
+        crossFadeControls[ 11 ].disable();
+        crossFadeControls[ 12 ].disable();
     }
 
     if ( idleWeight === 0 && walkWeight === 0 && runWeight === 1 ) {
@@ -702,6 +759,15 @@ function updateCrossFadeControls() {
         crossFadeControls[ 1 ].disable();
         crossFadeControls[ 2 ].disable();
         crossFadeControls[ 3 ].enable();
+        crossFadeControls[ 4 ].disable();
+        crossFadeControls[ 5 ].disable();
+        crossFadeControls[ 6 ].disable();
+        crossFadeControls[ 7 ].disable();
+        crossFadeControls[ 8 ].disable();
+        crossFadeControls[ 9 ].disable();
+        crossFadeControls[ 10 ].disable();
+        crossFadeControls[ 11 ].disable();
+        crossFadeControls[ 12 ].disable();
     }
 
 }

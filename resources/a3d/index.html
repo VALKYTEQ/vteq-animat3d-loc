@@ -5,6 +5,7 @@
         <meta charset="utf-8">
         <meta content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport">
         <!-- Bootstrap -->
+        <link type="text/css" rel="stylesheet" href="./external_modules/bootstrap-5.1.3/css/bootstrap.min.css">
         <link type="text/css" rel="stylesheet" href="./external_modules/bootstrap-3.4.1/bootstrap.min.css">
         <!-- Font Awesome -->
         <link type="text/css" rel="stylesheet" href="./external_modules/fontawesome-5.14.0/css/all.css" crossorigin="anonymous">
@@ -40,19 +41,69 @@
                 </div>
                 <div class="col-md-6 main-content-r">
                     <h1 class="text">Settings</h1>
-                    <hr>
-                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').fadeToggle();$('#setting-menu-aliasing').hide();$('#setting-menu-renderer').hide();" title="Click To Show / Hide">
-                        <span><i class="fas fa-angle-down mr-3"></i> Resolution</span>
-                    </h4>
-                    <div id="setting-menu-resolution">
+                    <hr class="login-hr">
+                    <!-- Settings Head -->
+                    <div class="row mb-4">
+                        <div class="text-center cursor-link col-md-3" onclick="['setting-menu-resolution', 'setting-menu-aliasing', 'setting-menu-renderer'].forEach(item => $(`#${item}`).hide());$('#setting-menu-env').show();" title="Click To Show / Hide">
+                            <span><i class="fas fa-angle-down mr-3"></i> Environment</span>
+                        </div>
+                        <div class="text-center cursor-link col-md-3" onclick="['setting-menu-env', 'setting-menu-aliasing', 'setting-menu-renderer'].forEach(item => $(`#${item}`).hide());$('#setting-menu-resolution').show();" title="Click To Show / Hide">
+                            <span><i class="fas fa-angle-down mr-3"></i> Resolution</span>
+                        </div>
+                        <div class="text-center cursor-link col-md-3" onclick="['setting-menu-env', 'setting-menu-resolution', 'setting-menu-renderer'].forEach(item => $(`#${item}`).hide());$('#setting-menu-aliasing').show();" title="Click To Show / Hide">
+                            <span><i class="fas fa-angle-down mr-3"></i> Anti Aliasing</span>
+                        </div>
+                        <div class="text-center cursor-link col-md-3" onclick="['setting-menu-env', 'setting-menu-aliasing', 'setting-menu-resolution'].forEach(item => $(`#${item}`).hide());$('#setting-menu-renderer').show();" title="Click To Show / Hide">
+                            <span><i class="fas fa-angle-down mr-3"></i> Renderer</span>
+                        </div>
+                    </div>
+                    <!-- Settings Content -->
+                    <div id="setting-menu-env">
+                        <div class="width-70 mx-auto">
+                            <!-- Carousel -->
+                            <div id="environments" class="carousel slide" data-bs-interval="false">
+
+                                <!-- Indicators/dots -->
+                                <ol class="carousel-indicators">
+                                    <li id="envIndicator0" data-bs-target="#environments" data-bs-slide-to="0" class="active"></li>
+                                    <li id="envIndicator1" data-bs-target="#environments" data-bs-slide-to="1"></li>
+<!--                                    <button type="button" data-bs-target="#environments" data-bs-slide-to="2"></button>-->
+                                </ol>
+
+                                <!-- The slideshow/carousel -->
+                                <div class="carousel-inner">
+                                    <div id="env0" class="carousel-item active">
+                                        <img style="width: 100%" src="https://valkyteq.com/static/a3d/bg-stage.webp" alt="Animat3D Stage">
+                                        <div class="carousel-caption">
+                                            <h3>Ice Stage</h3>
+                                            <p>Get some cool clothes and put your character in the middle of the Ice Stage. Ready to perform your show for the world!</p>
+                                        </div>
+                                    </div>
+                                    <div id="env1" class="carousel-item">
+                                        <img style="width: 100%" src="https://valkyteq.com/static/a3d/bg-ruins.webp" alt="Animat3D Ruins">
+                                        <div class="carousel-caption">
+                                            <h3>Desert Ruins</h3>
+                                            <p>Get some hot clothes and allow your character to glance in the middle of the Desert Ruins. It's getting warm there.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Left and right controls/icons -->
+                                <button class="carousel-control-prev" type="button" data-bs-target="#environments" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#environments" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div id="setting-menu-resolution" style="display: none;">
                         <div id="settings-lnk-1" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Maximize</div>
                         <br><br>
                         <div id="settings-lnk-2" class="btn a3d-btn btn-menu"><span class="a3d-line"></span>Set Default</div>
                     </div>
-                    <hr>
-                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').hide();$('#setting-menu-aliasing').fadeToggle();$('#setting-menu-renderer').hide();" title="Click To Show / Hide">
-                        <span><i class="fas fa-angle-down mr-3"></i> Anti Aliasing</span>
-                    </h4>
                     <div id="setting-menu-aliasing" style="display: none;">
                         <div class="tgl-menu">
                             <div class="sld-text text-left">Enable MSAA</div>
@@ -90,10 +141,6 @@
                         </div>
                         <br><br>
                     </div>
-                    <hr>
-                    <h4 class="text-left cursor-link" onclick="$('#setting-menu-resolution').hide();$('#setting-menu-aliasing').hide();$('#setting-menu-renderer').fadeToggle();" title="Click To Show / Hide">
-                        <span><i class="fas fa-angle-down mr-3"></i> Renderer</span>
-                    </h4>
                     <div id="setting-menu-renderer" style="display: none;">
                         <div class="tgl-menu">
                             <div class="sld-text text-left">Show Stats</div>

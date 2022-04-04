@@ -29,6 +29,10 @@
     ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
+* {
+  cursor: url("../animat3d_modules/cursor/A3D Normal Select.ani"), url("../animat3d_modules/cursor/static/A3D Normal Select.cur"), auto;
+}
+
 body {
   margin: 0;
   top: 0;
@@ -66,6 +70,60 @@ body, html {
   right: 15px;
   padding: 0;
   margin: 0;
+}
+
+.carousel-indicators li {
+  background-color: rgba(70, 70, 70, 0.25);
+}
+
+.carousel-indicators .active {
+  background-color: #29aafe;
+}
+
+h3 {
+  color: #29aafe;
+}
+
+.setting-menu-env,
+.carousel-item,
+.carousel-control-prev,
+.carousel-control-next {
+  height: 300px;
+  max-height: 300px;
+  margin-bottom: -35px;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  z-index: 10;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  margin-top: 128px;
+  height: 100px;
+  width: 100px;
+  outline: black;
+  background-size: 100%, 100%;
+  background-image: none;
+}
+
+.carousel-control-next-icon:after {
+  content: ">";
+  font-size: 55px;
+  color: #ff357f;
+}
+
+.carousel-control-prev-icon:after {
+  content: "<";
+  font-size: 55px;
+  color: #ff357f;
+}
+
+.carousel-caption {
+  position: relative;
+  left: auto;
+  right: auto;
 }
 
 .login-wrapper {

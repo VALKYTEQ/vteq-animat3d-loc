@@ -218,6 +218,48 @@ function clientControls() {
 }
 
 
+function startupHandler() {
+
+    // SSAA
+    if (getItemFlag("SETTING_SSAA") === "true") {
+        $('#switch-ssaa').addClass('toggle-on');
+        $('#sld-ssaa').prop('disabled', false);
+        $('#sld-ssaa-txt').css('color', 'white');
+    }
+
+    // FXAA
+    if (getItemFlag("SETTING_FXAA") === "true") {
+        $('#switch-fxaa').addClass('toggle-on');
+    }
+
+    // MSAA
+    if (getItemFlag("SETTING_MSAA") === "true") {
+        $('#switch-msaa').addClass('toggle-on');
+    }
+
+    // STATS
+    if (getItemFlag("SETTING_STATS") === "true") {
+        $('#switch-stats').addClass('toggle-on');
+    }
+
+    // ENV
+    if (getItemFlag("SETTING_ENV") === "ruins") {
+        $('#env0').removeClass('active');
+        $('#env1').addClass('active');
+        $('#envIndicator0').removeClass('active');
+        $('#envIndicator1').addClass('active');
+    }
+    else {
+        setItemFlag("SETTING_ENV", "stage");
+        $('#env1').removeClass('active');
+        $('#env0').addClass('active');
+        $('#envIndicator1').removeClass('active');
+        $('#envIndicator0').addClass('active');
+    }
+
+}
+
+
 
 
 
@@ -334,22 +376,23 @@ function lunaUserInfo(type, dataSave) {
 //                                                 v  MAIN MENU  v                                                    //
 // ****************************************************************************************************************** //
 
+// TODO:
 $('#main-lnk-preview').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
     else { showFrame("preview") }
-    showFrame("preview")
+    // showFrame("preview")
 });
 
 $('#main-lnk-editor').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
     else { showFrame("editor") }
-    showFrame("editor")
+    // showFrame("editor")
 });
 
 $('#main-lnk-control').click(function () {
     if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
     else { showFrame("control") }
-    showFrame("control")
+    // showFrame("control")
 });
 
 $('#main-lnk-settings').click(function () {
@@ -573,6 +616,17 @@ $('#switch-stats').click(function(e){
     }
 });
 
+$('#environments').on('slide.bs.carousel', function onSlide (env) {
+    const envId = env.relatedTarget.id;
+    switch (envId) {
+        case "env0":
+            setItemFlag("SETTING_ENV", "stage");
+            break;
+        case "env1":
+            setItemFlag("SETTING_ENV", "ruins");
+            break;
+    }
+})
 
 
 
@@ -899,7 +953,7 @@ function successHandler(slide, currValue) {
 if (location.pathname.split("/")[location.pathname.split("/").length-1].split(".")[0] === "index") {
 
     const brand = "VALKYTEQ";
-    const version = "0.9.10";
+    const version = "0.9.11a";
     const name = "Animat3D";
     let source;
 
@@ -936,24 +990,7 @@ if (location.pathname.split("/")[location.pathname.split("/").length-1].split(".
     slideHandler();
     clientControls();
     lunaUserInfo("hash");
-
-    if (getItemFlag("SETTING_SSAA") === "true") {
-        $('#switch-ssaa').addClass('toggle-on');
-        $('#sld-ssaa').prop('disabled', false);
-        $('#sld-ssaa-txt').css('color', 'white');
-    }
-
-    if (getItemFlag("SETTING_FXAA") === "true") {
-        $('#switch-fxaa').addClass('toggle-on');
-    }
-
-    if (getItemFlag("SETTING_MSAA") === "true") {
-        $('#switch-msaa').addClass('toggle-on');
-    }
-
-    if (getItemFlag("SETTING_STATS") === "true") {
-        $('#switch-stats').addClass('toggle-on');
-    }
+    startupHandler();  // Get User Settings
 
     if (getItemFlag("SRV_SIGN") !== null && getItemFlag("SRV_SIGN").length > 5) {
         // clientScale(document.documentElement.clientHeight);
