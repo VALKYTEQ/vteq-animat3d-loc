@@ -82,12 +82,13 @@ function showFancyMessage(title, text, level, autohide) {
 
 
 function showFrame(frame) {
+    setItemFlag("FRAME", frame);
     $('#main-wrap').fadeOut();
     $('#login-wrapper').fadeOut();
     setTimeout(function () {
         $('#frame-wrap').fadeIn();
         $('#control-wrap').fadeIn();
-        $("#frame").attr("src", `./${frame}.html`);
+        $("#frame").attr("src", `./frame.html`);
     }, 400)
 }
 
@@ -246,17 +247,45 @@ function startupHandler() {
     if (getItemFlag("SETTING_ENV") === "ruins") {
         $('#env0').removeClass('active');
         $('#env1').addClass('active');
+        $('#env2').removeClass('active');
         $('#envIndicator0').removeClass('active');
         $('#envIndicator1').addClass('active');
+        $('#envIndicator2').removeClass('active');
+    }
+    else if (getItemFlag("SETTING_ENV") === "bunker") {
+        $('#env2').addClass('active');
+        $('#env1').removeClass('active');
+        $('#env0').removeClass('active');
+        $('#envIndicator2').addClass('active');
+        $('#envIndicator1').removeClass('active');
+        $('#envIndicator0').removeClass('active');
     }
     else {
         setItemFlag("SETTING_ENV", "stage");
+        $('#env2').removeClass('active');
         $('#env1').removeClass('active');
         $('#env0').addClass('active');
+        $('#envIndicator2').removeClass('active');
         $('#envIndicator1').removeClass('active');
         $('#envIndicator0').addClass('active');
     }
 
+}
+
+
+function toggleSettings(id) {
+    const idArray = ['setting-menu-resolution', 'setting-menu-aliasing', 'setting-menu-renderer', 'setting-menu-env']
+    idArray.forEach((item) => {
+        if (id !== item) {
+            let tab = item.replace('menu', 'tab');
+            $(`#${item}`).hide();
+            $(`#${tab} > i`).removeClass('fa-angle-down').addClass('fa-angle-right');
+        } else {
+            let tab = id.replace('menu', 'tab');
+            $(`#${id}`).show();
+            $(`#${tab} > i`).removeClass('fa-angle-right').addClass('fa-angle-down');
+        }
+    });
 }
 
 
@@ -625,6 +654,9 @@ $('#environments').on('slide.bs.carousel', function onSlide (env) {
         case "env1":
             setItemFlag("SETTING_ENV", "ruins");
             break;
+        case "env2":
+            setItemFlag("SETTING_ENV", "bunker");
+            break;
     }
 })
 
@@ -953,7 +985,7 @@ function successHandler(slide, currValue) {
 if (location.pathname.split("/")[location.pathname.split("/").length-1].split(".")[0] === "index") {
 
     const brand = "VALKYTEQ";
-    const version = "0.9.11a";
+    const version = "0.9.12";
     const name = "Animat3D";
     let source;
 

@@ -93,7 +93,7 @@ h3 {
 .carousel-control-next {
     height: 300px;
     max-height: 300px;
-    margin-bottom: -35px;
+    margin-bottom: -20px;
 }
 
 .carousel-control-prev,
@@ -103,7 +103,7 @@ h3 {
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-    margin-top: 128px;
+    margin-top: 160px;
     height: 100px;
     width: 100px;
     outline: black;
@@ -126,9 +126,9 @@ h3 {
 }
 
 .carousel-caption {
-     position: relative;
-     left: auto;
-     right: auto;
+    position: relative;
+    left: auto;
+    right: auto;
  }
 
 .login-wrapper {
@@ -215,6 +215,10 @@ h3 {
         margin-top: 40px;
         margin-bottom: 30px;
     }
+    &.env-hr {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
 }
 
 .window-drag {
@@ -260,6 +264,7 @@ h3 {
 }
 
 .preview-content {
+    display: none;
     position: fixed;
     top: 30px;
     bottom: 0;

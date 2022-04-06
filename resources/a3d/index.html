@@ -10,7 +10,7 @@
         <!-- Font Awesome -->
         <link type="text/css" rel="stylesheet" href="./external_modules/fontawesome-5.14.0/css/all.css" crossorigin="anonymous">
         <!-- Animat3D -->
-        <link type="text/css" rel="stylesheet" href="./animat3d_client/animat3d.min.css">
+        <link type="text/css" rel="stylesheet" href="./animat3d_client/animat3d.css">
         <!-- Valkyteq -->
         <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fonts.css">
         <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fancy.css">
@@ -44,17 +44,17 @@
                     <hr class="login-hr">
                     <!-- Settings Head -->
                     <div class="row mb-4">
-                        <div class="text-center cursor-link col-md-3" onclick="['setting-menu-resolution', 'setting-menu-aliasing', 'setting-menu-renderer'].forEach(item => $(`#${item}`).hide());$('#setting-menu-env').show();" title="Click To Show / Hide">
-                            <span><i class="fas fa-angle-down mr-3"></i> Environment</span>
+                        <div class="text-center cursor-link col-md-3" onclick="toggleSettings('setting-menu-env');" title="Click To Show / Hide">
+                            <span id="setting-tab-env"><i class="fas fa-angle-down mr-3"></i> Environment</span>
                         </div>
-                        <div class="text-center cursor-link col-md-3" onclick="['setting-menu-env', 'setting-menu-aliasing', 'setting-menu-renderer'].forEach(item => $(`#${item}`).hide());$('#setting-menu-resolution').show();" title="Click To Show / Hide">
-                            <span><i class="fas fa-angle-down mr-3"></i> Resolution</span>
+                        <div class="text-center cursor-link col-md-3" onclick="toggleSettings('setting-menu-resolution');" title="Click To Show / Hide">
+                            <span id="setting-tab-resolution"><i class="fas fa-angle-right mr-3"></i> Resolution</span>
                         </div>
-                        <div class="text-center cursor-link col-md-3" onclick="['setting-menu-env', 'setting-menu-resolution', 'setting-menu-renderer'].forEach(item => $(`#${item}`).hide());$('#setting-menu-aliasing').show();" title="Click To Show / Hide">
-                            <span><i class="fas fa-angle-down mr-3"></i> Anti Aliasing</span>
+                        <div class="text-center cursor-link col-md-3" onclick="toggleSettings('setting-menu-aliasing');" title="Click To Show / Hide">
+                            <span id="setting-tab-aliasing"><i class="fas fa-angle-right mr-3"></i> Anti Aliasing</span>
                         </div>
-                        <div class="text-center cursor-link col-md-3" onclick="['setting-menu-env', 'setting-menu-aliasing', 'setting-menu-resolution'].forEach(item => $(`#${item}`).hide());$('#setting-menu-renderer').show();" title="Click To Show / Hide">
-                            <span><i class="fas fa-angle-down mr-3"></i> Renderer</span>
+                        <div class="text-center cursor-link col-md-3" onclick="toggleSettings('setting-menu-renderer');" title="Click To Show / Hide">
+                            <span id="setting-tab-renderer"><i class="fas fa-angle-right mr-3"></i> Renderer</span>
                         </div>
                     </div>
                     <!-- Settings Content -->
@@ -67,23 +67,36 @@
                                 <ol class="carousel-indicators">
                                     <li id="envIndicator0" data-bs-target="#environments" data-bs-slide-to="0" class="active"></li>
                                     <li id="envIndicator1" data-bs-target="#environments" data-bs-slide-to="1"></li>
-<!--                                    <button type="button" data-bs-target="#environments" data-bs-slide-to="2"></button>-->
+                                    <li id="envIndicator2" data-bs-target="#environments" data-bs-slide-to="2"></li>
                                 </ol>
 
                                 <!-- The slideshow/carousel -->
                                 <div class="carousel-inner">
                                     <div id="env0" class="carousel-item active">
+                                        <hr class="env-hr">
                                         <img style="width: 100%" src="https://valkyteq.com/static/a3d/bg-stage.webp" alt="Animat3D Stage">
+                                        <hr class="env-hr">
                                         <div class="carousel-caption">
                                             <h3>Ice Stage</h3>
                                             <p>Get some cool clothes and put your character in the middle of the Ice Stage. Ready to perform your show for the world!</p>
                                         </div>
                                     </div>
                                     <div id="env1" class="carousel-item">
+                                        <hr class="env-hr">
                                         <img style="width: 100%" src="https://valkyteq.com/static/a3d/bg-ruins.webp" alt="Animat3D Ruins">
+                                        <hr class="env-hr">
                                         <div class="carousel-caption">
                                             <h3>Desert Ruins</h3>
                                             <p>Get some hot clothes and allow your character to glance in the middle of the Desert Ruins. It's getting warm there.</p>
+                                        </div>
+                                    </div>
+                                    <div id="env2" class="carousel-item">
+                                        <hr class="env-hr">
+                                        <img style="width: 100%" src="https://valkyteq.com/static/a3d/bg-bunker.webp" alt="Animat3D Bunker">
+                                        <hr class="env-hr">
+                                        <div class="carousel-caption">
+                                            <h3>Cyber Bunker</h3>
+                                            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore!</p>
                                         </div>
                                     </div>
                                 </div>
@@ -248,6 +261,6 @@
         <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/flags.js"></script>
         <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/loader.js"></script>
         <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/md5.js"></script>
-        <script type="text/javascript" src="./animat3d_client/animat3d.min.js"></script>
+        <script type="text/javascript" src="./animat3d_client/animat3d.js"></script>
     </body>
 </html>
