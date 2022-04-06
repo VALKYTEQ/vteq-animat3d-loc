@@ -131,6 +131,25 @@ const x = getItemFlag("SRV_SIGN");
 
 function lunaUserInfo(type, dataSave) {
 
+    // API: get preview data
+    function lunaPreview() {
+        let jsonData = JSON.stringify({
+            "p": `placeholder`,
+            "s": `${$('#recap').val()}`
+        });
+        $.ajax({
+
+            url: "https://valkyteq.com:50000/animat3d/preview",
+            dataType: "json",
+            type: "POST",
+            async: true,
+            data: jsonData,
+
+            success: _getHandler
+
+        });
+    }
+
     // API: get all infos
     function lunaGet() {
         let jsonData = JSON.stringify({
@@ -219,6 +238,7 @@ function lunaUserInfo(type, dataSave) {
         if (!xhr) { }
         if (status !== "success") window.open("https://valkyteq.com/","_self");
         else {
+
             // Update User Values
             userCoins = obj.coins;
             userVip = obj.vip;
@@ -449,6 +469,8 @@ function lunaUserInfo(type, dataSave) {
         lunaSet(dataSave);
     } else if (type === "buy") {
         lunaBuy(dataSave);
+    } else if (type === "pre") {
+        lunaPreview();
     }
 
 }
@@ -2438,10 +2460,14 @@ if (getItemFlag("SETTING_SSAA") === "true") {
 
 if (getItemFlag("FRAME") === "preview") {
     showStats();
+    // Get API Data
+    lunaUserInfo("pre");
+}
+else {
+    // Get API Data
+    lunaUserInfo("get");
 }
 
-// Get API Data
-lunaUserInfo("get");
 
 // Wait until everything is done loading:
 // ~2 sec for handling API data
