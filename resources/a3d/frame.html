@@ -4,57 +4,112 @@
     <title>Animat3D | ..a project by VALKYTEQ</title>
     <meta charset="utf-8">
     <meta content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport">
+    <!-- Bootstrap -->
+    <link type="text/css" rel="stylesheet" href="./external_modules/bootstrap-5.1.3/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link type="text/css" rel="stylesheet" href="./external_modules/fontawesome-5.14.0/css/all.css" crossorigin="anonymous">
+    <!-- Material Design Bootstrap -->
+    <link rel="stylesheet" href="https://valkyteq.com/bootstrap/css/mdb.min.css">
     <!-- Animat3D -->
     <link type="text/css" rel="stylesheet" href="./animat3d_client/animat3d.min.css">
     <!-- Valkyteq -->
     <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fonts.css">
     <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/loader.css">
+    <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/fancy.css">
+    <link type="text/css" rel="stylesheet" href="./external_modules/valkyteq-0.1.1/css/shop.css">
 </head>
 <body>
-
-<!-- Animat3D Modal -->
-<div class="a3d-modal" id="a3d-modal">
-    <div class="a3d-modal-dialog">
-        <div class="a3d-modal-content">
-            <div class="a3d-modal-header">
-                <h1 class="a3d-modal-title"></h1>
-            </div>
-            <div class="a3d-modal-body">
-                <div class="a3d-modal-body-l"></div>
-                <div class="a3d-modal-body-m"></div>
-            </div>
-            <div class="a3d-modal-footer">
-                <div class="a3d-modal-footer-r"></div>
-                <div class="a3d-modal-footer-m"></div>
-                <div class="a3d-modal-footer-l"></div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Animat3D Confirm Modal -->
 <div id="a3d-confirm-modal">
     <div class="a3d-confirm-header"></div>
     <div class="a3d-confirm-body"></div>
     <div class="a3d-confirm-footer">
-        <span class="yes btn btn-sm btn-outline">YES</span>
-        <span class="no btn btn-sm btn-outline">NO</span>
-        <span class="ok btn btn-sm btn-outline">OK</span>
+        <span class="yes btn btn-sm a3d-btn"><span class="a3d-line"></span>YES</span>
+        <span class="no btn btn-sm a3d-btn"><span class="a3d-line"></span>NO</span>
+        <span class="ok btn btn-sm a3d-btn"><span class="a3d-line"></span>OK</span>
+    </div>
+</div>
+
+<!-- Animat3D Store -->
+<div id="a3d-store">
+
+    <div id="header">
+        <nav class="navbar navbar-nav fixed-top navbar-expand-lg navbar-dark" id="section-navbar">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <div class="navbar-brand ml-3" onclick="toggleStoreCategory('store-cat')">
+                        <b>  Animat3D</b>
+                    </div>
+                </div>
+                <!-- Collapse -->
+                <button class="navbar-toggler navbar-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="sr-only">Navigation</span>
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- Links -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left -->
+                    <ul class="nav navbar-nav mr-auto">
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="toggleStoreCategory('store-cat-body')">Outfits</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="toggleStoreCategory('store-cat-hair')">Hairstyles</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="toggleStoreCategory('store-cat-face')">Faces</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="toggleStoreCategory('store-cat-horn')">Horns</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="toggleStoreCategory('store-cat-anim')">Animations</a></li>
+                    </ul>
+                    <!-- Right -->
+                    <ul class="nav navbar-nav mr-auto pull-right" id="user-vip">
+                    </ul>
+                    <ul class="navbar-nav nav-flex-icons mr-auto pull-right">
+                        <li class="nav-item avatar">
+                            <a class="nav-link" href="#">
+                                <div id="user-chip" class="chip chip-lg transparent white-text mb-0 mt-1 ml-1"></div>
+                            </a>
+                        </li>
+                        <li class="nav-item avatar">
+                            <a class="nav-link mt-2" href="#" onclick="$('#a3d-store').fadeOut()">X</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="row ml-5 mr-5 mt-5 mb-5" >
+        <div id="sidebar" class="col-md-3 text-center">
+            <img src="https://valkyteq.com/static/vteq.png" alt="VALKYTEQ" width="128" height="128">
+            <br><div style="font-family:'Russo One',serif;letter-spacing:0.05em;">..a project by VALKYTEQ</div><br>
+            <br><b><i class="fal fa-info-square"></i>     INFORMATION     <i class="fal fa-info-square"></i></b>
+            <br><p id="sidebar-info"></p>
+            <div id="copyright" class="text-left"><span class="item_grade_3">VALKYTEQ</span>   |   Copyright © 2022<div class="hr_grade_3"></div></div>
+        </div>
+
+        <div id="main" class="col-md-9">
+            <div id="content">
+                <div id="store-cat" class="text-center">
+                    <br><img src="https://valkyteq.com/static/a3d/store.webp" alt="VALKYTEQ" width="888" height="500">
+                </div>
+                <div id="store-cat-sets" style="display: none"></div>
+                <div id="store-cat-body" style="display: none"></div>
+                <div id="store-cat-hair" style="display: none"></div>
+                <div id="store-cat-face" style="display: none"></div>
+                <div id="store-cat-horn" style="display: none"></div>
+                <div id="store-cat-anim" style="display: none"></div>
+                <div id="store-cat-equip" style="display: none"></div>
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- Animat3D Container -->
-<div id="container" class="sticky-top"></div>
+<div id="a3d-container"></div>
 
 <!-- Animat3D Stats -->
 <div id="a3d-stat-container"></div>
 
 <!-- Animat3D Dynamic Content -->
 <div id="a3d-content-mask">
-    <div class="content-bg-r"></div>
-    <div class="content-bg-l">
+    <div class="content-bg-r col-lg-6"></div>
+    <div class="content-bg-l col-lg-6">
         <div class="preview-content">
             <img src="https://valkyteq.com/static/animat3d.png" alt="Animat3D" height="128" class="mb-5">
             <br><large style="font-family: 'Mechsuit', sans-serif; letter-spacing: 0.1em; font-size: 0.8em;">ANImAT3D</large>
@@ -75,12 +130,12 @@
                 Thanks to the glTF format, the generated A3D file grants the following features:
                 <br> ➤     Embedded animations and textures
                 <br> ➤     Separate files for animations and models
-                <!--                <br> ➤     <a href="https://en.wikipedia.org/wiki/FastCGI" target="_blank" style="color: #e8e8e8;">FastCGI <i class="fad fa-external-link"></i></a> for session based application calls-->
                 <br> ➤     Low file size with high resolution textures
                 <br> ➤     On-the-fly manipulation of 3D Skeletons
             </small>
             </p>
-        </div></div>
+        </div>
+    </div>
 </div>
 
 <!-- Animat3D Loading Screen -->
@@ -121,6 +176,7 @@
 <!-- SCRIPTS -->
 <script type="text/javascript" src="./external_modules/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="./external_modules/bootstrap-5.1.3/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://valkyteq.com/bootstrap/js/mdb.min.js"></script>
 <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/flags.js"></script>
 <script type="text/javascript" src="./external_modules/valkyteq-0.1.1/js/loader.js"></script>
 <script type="text/javascript" src="./animat3d_client/animat3d.min.js"></script>

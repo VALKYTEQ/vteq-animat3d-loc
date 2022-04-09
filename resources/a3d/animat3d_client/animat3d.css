@@ -31,12 +31,12 @@
 */
 * {
   cursor: url("../animat3d_modules/cursor/A3D Normal Select.ani"), url("../animat3d_modules/cursor/static/A3D Normal Select.cur"), auto;
+  font-family: "Philosopher", serif;
 }
 
 body {
   margin: 0;
   top: 0;
-  background-color: #000;
   color: #fff;
   font-family: "Philosopher", serif;
   font-size: 13px;
@@ -47,11 +47,15 @@ body {
   background-attachment: fixed;
   background-size: cover;
   background-image: url("../external_modules/valkyteq-0.1.1/css/images/bg.webp");
-  background-color: rgba(0, 0, 0, 0.24);
+  background-color: rgba(0, 0, 0, 0.73);
 }
 
 body, html {
   cursor: url("../animat3d_modules/cursor/A3D Normal Select.ani"), url("../animat3d_modules/cursor/static/A3D Normal Select.cur"), auto;
+}
+
+hr {
+  opacity: 0.78;
 }
 
 .txt-brand {
@@ -154,13 +158,18 @@ h3 {
 }
 
 .tooltip {
+  width: 288px;
+  min-width: 288px;
+}
+
+.tooltip-inner {
   z-index: 99999;
   /* A value higher than 1010 solves the PopperJS issue */
   background-color: rgba(0, 0, 0, 0.75);
   padding: 5px 15px 5px 15px;
-  border-radius: 7px;
-  border: black;
-  width: 260px;
+  border: #ffffff;
+  width: 288px;
+  min-width: 288px;
   text-align: center;
   align-items: center;
   font-size: medium;
@@ -198,6 +207,7 @@ h3 {
   border-color: transparent;
   background: linear-gradient(45deg, #3bade3 0%, #8057e6 25%, #9844b7 51%, #ff357f 100%);
   height: 2px;
+  opacity: 0.7;
 }
 .wrapper hr.login-hr {
   margin-top: 40px;
@@ -572,21 +582,22 @@ a, button, input, select {
 /* CONFIRM
  * ******* */
 #a3d-confirm-modal {
-  font-size: 1rem;
+  border-style: double;
+  border-color: rgba(255, 255, 255, 0.33);
   z-index: 10000;
   display: none;
-  background-color: #646464;
-  border-radius: 5px;
-  border: 1px solid #000000;
-  position: fixed;
   width: 350px;
+  height: 160px;
+  position: absolute;
+  padding: 8px 8px 8px 8px;
   left: 50%;
-  top: 37.5%;
-  margin-left: -175px;
-  padding: 6px 8px 8px;
-  box-sizing: border-box;
-  text-align: left;
-  line-height: normal;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-image: url("../external_modules/valkyteq-0.1.1/css/images/bg_blur_b.png");
 }
 
 #a3d-confirm-modal button {
@@ -858,6 +869,7 @@ a, button, input, select {
   text-align: center;
 }
 .a3d-modal-body-l-cnt {
+  padding-left: 50px;
   width: 30%;
   display: block;
   position: absolute;
@@ -873,8 +885,8 @@ a, button, input, select {
   overflow-y: auto;
 }
 .a3d-modal-body-m-cnt {
-  padding-left: 150px;
-  width: 45%;
+  padding-left: 200px;
+  width: 100%;
   display: block;
   position: absolute;
   text-align: left;

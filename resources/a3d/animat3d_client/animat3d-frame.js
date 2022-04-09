@@ -32,7 +32,7 @@
 import * as THREE from '../animat3d_modules/build/three.module.js';
 import { GLTFLoader } from '../animat3d_modules/loaders/GLTFLoader.js';
 import * as SkeletonUtils from '../animat3d_modules/utils/SkeletonUtils.js';
-import {GUI} from "../animat3d_modules/libs/lil-gui.module.min.js";
+import { GUI } from "../animat3d_modules/libs/lil-gui.module.min.js";
 import Stats from '../animat3d_modules/libs/stats.module.js';
 import { Water } from '../animat3d_modules/objects/Water2.js';
 import { EffectComposer } from '../animat3d_modules/postprocessing/EffectComposer.js';
@@ -41,7 +41,7 @@ import { ShaderPass } from '../animat3d_modules/postprocessing/ShaderPass.js';
 import { CopyShader } from '../animat3d_modules/shaders/CopyShader.js';
 import { FXAAShader } from '../animat3d_modules/shaders/FXAAShader.js';
 import { SSAARenderPass } from '../animat3d_modules/postprocessing/SSAARenderPass.js';
-import {GammaCorrectionShader} from "../animat3d_modules/shaders/GammaCorrectionShader.js";
+import { GammaCorrectionShader } from "../animat3d_modules/shaders/GammaCorrectionShader.js";
 
 
 let camera, scene, renderer;
@@ -65,6 +65,7 @@ let arrFace = [];
 let arrHorn = [];
 let arrBody = [];
 let arrAnim = [];
+let arrSets = [];
 let listHair = {};
 let listFace = {};
 let listHorn = {};
@@ -101,10 +102,8 @@ let arrs = [
     arrAnim
 ];
 
-let gizmo, helper, samples;
-let world, water, scale;
-
-let options, optionsCastaFem, optionsCastaKid;
+let gizmo, samples;
+let world, water, scale, options;
 
 // so we can use degrees as input
 let degree = Math.PI / 180;
@@ -117,7 +116,7 @@ let animationSkeleton = [];
 
 
 // ****************************************************************************************************************** //
-//                                                 v  LOAD DATA  v                                                    //
+//                                               v  DATA INTERFACE  v                                                 //
 // ****************************************************************************************************************** //
 
 
@@ -125,14 +124,33 @@ const m = getItemFlag("CHAR_NAME");
 const u = getItemFlag("USER");
 const uid = getItemFlag("USER_ID");
 const n = getItemFlag("USER_NAME");
-const s = getItemFlag("CHAR_SET").split("x");
 const x = getItemFlag("SRV_SIGN");
+let s;
+if (getItemFlag("FRAME") === "preview") {
+    s = getItemFlag("CHAR_SET");
+} else {
+    s = getItemFlag("CHAR_SET").split("x");
+}
 
 
-function lunaUserInfo(type, dataSave) {
+/** VALKYTEQ ADI
+ * ------------------------
+ * Accessible Data Interface
+ *
+ * ------------------------
+ * - adi_getDataAll
+ * - adi_getDataPreview
+ * - adi_setDataAll
+ * - adi_setDataBuy
+ * - adi_serverPing
+ *
+ * @param {string} type
+ * @param {{}} dataSave
+ */
+function vteqADI(type, dataSave) {
 
     // API: get preview data
-    function lunaPreview() {
+    function adi_getDataPreview() {
         let jsonData = JSON.stringify({
             "p": `placeholder`,
             "s": `${$('#recap').val()}`
@@ -151,7 +169,7 @@ function lunaUserInfo(type, dataSave) {
     }
 
     // API: get all infos
-    function lunaGet() {
+    function adi_getDataAll() {
         let jsonData = JSON.stringify({
             "m": m,
             "u": u,
@@ -171,7 +189,7 @@ function lunaUserInfo(type, dataSave) {
     }
 
     // API: user save char
-    function lunaSet(save) {
+    function adi_setDataAll(save) {
         let jsonData = JSON.stringify({
             "m": m,
             "u": u,
@@ -192,7 +210,7 @@ function lunaUserInfo(type, dataSave) {
     }
 
     // API: user buy item
-    function lunaBuy(item) {
+    function adi_setDataBuy(item) {
         let jsonData = JSON.stringify({
             "m": m,
             "u": u,
@@ -213,7 +231,7 @@ function lunaUserInfo(type, dataSave) {
     }
 
     // API: ping
-    function lunaPing() {
+    function adi_serverPing() {
         let jsonData = JSON.stringify({
             "m": m,
             "u": u,
@@ -233,6 +251,24 @@ function lunaUserInfo(type, dataSave) {
         });
     }
 
+    // Event: connect
+    function adi_eventConnect() {
+        let eventData = JSON.stringify({
+            "m": `${m}`,
+            "u": `${u}`,
+            "s": `${x}`
+        })
+        let serverEvents = new EventSource(`https://valkyteq.com:50000/animat3d/event/${uid}?${eventData}`);
+        serverEvents.addEventListener('message', function (event) {
+            function _aiCmd(command) {
+                const cmd = (command[0].toString().toLowerCase()).replace("/", "")
+                setAnimation(cmd);
+            }
+            let msg = event.data.split(" ")
+            _aiCmd(msg)
+        });
+    }
+
     // Getter handler -> Start Animat3D
     function _getHandler (obj, status, xhr) {
         if (!xhr) { }
@@ -240,84 +276,30 @@ function lunaUserInfo(type, dataSave) {
         else {
 
             // Update User Values
-            userCoins = obj.coins;
-            userVip = obj.vip;
-            if (obj.unlocks) {
-                userUnlocks = obj.unlocks;
-            } else {
-                userUnlocks = "empty";
-            }
+            userDataUpdateBase(obj);
 
-            // Go through all items from database
-            obj.payload.forEach(function (item) {
-                switch (item.category) {
-                    case "Body":
-                        arrBody.push(item)
-                        listBody[item.name] = function () {
-                            updateEquipment(item)
-                            removeEntity(item.category);
-                            addEntity(item);
-                            setTimeout(function () {
-                                setAnimation("idle");
-                            }, 100);
-                        }
-                        settingsDummy[item.name] = function () {};
-                        break;
-                    case "Face":
-                        arrFace.push(item)
-                        listFace[item.name] = function () {
-                            updateEquipment(item)
-                            removeEntity(item.category);
-                            addEntity(item);
-                            setTimeout(function () {
-                                setAnimation("idle");
-                            }, 100);
-                        }
-                        settingsDummy[item.name] = function () {};
-                        break;
-                    case "Hair":
-                        arrHair.push(item)
-                        listHair[item.name] = function () {
-                            updateEquipment(item)
-                            removeEntity(item.category);
-                            addEntity(item);
-                            setTimeout(function () {
-                                setAnimation("idle");
-                            }, 100);
-                        }
-                        settingsDummy[item.name] = function () {};
-                        break;
-                    case "Horn":
-                        arrHorn.push(item)
-                        listHorn[item.name] = function () {
-                            updateEquipment(item)
-                            removeEntity(item.category);
-                            addEntity(item);
-                            setTimeout(function () {
-                                setAnimation("idle");
-                            }, 100);
-                        }
-                        settingsDummy[item.name] = function () {};
-                        break;
-                    case "Anim":
-                        arrAnim.push(item)
-                        listAnim[item.name] = function () {
-                            // updateEquipment(item)
-                            // removeEntity(item.category);
-                            // addEntity(item);
-                            setTimeout(function () {
-                                setAnimation(item.name);
-                            }, 100);
-                        }
-                        settingsDummy[item.name] = function () {};
-                        break;
-                }
-            });
+            // Go through all items
+            // if (getItemFlag("FRAME") === "preview") {
+                obj.payload.forEach(function (item) {
+                    updateItem(item);
+                });
+            // } else {
+            //     // items
+            //     obj.payload[0].forEach(function (item) {
+            //         updateItem(item);
+            //     });
+            //     // sets
+            //     obj.payload[1].forEach(function (item) {
+            //         arrSets.push(item)
+            //     });
+            // }
 
             //
             // START ANIMAT3D
             // =================
-            init(options);
+            if (getItemFlag("FRAME") !== "store") {
+                init(options);
+            }
 
         }
     }
@@ -329,13 +311,7 @@ function lunaUserInfo(type, dataSave) {
         else {
 
             // Update User Values
-            userCoins = obj.coins;
-            userVip = obj.vip;
-            if (obj.unlocks) {
-                userUnlocks = obj.unlocks;
-            } else {
-                userUnlocks = "empty";
-            }
+            userDataUpdateBase(obj);
 
             //
             // LOCKED ITEMS FOUND
@@ -343,80 +319,28 @@ function lunaUserInfo(type, dataSave) {
             if (obj.status === "itemToBuy") {
 
                 let btnIDs = [];
-                let info = ``;
-                let vip;
+                let infoItem = ``;
 
-                // Set VIP
-                if (obj.vip) {
-                    vip = `<span class="success">YES</span>`;
-                } else {
-                    vip = `<span class="error">NO</span>`;
-                }
-
-                // Design Item List (Right Panel)
+                // Design Item List
                 obj.payload.forEach(function (item) {
-
                     btnIDs.push(item.id)
                     settingsA3Dbuy[`${item.id}`] = function() {
                         buyEquipment(item);
                     }
-
-                    // Decide if VIP or Ꝟ Coins
-                    let amount;
-                    if (item.price !== 99999) {
-                        amount = item.price + ' Ꝟ';
-                    } else {
-                        amount = 'VIP Membership';
-                    }
-
-                    // Design Item Block Info (right)
-                    let itemName = `<div class="item_grade_${item.grade}">${item.name_en} (${rarity[item.grade]})</div>`;
-                    let itemDesc = `<div class="hr_grade_${item.grade}"></div>${item.desc_en}`;
-                    let itemPrice = `Unlock ${item.name_en} with: <span class="item_price">${amount}</span>`;
-                    let itemBuy = `<button class="btn btn-sm btn-outline-buy" id="${item.id}">Unlock</button>`;
-
-                    // Design Item Block Image (left)
-                    let itemImg = `
-                        <div class="icon_grade_${item.grade}" style="width: 132px;height: 130px;">
-                            <img src="https://valkyteq.com/static/${item.icon}" alt="${item.name}" width="128" height="128">
-                        </div>
-                    `;
-
-                    // Put Design Block Together
-                    let itemInfoL = `<div class="a3d-modal-body-l-cnt">${itemImg}</div>`;
-                    let itemInfoR = `<div class="a3d-modal-body-m-cnt">${itemName}${itemDesc}<br><br>${itemPrice}<br>${itemBuy}</div>`;
-
-                    // Add Item To List
-                    info += `<br><div class="a3d-block" id="block${item.id}">${itemInfoL}${itemInfoR}</div>`;
-
+                    infoItem += styleStoreItem(item, "");
                 })
 
-                // Design Info Panel (left)
-                let infoImage = `<img src="https://valkyteq.com/static/vteq.png" alt="VALKYTEQ" width="128">`;
-                let infoA3D = `<br><div style="font-family:'Russo One',serif;letter-spacing:0.05em;">..a project by VALKYTEQ</div><br>`;
-                let infoTitle = `<i class="fal fa-info-square"></i>     INFORMATION     <i class="fal fa-info-square"></i>`;
+                // Add info about locked items
                 let infoText = `
-                    You have items equipped, which aren't unlocked yet. Select an item on the right to unlock it, 
-                    or the button below to close this window and switch the equipped item.
+                    You have items equipped, which aren't unlocked yet. Select an item on the right to unlock it,
+                    or the X on top right to close this window and switch the equipped item.
                 `;
 
-                // Get Modal Template
-                let modal = $('.a3d-modal');
-                let title = $('.a3d-modal-title');
-                let body = [$('.a3d-modal-body-l'), $('.a3d-modal-body-m')];
-                let footer = [$('.a3d-modal-footer-l'), $('.a3d-modal-footer-m'), $('.a3d-modal-footer-r')];
-
-                // Build Modal Info
-                title.text("Locked Items");
-                body[0].html(`${infoImage}${infoA3D}<br><b>${infoTitle}</b><br>${infoText}`);
-                body[1].html(`${info}`);
-                footer[0].html(`
-                    <b><i class="fal fa-user"></i> ${n}</b>     <br>
-                    <span class="item_price"><i class="fal fa-coins"></i> <span id="coins">${obj.coins}</span> Ꝟ</span>     
-                    <span class="success"><i class="fal fa-crown"></i> VIP:</span> ${vip}
-                `);
-                footer[1].html(`<a href="https://valkyteq.com/support/" target="_blank">Need Help? <i class="fal fa-external-link"></i></a>`);
-                footer[2].html(`<button type="button" class="a3d-modal-button btn a3d-btn" onclick="$('#a3d-modal').hide()">Close</button>`);
+                // Show locked items in store
+                let htmlId = 'store-cat-equip';
+                let shopBody = $(`#${htmlId}`);
+                shopBody.html(infoItem);
+                toggleStoreCategory(htmlId, infoText);
 
                 // Bind function to buy buttons
                 btnIDs.forEach(function (id) {
@@ -424,8 +348,9 @@ function lunaUserInfo(type, dataSave) {
                     buyBtn.on("click", settingsA3Dbuy[`${id}`])
                 })
 
-                // Show Modal
-                modal.show();
+                // Store Modal
+                storeUserInfo();
+                showStore();
             }
 
             //
@@ -436,11 +361,14 @@ function lunaUserInfo(type, dataSave) {
                 if (obj.payload.constructor === Array) {
                     let item = obj.payload[0];
                     // Update Coins Display
-                    parent.postMessage(userCoins, '*');
-                    $('#coins').html(userCoins);
-                    setItemFlag("USER_COINS", userCoins)
+                    $('#coins').html(obj.coins);
                     // Delete Image from Locked Items panel
                     $(`#block${item.id}`).remove()
+                    $(`#blockstore${item.id}`).remove()
+                    $(`#blocksets${item.id}`).remove()
+                    $(`#br${item.id}`).remove()
+                    $(`#brstore${item.id}`).remove()
+                    $(`#brsets${item.id}`).remove()
                     // Create Confirm Modal
                     let buyTitle = `<div class="item_grade_3">Congratulations!</div><div class="hr_grade_3">`;
                     let buyMessage = `${item.name_en} has been unlocked! Enjoy!`;
@@ -449,7 +377,7 @@ function lunaUserInfo(type, dataSave) {
                 // CHARACTER SAVED
                 else {
                     // Updated Info
-                    lunaUserUpdate(obj);
+                    userDataUpdate(obj);
                     // Create Confirm Modal
                     let buyTitle = `<div class="item_grade_3">Congratulations!</div><div class="hr_grade_3">`;
                     let buyMessage = `Your character has been saved!`;
@@ -462,45 +390,25 @@ function lunaUserInfo(type, dataSave) {
     }
 
     if (type === "ping") {
-        lunaPing();
+        adi_serverPing();
     } else if (type === "get") {
-        lunaGet();
+        adi_getDataAll();
     } else if (type === "set") {
-        lunaSet(dataSave);
+        adi_setDataAll(dataSave);
     } else if (type === "buy") {
-        lunaBuy(dataSave);
+        adi_setDataBuy(dataSave);
     } else if (type === "pre") {
-        lunaPreview();
+        adi_getDataPreview();
+    } else if (type === "event") {
+        adi_eventConnect();
     }
 
 }
 
 
 // ****************************************************************************************************************** //
-//                                               v  SERVER EVENTS  v                                                  //
+//                                                 v  ANIMATIONS  v                                                   //
 // ****************************************************************************************************************** //
-
-if (getItemFlag("FRAME") === "control") {
-    let eventData = JSON.stringify({
-        "m": `${m}`,
-        "u": `${u}`,
-        "s": `${x}`
-    })
-    let serverEvents = new EventSource(`https://valkyteq.com:50000/animat3d/event/${uid}?${eventData}`);
-
-    serverEvents.addEventListener('message', function (event) {
-
-        // chat command
-        function _aiCmd(command) {
-            const cmd = (command[0].toString().toLowerCase()).replace("/", "")
-            setAnimation(cmd);
-        }
-
-        let msg = event.data.split(" ")
-        _aiCmd(msg)
-
-    });
-}
 
 const anim = {
     "castanic": {
@@ -516,6 +424,9 @@ const anim = {
                 "dance":5,
                 "fund":6,
                 "idle":19,
+                "idle2":22,
+                "idle3":23,
+                "idle4":24,
                 "point":10,
                 "propose":11,
                 "request":12,
@@ -574,11 +485,15 @@ settingsA3D = {
         showStats();
     },
     'Show Debug Lines': false,
-    'Reset Char Animation': function () {
+    'Sync Animation': function () {
         setAnimation("idle");
     },
     'Save Character': function () {
         saveCharacter();
+    },
+    'Animat3D Store': function () {
+        storeUserInfo();
+        showStore();
     },
     'Water Color': '#fce1b8',
     'Water Scale': 3,
@@ -799,7 +714,7 @@ settingsPreview = {
 // ****************************************************************************************************************** //
 
 
-optionsCastaKid = {
+options = {
     "stats":getItemFlag("SETTING_STATS") === "true",
     "debug":true,
     "gizmo":10,
@@ -834,45 +749,6 @@ optionsCastaKid = {
         "bias":-0.00001
     }
 };
-optionsCastaFem = {
-    "stats":getItemFlag("SETTING_STATS") === "true",
-    "debug":true,
-    "gizmo":200,
-    "cpanel":true,
-    "camera":{
-        "fov":45,
-        "near":1,
-        "far":10000,
-        "position":[
-            optionsCastaKid.camera.position[0] * inch,
-            optionsCastaKid.camera.position[1] * inch,
-            optionsCastaKid.camera.position[2] * inch
-        ],
-        "rotation":[2, 180, 0]
-    },
-    "scene":{
-        "ground":false,
-        "gcolor":0x0d5bdd,
-        "gsize":[20000,20000],
-        "background":true,
-        "bgcolor":0x0d5bdd,
-        "fog":false,
-        "fogcolor":0x0d5bdd,
-        "fognear":777,
-        "fogfar":7777
-    },
-    "light":{
-        "shadow":true,
-        "color":0xffffff,
-        "skycolor":0xffffff,
-        "groundcolor":0x444444,
-        "position":[-300, 1000, -1000],
-        "size":1000,
-        "near":0.00001,
-        "far":100000,
-        "bias":-0.00001
-    }
-};
 
 // if (m !== "custom") {
 //     if (m === "kara" || m === "kara1") {
@@ -891,8 +767,6 @@ optionsCastaFem = {
 //         scale = true;
 //     }
 // } else {
-    // settings = settingsCastaFem;
-    options = optionsCastaKid;
     scale = true;
 // }
 
@@ -904,13 +778,14 @@ optionsCastaFem = {
 
 function init(opt) {
 
-    container = document.getElementById( 'container' );
+    container = document.getElementById( 'a3d-container' );
 
     // LOAD BASE SKELETON
     if (getItemFlag("FRAME") !== "preview") {
         gltfLoadBase();
     }
 
+    // SET CAMERA
     camera = new THREE.PerspectiveCamera(
         opt.camera.fov,
         window.innerWidth/window.innerHeight,
@@ -928,6 +803,7 @@ function init(opt) {
         opt.camera.rotation[2] * degree
     );
 
+    // LOAD CLOCK / SCENE
     clock = new THREE.Clock();
     scene = new THREE.Scene();
 
@@ -937,7 +813,7 @@ function init(opt) {
         scene.background = new THREE.Color(opt.scene.bgcolor);
     }
 
-    // EDITOR SETTINGS
+    // ENVIRONMENT SETTINGS
     if (getItemFlag("FRAME") !== "control") {
 
         // fog / bg transmission
@@ -945,7 +821,7 @@ function init(opt) {
             scene.fog = new THREE.Fog(opt.scene.fogcolor, opt.scene.fognear, opt.scene.fogfar);
         }
 
-        let skyMap, noWater = false;
+        let skyMap, waterX = 300, waterY = 400, noWater = false, waterPos = [0, -3, 100];
         const waterTexture = new THREE.TextureLoader();
         let waterOptions = {
             color: '#fce1b8',
@@ -973,6 +849,15 @@ function init(opt) {
             waterOptions['flowSpeed'] = 0.00001;
             skyMap = 'animat3d_textures/sky/night.jpg';
         }
+        else if (getItemFlag("SETTING_ENV") === "island") {
+            waterOptions['color'] = '#7f9498';
+            waterOptions['flowSpeed'] = 0.025;
+            waterOptions['scale'] = 5;
+            waterX = 10000;
+            waterY = 10000;
+            waterPos = [2500, -22, 5000]
+            skyMap = 'animat3d_textures/sky/island.jpg';
+        }
         else {
             noWater = true;
             skyMap = 'animat3d_textures/sky/night.jpg';
@@ -980,11 +865,11 @@ function init(opt) {
 
         // Create water
         if (!noWater) {
-            const waterGeometry = new THREE.PlaneGeometry(300, 400);
+            const waterGeometry = new THREE.PlaneGeometry(waterX, waterY);
             water = new Water(waterGeometry, waterOptions);
-            water.position.x = 0;
-            water.position.y = -3;
-            water.position.z = 100;
+            water.position.x = waterPos[0];
+            water.position.y = waterPos[1];
+            water.position.z = waterPos[2];
             water.rotation.x = Math.PI * -0.5;
             scene.add(water);
         }
@@ -1021,6 +906,30 @@ function init(opt) {
         dirLight.shadow.camera.far = 200;
         dirLight.shadow.bias = -0.05;
         scene.add( dirLight );
+    }
+    else if (getItemFlag("SETTING_ENV") === "island") {
+        // ambient light
+        const ambientLight = new THREE.AmbientLight(0xb8bbfc, 0.33);
+        scene.add(ambientLight);
+
+        // directional light
+        const dirLight = new THREE.DirectionalLight( 0xb8bbfc, 1.337);
+        dirLight.position.set( -20, 30, -50 );
+        dirLight.castShadow = true;
+        dirLight.shadow.camera.top = 200;
+        dirLight.shadow.camera.bottom = -200;
+        dirLight.shadow.camera.left = -200;
+        dirLight.shadow.camera.right = 200;
+        dirLight.shadow.camera.near = 0.0001;
+        dirLight.shadow.camera.far = 200;
+        dirLight.shadow.bias = -0.0001;
+        scene.add( dirLight );
+
+        // directional light
+        // const dirLight2 = new THREE.DirectionalLight(0xb8bbfc, 0.66);
+        // dirLight2.position.set(0, 30, -20);
+        // dirLight.castShadow = true;
+        // scene.add(dirLight2);
     }
     else {
         // ambient light
@@ -1137,6 +1046,28 @@ function init(opt) {
                 world.rotation.y = 200 * degree;
                 world.rotation.z = 0;
                 // world.scale.set(1 / inch, 1 / inch, 1 / inch);
+
+                scene.add(world);
+
+            });
+        }
+        // Tropical Island
+        else if (getItemFlag("SETTING_ENV") === "island") {
+            worldLoader.load('./animat3d_objects/scenes/island.a3d', function (gltf) {
+
+                world = gltf.scene;
+
+                world.traverse(function (object) {
+                    if (object.isMesh) {
+                        object.castShadow = opt.light.shadow;
+                        object.receiveShadow = opt.light.shadow;
+                        // object.material.transparency = true;
+                    }
+                });
+
+                world.position.x = -55;
+                world.position.y = -33;
+                world.position.z = 66;
 
                 scene.add(world);
 
@@ -1355,6 +1286,182 @@ function showStats()  {
     $(visibility).toggle()
 }
 
+function showStore() {
+    $('#a3d-store').fadeToggle();
+}
+
+function storeUserInfo() {
+    let user_coins = getItemFlag("USER_COINS");
+    let user_vip = getItemFlag("USER_VIP");
+
+    let string = `<img src="https://valkyteq.com/avatars/${uid}.jpg" alt="${n}" style="width: 32px; height: 32px;">${n}   <span style="color: #ffd700;"><span id="coins">${user_coins}</span> Ꝟ<i class="fas fa-coins"></i></span>`;
+    let stringVip;
+
+    if (user_vip === "true") {
+        stringVip = `<li class="nav-item"><a class="nav-link" href="#" style="color: #ffd700;" disabled="true"><i class="fal fa-crown mr-2"></i> VIP Account</a></li>`;
+    } else {
+        stringVip = ``;
+    }
+
+    $('#user-chip').html('');
+    $('#user-vip').html('');
+    $('#user-chip').html(string);
+    $('#user-vip').html(stringVip);
+}
+
+function storeUpdate() {
+
+    let btnItemIDs = [];
+    let btnSetIDs = [];
+
+    let styledItemBody = '';
+    let styledItemFace = '';
+    let styledItemHair = '';
+    let styledItemHorn = '';
+    let styledItemAnim = '';
+    let styledItemSets = '';
+
+    // Get Items
+    arrs.forEach(function (arr) {
+        arr.forEach(function (item) {
+
+            let unlocks = getItemFlag("USER_UNLOCKS");
+            if (unlocks.includes(item.id)) return;
+            if ((item.tradable).toString() === "0") return;
+            if (getItemFlag("USER_VIP") === "true" && (item.tradable).toString() === "2") return;
+
+            btnItemIDs.push(item.id)
+            settingsA3Dbuy[`store${item.id}`] = function() {
+                buyEquipment(item);
+            }
+
+            switch (item.category.toLowerCase()) {
+                case "body":
+                    styledItemBody += styleStoreItem(item, "store");
+                    break;
+                case "face":
+                    styledItemFace += styleStoreItem(item, "store");
+                    break;
+                case "hair":
+                    styledItemHair += styleStoreItem(item, "store");
+                    break;
+                case "horn":
+                    styledItemHorn += styleStoreItem(item, "store");
+                    break;
+                case "anim":
+                    styledItemAnim += styleStoreItem(item, "store");
+                    break;
+            }
+
+        })
+    })
+
+    // Get Sets
+    arrSets.forEach(function (item) {
+
+        // let unlocks = getItemFlag("USER_UNLOCKS");
+        // if (unlocks.includes(item.id)) return;
+        if ((item.tradable).toString() === "0") return;
+        if (getItemFlag("USER_VIP") === "true" && (item.tradable).toString() === "2") return;
+
+        btnSetIDs.push(item.id)
+        settingsA3Dbuy[`sets${item.id}`] = function() {
+            buyEquipment(item);
+        }
+
+        styledItemSets += styleStoreSet(item, "sets");
+
+    })
+
+    // Fill Categories
+    $('#store-cat-body').html(styledItemBody !== "" ? styledItemBody : SHOP_IMG)
+    $('#store-cat-face').html(styledItemFace !== "" ? styledItemFace : SHOP_IMG)
+    $('#store-cat-hair').html(styledItemHair !== "" ? styledItemHair : SHOP_IMG)
+    $('#store-cat-horn').html(styledItemHorn !== "" ? styledItemHorn : SHOP_IMG)
+    $('#store-cat-anim').html(styledItemAnim !== "" ? styledItemAnim : SHOP_IMG)
+    $('#store-cat-sets').html(styledItemSets !== "" ? styledItemSets : SHOP_IMG)
+
+    // Bind function to buy buttons
+    btnItemIDs.forEach(function (id) {
+        let buyBtn = $(`#store${id}`)
+        buyBtn.on("click", settingsA3Dbuy[`store${id}`])
+    })
+
+    // Bind function to buy buttons
+    btnSetIDs.forEach(function (id) {
+        let buyBtn = $(`#sets${id}`)
+        buyBtn.on("click", settingsA3Dbuy[`sets${id}`])
+    })
+
+}
+
+function updateItem(item) {
+
+    switch (item.category) {
+        case "Body":
+            arrBody.push(item)
+            listBody[item.name] = function () {
+                updateEquipment(item)
+                removeEntity(item.category);
+                addEntity(item);
+                setTimeout(function () {
+                    setAnimation("idle");
+                }, 100);
+            }
+            settingsDummy[item.name] = function () {};
+            break;
+        case "Face":
+            arrFace.push(item)
+            listFace[item.name] = function () {
+                updateEquipment(item)
+                removeEntity(item.category);
+                addEntity(item);
+                setTimeout(function () {
+                    setAnimation("idle");
+                }, 100);
+            }
+            settingsDummy[item.name] = function () {};
+            break;
+        case "Hair":
+            arrHair.push(item)
+            listHair[item.name] = function () {
+                updateEquipment(item)
+                removeEntity(item.category);
+                addEntity(item);
+                setTimeout(function () {
+                    setAnimation("idle");
+                }, 100);
+            }
+            settingsDummy[item.name] = function () {};
+            break;
+        case "Horn":
+            arrHorn.push(item)
+            listHorn[item.name] = function () {
+                updateEquipment(item)
+                removeEntity(item.category);
+                addEntity(item);
+                setTimeout(function () {
+                    setAnimation("idle");
+                }, 100);
+            }
+            settingsDummy[item.name] = function () {};
+            break;
+        case "Anim":
+            arrAnim.push(item)
+            listAnim[item.name] = function () {
+                // updateEquipment(item)
+                // removeEntity(item.category);
+                // addEntity(item);
+                setTimeout(function () {
+                    setAnimation(item.name);
+                }, 100);
+            }
+            settingsDummy[item.name] = function () {};
+            break;
+    }
+
+}
+
 function updateEquipment(item) {
     switch (item.category.toLowerCase()) {
         case "body":
@@ -1411,7 +1518,7 @@ function getEquipment() {
 
 function saveCharacter() {
     const equipment = getEquipment();
-    lunaUserInfo("set", equipment)
+    vteqADI("set", equipment)
 }
 
 
@@ -1424,7 +1531,7 @@ function buyEquipment( item ) {
             buyTitle,
             buyMessage,
             function yes() {
-                lunaUserInfo("buy", item.id)
+                vteqADI("buy", item.id)
             },
             function no() {
                 // Do nothing
@@ -1477,9 +1584,119 @@ function doConfirm(ttl, msg, yesFn, noFn) {
 }
 
 
+function userDataUpdateBase(obj) {
+    if (obj.coins) {
+        userCoins = obj.coins;
+        setItemFlag("USER_COINS", userCoins);
+    }
+    if (obj.vip) {
+        userVip = obj.vip;
+        setItemFlag("USER_VIP", userVip);
+    }
+    if (obj.unlocks) {
+        userUnlocks = obj.unlocks;
+        setItemFlag("USER_UNLOCKS", userUnlocks);
+    }
+}
+
+
 // ****************************************************************************************************************** //
 //                                                v  ITEM PANEL  v                                                    //
 // ****************************************************************************************************************** //
+
+/**
+ * @param {Object} item
+ * @param {string} type
+ * @return {string} html
+ * */
+function styleStoreItem (item, type) {
+
+    let info = '';
+
+    // Decide if VIP, Exclusive or Ꝟ Coins
+    let amount;
+    switch (item.tradable) {
+        case 1:
+            amount = item.price + ' Ꝟ';
+            break;
+        case 2:
+            amount = 'VIP Membership';
+            break;
+        case 3:
+            amount = 'Exclusive';
+            break;
+    }
+
+    // Design Item Block Info (right)
+    let itemName = `<div class="item_grade_${item.grade}">${item.name_en} (${rarity[item.grade]})</div>`;
+    let itemDesc = `<div class="hr_grade_${item.grade}"></div>${item.desc_en}`;
+    let itemPrice = `Unlock ${item.name_en} with: <span class="item_price">${amount}</span>`;
+    let itemBuy = `<button class="btn btn-sm a3d-btn" id="${type}${item.id}">Unlock</button>`;
+
+    // Design Item Block Image (left)
+    let itemImg = `
+                        <div class="icon_grade_${item.grade}" style="width: 132px;height: 132px;">
+                            <img src="https://valkyteq.com/static/${item.icon}" alt="${item.name}" width="128" height="128">
+                        </div>
+                    `;
+
+    // Put Design Block Together
+    let itemInfoL = `<div class="a3d-modal-body-l-cnt">${itemImg}</div>`;
+    let itemInfoR = `<div class="a3d-modal-body-m-cnt">${itemName}${itemDesc}<br><br>${itemPrice}<br>${itemBuy}</div>`;
+
+    // Add Item To List
+    info += `<br id="br${type}${item.id}"><div class="a3d-block" id="block${type}${item.id}">${itemInfoL}${itemInfoR}</div>`;
+
+    return info;
+
+}
+
+/**
+ * @param {Object} item
+ * @param {string} type
+ * @return {string} html
+ * */
+function styleStoreSet (item, type) {
+
+    let info = '';
+
+    // Decide if VIP, Exclusive or Ꝟ Coins
+    let amount;
+    switch (item.tradable) {
+        case 1:
+            amount = item.price + ' Ꝟ';
+            break;
+        case 2:
+            amount = 'VIP Membership';
+            break;
+        case 3:
+            amount = 'Exclusive';
+            break;
+    }
+
+    // Design Item Block Info (right)
+    let itemName = `<div class="item_grade_${item.grade}">${item.set_name_en} (${rarity[item.grade]})</div>`;
+    let itemDesc = `<div class="hr_grade_${item.grade}"></div>${item.set_desc_en}`;
+    let itemPrice = `Unlock ${item.set_name_en} with: <span class="item_price">${amount}</span>`;
+    let itemBuy = `<button class="btn btn-sm a3d-btn" id="${type}${item.id}">Unlock</button>`;
+
+    // Design Item Block Image (left)
+    let itemImg = `
+                        <div class="icon_grade_${item.grade}" style="width: 132px;height: 132px;">
+                            <img src="https://valkyteq.com/static/${item.icon}" alt="${item.name}" width="128" height="128">
+                        </div>
+                    `;
+
+    // Put Design Block Together
+    let itemInfoL = `<div class="a3d-modal-body-l-cnt">${itemImg}</div>`;
+    let itemInfoR = `<div class="a3d-modal-body-m-cnt">${itemName}${itemDesc}<br><br>${itemPrice}<br>${itemBuy}</div>`;
+
+    // Add Item To List
+    info += `<br id="br${type}${item.id}"><div class="a3d-block" id="block${type}${item.id}">${itemInfoL}${itemInfoR}</div>`;
+
+    return info;
+
+}
 
 /**
  *
@@ -1493,10 +1710,10 @@ function stylePanelBtn( element, item ) {
     if (item.tradable === 0) {
         shop = false;
     }
-    else if (item.tradable === 1 && userUnlocks.includes(item.id)) {
+    else if (item.tradable === 1 && getItemFlag("USER_UNLOCKS").includes(item.id)) {
         shop = false;
     }
-    else shop = !(item.tradable === 2 && userVip);
+    else shop = !(item.tradable === 2 && getItemFlag("USER_VIP") === "true");
 
     const url = `https://valkyteq.com/static/`;
     // type
@@ -1615,21 +1832,23 @@ function stylePanelBtn( element, item ) {
 
     // info
     let info = `${item.desc_en}`;
-    const image = `<div class="icon_grade_${item.grade}"><img src='${previewImage}' alt="${item.name}" width="256px"/></div>`;
+    const image = `<div class="icon_grade_${item.grade}"><img src='${previewImage}' alt="${item.name}" width="254px"/></div>`;
     const descRarity = `<div class="item_grade_${item.grade}">${rarity} ${item.category}</div>`;
 
-    // vip?
+    // Decide if VIP, Exclusive or Ꝟ Coins
     let price = '';
     if (shop) {
         let amount;
-        if (item.tradable === 1) {
-            amount = item.price + ' Ꝟ';
-        }
-        else if (item.tradable === 2) {
-            amount = 'VIP Membership';
-        }
-        else if (item.tradable === 3) {
-            amount = 'Exclusive';
+        switch (item.tradable) {
+            case 1:
+                amount = item.price + ' Ꝟ';
+                break;
+            case 2:
+                amount = 'VIP Membership';
+                break;
+            case 3:
+                amount = 'Exclusive';
+                break;
         }
         price = `Unlock ${item.name_en} for: <div class="item_price">${amount}</div><hr>`;
     }
@@ -1780,6 +1999,8 @@ function objectPanel(frame) {
     cssPanelR.overflow = 'hidden';
     cssPanelR.verticalAlign = 'right';
     cssPanelR.textAlign = 'right';
+    cssPanelR.marginLeft = 'auto';
+    cssPanelR.marginRight = '0';
     cssPanelR.alignSelf = 'right';
     cssPanelR.alignContent = 'right';
     cssPanelR.alignItems = 'right';
@@ -1897,7 +2118,7 @@ function objectPanel(frame) {
         stylePanelSetting(setScene)
         let elSetStat = dirRA3D.add( settingsA3D, 'Show Engine Stats' );
         stylePanelSetting(elSetStat)
-        let elSetSync = dirRA3D.add( settingsA3D, 'Reset Char Animation' );
+        let elSetSync = dirRA3D.add( settingsA3D, 'Sync Animation' );
         stylePanelSetting(elSetSync)
 
         // Dynamic Water Setting
@@ -1990,9 +2211,11 @@ function objectPanel(frame) {
         }
 
         // Character Settings
+        let elSetStore = dirRA3Dsave.add(settingsA3D, 'Animat3D Store');
+        stylePanelSetting(elSetStore)
         let elSetSave = dirRA3Dsave.add(settingsA3D, 'Save Character');
         stylePanelSetting(elSetSave)
-        let elSetSync = dirRA3Dsave.add(settingsA3D, 'Reset Char Animation');
+        let elSetSync = dirRA3Dsave.add(settingsA3D, 'Sync Animation');
         stylePanelSetting(elSetSync)
 
         // Set icons for categories - right
@@ -2024,7 +2247,7 @@ function objectPanel(frame) {
         cssPanel.width = '30%';
         cssPanel.height = '100%';
         cssPanel.padding = '2%';
-        cssPanel.overflow = 'hidden';
+        cssPanel.overflow = 'auto';
 
         const dirA3D = panel.addFolder( '3D Model Categories' );
         let cssdirA3D = dirA3D.domElement.style;
@@ -2036,26 +2259,31 @@ function objectPanel(frame) {
         let cssdirFace = dirFace.domElement.style;
         cssdirFace.backgroundColor = 'transparent';
         cssdirFace.width = '80%';
+        cssdirFace.overflow = 'auto';
 
         dirHair = panel.addFolder( 'Hair' );
         let cssdirHair = dirHair.domElement.style;
         cssdirHair.backgroundColor = 'transparent';
         cssdirHair.width = '80%';
+        cssdirHair.overflow = 'auto';
 
         dirHorn = panel.addFolder( 'Horn' );
         let cssdirHorn = dirHorn.domElement.style;
         cssdirHorn.backgroundColor = 'transparent';
         cssdirHorn.width = '80%';
+        cssdirHorn.overflow = 'auto';
 
         dirBody = panel.addFolder( 'Body' );
         let cssdirBody = dirBody.domElement.style;
         cssdirBody.backgroundColor = 'transparent';
         cssdirBody.width = '80%';
+        cssdirBody.overflow = 'auto';
 
         dirAnim = panel.addFolder( 'Animation' );
         let cssdirAnim = dirAnim.domElement.style;
         cssdirAnim.backgroundColor = 'transparent';
         cssdirAnim.width = '80%';
+        cssdirAnim.overflow = 'auto';
 
 
         // Set icons for categories - left
@@ -2434,42 +2662,78 @@ function animat3d() {
 
 console.log(`Animat3D Loader        : ${getItemFlag("FRAME").toUpperCase()}`);
 
-if (getItemFlag("SETTING_SSAA") === "true") {
-    if (getItemFlag("FRAME") !== "control") {
-        setItemFlag("SETTING_SSAA_SAMPLE", "0");
-    }
-    switch (Number(getItemFlag("SETTING_SSAA_SAMPLE"))) {
-        case 0:
-            samples = 2;
-            break;
-        case 25:
-            samples = 4;
-            break;
-        case 50:
-            samples = 8;
-            break;
-        case 75:
-            samples = 16;
-            break;
-        case 100:
-        case 101:
-            samples = 32;
-            break;
-    }
-}
-
+// Get API Data
 if (getItemFlag("FRAME") === "preview") {
     showStats();
-    // Get API Data
-    lunaUserInfo("pre");
+    vteqADI("pre", null);
+}
+else if (getItemFlag("FRAME") === "store") {
+    vteqADI("get", null);
+}
+else if (getItemFlag("FRAME") === "control") {
+    vteqADI("get", null);
+    vteqADI("event", null);
 }
 else {
-    // Get API Data
-    lunaUserInfo("get");
+    vteqADI("get", null);
 }
 
 
-// Wait until everything is done loading:
-// ~2 sec for handling API data
-// ~5 sec for loading 3D data
-setTimeout(function (){ animat3d() }, 7000);
+// FRAMES
+if (getItemFlag("FRAME") === "store") {
+
+    $('#sidebar-info').html(SHOP_INFO);
+
+    setTimeout(function () {
+        storeUserInfo();
+        storeUpdate();
+
+        $('#a3d-content-mask').hide();
+        $('#loading-screen').fadeOut()
+
+        showStore();
+    }, 1337);
+
+} else {
+
+    // Anti Aliasing
+    if (getItemFlag("SETTING_SSAA") === "true") {
+        // TODO: Fix this workaround to fully support SSAA
+        //       with every frame, not only Twitch controls
+        //       Please note, the Cyber Bunker would support
+        //       high SSAA samples too.
+        if (getItemFlag("FRAME") !== "control") {
+            setItemFlag("SETTING_SSAA_SAMPLE", "0");
+        }
+        switch (Number(getItemFlag("SETTING_SSAA_SAMPLE"))) {
+            case 0:
+                samples = 2;
+                break;
+            case 25:
+                samples = 4;
+                break;
+            case 50:
+                samples = 8;
+                break;
+            case 75:
+                samples = 16;
+                break;
+            case 100:
+            case 101:
+                samples = 32;
+                break;
+        }
+    }
+
+    // Wait until everything is done loading:
+    // ~2 sec for handling API data
+    // ~5 sec for loading 3D data
+    setTimeout(function () {
+        if (getItemFlag("FRAME") !== "preview") {
+            $('#sidebar-info').html(SHOP_INFO);
+            storeUserInfo();
+            storeUpdate();
+        }
+        animat3d();
+    }, 7000);
+}

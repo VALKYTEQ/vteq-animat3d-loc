@@ -30,8 +30,21 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-
+const SHOP_IMG = `
+<div class="text-center"><br><img src="https://valkyteq.com/static/a3d/store.webp" alt="VALKYTEQ" width="888" height="500"></div>
+`;
+const SHOP_INFO = `
+Welcome to the Animat3D Store!
+<br>
+The store offers you the possibility to choose between over 150 fantastic products.
+<br>
+<br>
+Notes:
+<br>
+If you face any troubles, please file a 
+<a class="txt-brand" href="https://valkyteq.com/support/" target="_blank">Support Ticket</a> 
+and let us know.
+`;
 
 
 // ****************************************************************************************************************** //
@@ -88,13 +101,17 @@ function showFrame(frame) {
     setTimeout(function () {
         $('#frame-wrap').fadeIn();
         $('#control-wrap').fadeIn();
-        $("#frame").attr("src", `./frame.html`);
+        // if (frame !== 'store') {
+            $("#frame").attr("src", `./frame.html`);
+        // } else {
+        //     $("#frame").attr("src", `./store.html`);
+        // }
     }, 400)
 }
 
 
-function lunaUserLogout() {
-    lunaUserClear();
+function userLogout() {
+    userDataClear();
     $('#main-wrap').fadeOut();
     $('#login-wrapper').fadeOut();
     setTimeout(function () {
@@ -105,16 +122,7 @@ function lunaUserLogout() {
 }
 
 
-function clientSettingsClear() {
-    resetItemFlag("SETTING_MSAA");
-    resetItemFlag("SETTING_FXAA");
-    resetItemFlag("SETTING_SSAA");
-    resetItemFlag("SETTING_SSAA_SAMPLE");
-    resetItemFlag("SETTING_STATS");
-}
-
-
-function lunaUserClear() {
+function userDataClear() {
     resetItemFlag("SRV_TIME");
     resetItemFlag("SRV_SIGN");
     resetItemFlag("USER");
@@ -128,7 +136,7 @@ function lunaUserClear() {
 }
 
 
-function lunaUserUpdate(obj) {
+function userDataUpdate(obj) {
     setItemFlag("USER", `${obj.user_id}-${obj.user_name}-${obj.char_set}-${obj.timestamp}`)
     setItemFlag("USER_ID", obj.user_id)
     setItemFlag("USER_NAME", obj.user_name)
@@ -142,7 +150,7 @@ function lunaUserUpdate(obj) {
 }
 
 
-function lunaUserExit() {
+function userExit() {
     $('#control-wrap').fadeOut();
     $('#settings-wrap').fadeOut();
     $('#main-wrap').fadeOut();
@@ -219,6 +227,16 @@ function clientControls() {
 }
 
 
+function clientSettingsClear() {
+    resetItemFlag("SETTING_ENV");
+    resetItemFlag("SETTING_MSAA");
+    resetItemFlag("SETTING_FXAA");
+    resetItemFlag("SETTING_SSAA");
+    resetItemFlag("SETTING_SSAA_SAMPLE");
+    resetItemFlag("SETTING_STATS");
+}
+
+
 function startupHandler() {
 
     // SSAA
@@ -248,23 +266,39 @@ function startupHandler() {
         $('#env0').removeClass('active');
         $('#env1').addClass('active');
         $('#env2').removeClass('active');
+        $('#env3').removeClass('active');
         $('#envIndicator0').removeClass('active');
         $('#envIndicator1').addClass('active');
         $('#envIndicator2').removeClass('active');
+        $('#envIndicator3').removeClass('active');
     }
     else if (getItemFlag("SETTING_ENV") === "bunker") {
+        $('#env3').removeClass('active');
         $('#env2').addClass('active');
         $('#env1').removeClass('active');
         $('#env0').removeClass('active');
+        $('#envIndicator3').removeClass('active');
         $('#envIndicator2').addClass('active');
+        $('#envIndicator1').removeClass('active');
+        $('#envIndicator0').removeClass('active');
+    }
+    else if (getItemFlag("SETTING_ENV") === "island") {
+        $('#env3').addClass('active');
+        $('#env2').removeClass('active');
+        $('#env1').removeClass('active');
+        $('#env0').removeClass('active');
+        $('#envIndicator3').addClass('active');
+        $('#envIndicator2').removeClass('active');
         $('#envIndicator1').removeClass('active');
         $('#envIndicator0').removeClass('active');
     }
     else {
         setItemFlag("SETTING_ENV", "stage");
+        $('#env3').removeClass('active');
         $('#env2').removeClass('active');
         $('#env1').removeClass('active');
         $('#env0').addClass('active');
+        $('#envIndicator3').removeClass('active');
         $('#envIndicator2').removeClass('active');
         $('#envIndicator1').removeClass('active');
         $('#envIndicator0').addClass('active');
@@ -289,6 +323,25 @@ function toggleSettings(id) {
 }
 
 
+function toggleStoreCategory(id, info) {
+    let shopInfo = $('#sidebar-info');
+    if (info) shopInfo.text(info)
+    else shopInfo.html(SHOP_INFO)
+
+    const idArray = [
+        'store-cat-sets', 'store-cat-body', 'store-cat-hair', 'store-cat-face',
+        'store-cat-horn', 'store-cat-anim', 'store-cat-equip', 'store-cat'
+    ]
+    idArray.forEach((item) => {
+        if (id !== item) {
+            $(`#${item}`).hide();
+        } else {
+            $(`#${id}`).show();
+        }
+    });
+}
+
+
 
 
 
@@ -296,9 +349,9 @@ function toggleSettings(id) {
 //                                                 v  USERDATA  v                                                     //
 // ****************************************************************************************************************** //
 
-function lunaUserInfo(type, dataSave) {
+function vteqADI(type, dataSave) {
     // API: login user
-    function lunaHash() {
+    function adi_getDataHash() {
         let jsonData = JSON.stringify({
             "p": `placeholder`,
             "s": `${$('#recap').val()}`
@@ -317,7 +370,7 @@ function lunaUserInfo(type, dataSave) {
     }
 
     // API: login user
-    function lunaLogin() {
+    function adi_getDataLogin() {
         let jsonData = JSON.stringify({
             "u": `${$('#login').val()}`,
             "p": `${$('#password').val()}`,
@@ -373,11 +426,11 @@ function lunaUserInfo(type, dataSave) {
             if (obj.status !== "success") {
                 // console.log(obj)
                 showFancyMessage("CREDENTIALS", "Wrong Username or Password!", "error", true);
-                lunaUserClear();
+                userDataClear();
             } else {
                 // console.log(obj)
                 showFancyMessage("Yay!", "Welcome!", "success", true);
-                lunaUserUpdate(obj);
+                userDataUpdate(obj);
                 $('#login-wrapper').fadeOut();
                 setTimeout(function () {
                     $('#main-wrap').fadeIn();
@@ -389,10 +442,10 @@ function lunaUserInfo(type, dataSave) {
     }
 
     if (type === "login") {
-        lunaLogin();
+        adi_getDataLogin();
     }
     else if (type === "hash") {
-        lunaHash();
+        adi_getDataHash();
     }
 
 }
@@ -424,6 +477,12 @@ $('#main-lnk-control').click(function () {
     // showFrame("control")
 });
 
+$('#main-lnk-store').click(function () {
+    if (err) { showFancyMessage("MANIPULATION", "Local files manipulated or corrupt!", "error", false) }
+    else { showFrame("store") }
+    // showFrame("store")
+});
+
 $('#main-lnk-settings').click(function () {
     $('#main-wrap').fadeOut();
     setTimeout(function () {
@@ -433,11 +492,11 @@ $('#main-lnk-settings').click(function () {
 });
 
 $('#main-lnk-logout').click(function () {
-    lunaUserLogout();
+    userLogout();
 });
 
 $('#main-lnk-exit').click(function () {
-    lunaUserExit();
+    userExit();
 });
 
 $('#lnk-preview').click(function () {
@@ -521,18 +580,18 @@ $('#control-wrap').click(function () {
 })
 
 $('#window-close').click(function () {
-    lunaUserExit();
+    userExit();
 });
 
 
 
 $('#sign-out').click(function () {
-    lunaUserExit();
+    userExit();
 });
 
 $('#sign-in').click(function() {
     if ($('#notbot').is(":checked")) {
-        lunaUserInfo('login');
+        vteqADI('login');
     }
     else {
         showFancyMessage("BOT CHECK", "Please accept the Checkbox!", "error", true)
@@ -656,6 +715,9 @@ $('#environments').on('slide.bs.carousel', function onSlide (env) {
             break;
         case "env2":
             setItemFlag("SETTING_ENV", "bunker");
+            break;
+        case "env3":
+            setItemFlag("SETTING_ENV", "island");
             break;
     }
 })
@@ -985,7 +1047,7 @@ function successHandler(slide, currValue) {
 if (location.pathname.split("/")[location.pathname.split("/").length-1].split(".")[0] === "index") {
 
     const brand = "VALKYTEQ";
-    const version = "0.9.12";
+    const version = "0.9.13";
     const name = "Animat3D";
     let source;
 
@@ -1021,7 +1083,7 @@ if (location.pathname.split("/")[location.pathname.split("/").length-1].split(".
 
     slideHandler();
     clientControls();
-    lunaUserInfo("hash");
+    vteqADI("hash");
     startupHandler();  // Get User Settings
 
     if (getItemFlag("SRV_SIGN") !== null && getItemFlag("SRV_SIGN").length > 5) {

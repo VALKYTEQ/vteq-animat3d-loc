@@ -7,6 +7,8 @@ export interface Animat3D {
     /** User Unlock */
     unlocks: string;
 
+    /** Payload Array */
+    payload: object;
     /** Items Array */
     items: object;
     /** Items to buy Array */
@@ -24,6 +26,14 @@ export interface Animat3D {
     desc_de: string;
     /** English Item Description */
     desc_en: string;
+    /** German Item Set Display Name */
+    set_name_de: string;
+    /** English Item Set Display Name */
+    set_name_en: string;
+    /** German Item Set Description */
+    set_desc_de: string;
+    /** English Item Set Description */
+    set_desc_en: string;
     /** Item Category */
     category: string;
     /** Item Rarity */

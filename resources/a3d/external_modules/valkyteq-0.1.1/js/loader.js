@@ -1,6 +1,6 @@
 
 
-if (location.pathname.slice(-10) !== "index.html") {
+if (location.pathname.slice(-10) !== "index.html" && getItemFlag("FRAME") !== "store") {
     setTimeout( function() {
 
         let text = document.getElementById("loading-text")
